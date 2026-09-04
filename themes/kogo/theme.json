@@ -175,31 +175,32 @@
 			"units": ["%", "px", "em", "rem", "vh", "vw"]
 		},
 		"typography": {
+            "defaultFontSizes": false,
 			"lineHeight": true,
-			"fontFamilies": [
-				{
-					"fontFamily": "system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, \"Noto Sans\", \"Liberation Sans\", sans-serif",
-					"name": "Sans Serif",
-					"slug": "sans-serif"
-				},
-				{
-					"fontFamily": "Cambria, Georgia, \"Times New Roman\", Times, serif",
-					"name": "Serif",
-					"slug": "serif"
-				},
-				{
-					"fontFamily": "SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace",
-					"name": "Monospace",
-					"slug": "monospace"
-				}
+            "fontFamilies": [
+            {
+                "fontFamily": "\"IBM Plex Sans\", sans-serif",
+                "name": "Sans Serif",
+                "slug": "sans-serif"
+            },
+            {
+                "fontFamily": "\"IBM Plex Serif\", serif",
+                "name": "Serif",
+                "slug": "serif"
+            },
+            {
+                "fontFamily": "\"IBM Plex Mono\", monospace",
+                "name": "Monospace",
+                "slug": "monospace"
+            }
 			],
 			"fontSizes": [
 				{
-					"size": "1rem",
+					"size": "0.824rem",
 					"slug": "small"
 				},
 				{
-					"size": "1.125rem",
+					"size": "1rem",
 					"slug": "medium"
 				},
 				{
@@ -225,9 +226,9 @@
 					"normal": "400"
 				},
 				"font-size": {
-					"huge": "clamp(2.25rem, 4vw, 2.75rem)",
-					"gigantic": "clamp(2.75rem, 6vw, 3.25rem)",
-					"colossal": "clamp(3.25rem, 8vw, 6.25rem)"
+					"huge": "clamp(2.25rem, 4vw, 2.25rem)",
+					"gigantic": "clamp(2.47rem, 6vw, 2.47rem)",
+					"colossal": "clamp(3.765rem, 8vw, 3.765rem)"
 				}
 			}
 		}
@@ -282,6 +283,11 @@
 					"textTransform": "uppercase"
 				}
 			},
+            "core/paragraph": {
+              "typography": {
+                "lineHeight": "1.8"
+              }
+            },
 			"core/code": {
 				"spacing": {
 					"padding": {
@@ -405,7 +411,7 @@
 			}
 		},
 		"typography": {
-			"fontFamily": "var(--wp--preset--font-family--sans-serif)",
+			"fontFamily": "var(--wp--preset--font-family--monospace)",
 			"fontSize": "var(--wp--preset--font-size--medium)",
 			"lineHeight": "var(--wp--custom--typography--line-height--body)"
 		}

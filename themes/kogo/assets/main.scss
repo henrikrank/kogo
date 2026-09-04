@@ -27,11 +27,15 @@ $spacing-horizontal: var(--wp--preset--spacing--4, 1.5rem) !default;
 
 // Responsive breakpoints
 $media-max-width-sm: 599px; // var(--wp--custom--media-max-width--sm);
-$media-max-width-lg: 999px; // var(--wp--custom--media-max-width--lg);
+$media-max-width-lg: 1366px; // var(--wp--custom--media-max-width--lg);
 
 :root {
 	--custom--media-max-width--sm: #{$media-max-width-sm};
 	--custom--media-max-width--lg: #{$media-max-width-lg};
+}
+
+html {
+  font-size: 17px;
 }
 
 /**
