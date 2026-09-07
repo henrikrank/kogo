@@ -10,12 +10,14 @@
  */
 
 $posts_archive_url = get_post_type_archive_link( 'post' ) ?: home_url( '/' );
+$news_category     = get_category_by_slug( 'news' );
+$news_category_id  = $news_category ? (int) $news_category->term_id : 0;
 ?>
 <!-- wp:separator {"className":"is-style-default"} -->
 <hr class="wp-block-separator has-alpha-channel-opacity is-style-default"/>
 <!-- /wp:separator -->
 
-<!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"full","className":"kogo-posts-slider swiper","layout":{"type":"default"}} -->
+<!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","categoryIds":[<?php echo $news_category_id; ?>],"order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"full","className":"kogo-posts-slider swiper","layout":{"type":"default"}} -->
 <div class="wp-block-query alignfull kogo-posts-slider swiper">
 	<!-- wp:group {"className":"kogo-posts-slider__header","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
 	<div class="wp-block-group kogo-posts-slider__header">
