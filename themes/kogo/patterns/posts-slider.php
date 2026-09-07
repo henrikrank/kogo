@@ -11,6 +11,10 @@
 
 $posts_archive_url = get_post_type_archive_link( 'post' ) ?: home_url( '/' );
 ?>
+<!-- wp:separator {"className":"is-style-default"} -->
+<hr class="wp-block-separator has-alpha-channel-opacity is-style-default"/>
+<!-- /wp:separator -->
+
 <!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"align":"full","className":"kogo-posts-slider swiper","layout":{"type":"default"}} -->
 <div class="wp-block-query alignfull kogo-posts-slider swiper">
 	<!-- wp:group {"className":"kogo-posts-slider__header","layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"space-between"}} -->
@@ -52,3 +56,7 @@ $posts_archive_url = get_post_type_archive_link( 'post' ) ?: home_url( '/' );
 	<!-- /wp:query-no-results -->
 </div>
 <!-- /wp:query -->
+
+<!-- wp:separator {"className":"is-style-default"} -->
+<hr class="wp-block-separator has-alpha-channel-opacity is-style-default"/>
+<!-- /wp:separator -->
