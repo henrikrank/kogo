@@ -1,23 +1,32 @@
-<!-- wp:group {"align":"full","layout":{"type":"flex","justifyContent":"space-between"}} -->
-<div class="wp-block-group alignfull">
-	<!-- wp:group {"layout":{"type":"flex"}} -->
-	<div class="wp-block-group">
-		<!-- wp:site-logo {"width":95} /-->
+<!-- wp:group {"align":"full","className":"kogo-header","layout":{"type":"default"}} -->
+<div class="wp-block-group alignfull kogo-header">
+	<!-- wp:site-logo {"width":100,"className":"kogo-header__logo"} /-->
 
-		<!-- wp:site-tagline {"fontSize":"extra-small"} /-->
-	</div>
-	<!-- /wp:group -->
+	<!-- wp:navigation {"overlayMenu":"never","className":"kogo-header__navigation","layout":{"type":"flex","orientation":"horizontal","flexWrap":"nowrap"}} -->
+		<!-- wp:navigation-link {"label":"Artists","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Exhibitions","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Fairs","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"News","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Visit & about","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Editions","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Buy art","url":"#"} /-->
+	<!-- /wp:navigation -->
 
-	<!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"right"}} -->
-	<div class="wp-block-group">
-		<!-- wp:navigation {"overlayMenu":"mobile","layout":{"type":"flex","justifyContent":"center","orientation":"horizontal","flexWrap":"wrap"}} -->
-		<!-- wp:navigation-link {"label":"Home","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"About them.es","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"Blog","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"Contact","url":"#"} /-->
-		<!-- wp:search {"label":"Search","showLabel":false,"buttonPosition":"button-inside","buttonUseIcon":true} /-->
-		<!-- /wp:navigation -->
+	<!-- wp:html -->
+	<div class="kogo-header__actions">
+		<div class="kogo-header__utilities" role="group" aria-label="Site tools">
+			<button class="kogo-header__icon-button kogo-header__icon-button--search" type="button" aria-label="Search"></button>
+			<button class="kogo-header__icon-button kogo-header__icon-button--heart" type="button" aria-label="Favourites"></button>
+			<button class="kogo-header__icon-button kogo-header__icon-button--eye" type="button" aria-label="Accessibility options"></button>
+		</div>
+
+		<nav class="kogo-header__languages" aria-label="Language">
+			<a href="#" lang="et">EE</a>
+			<a href="#" lang="en" aria-current="page">EN</a>
+		</nav>
+
+		<button class="kogo-header__menu-button" type="button" aria-label="Open menu"></button>
 	</div>
-	<!-- /wp:group -->
+	<!-- /wp:html -->
 </div>
 <!-- /wp:group -->

@@ -5,3 +5,27 @@
 .is-root-container.wp-site-blocks {
 	padding: 15px 5vw;
 }
+
+.editor-styles-wrapper .kogo-hero-slider {
+	height: auto !important;
+	min-height: 0 !important;
+	max-height: none !important;
+	aspect-ratio: auto;
+	overflow: visible;
+}
+
+.editor-styles-wrapper .kogo-hero-slider__slides {
+	display: grid !important;
+	height: auto;
+	gap: 24px !important;
+	transform: none !important;
+}
+
+.editor-styles-wrapper .kogo-hero-slider__slide {
+	position: relative !important;
+	inset: auto !important;
+	width: 100% !important;
+	min-height: 540px !important;
+	pointer-events: auto !important;
+	visibility: visible !important;
+}

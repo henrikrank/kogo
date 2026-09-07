@@ -21,7 +21,7 @@ function kogo_theme_support() {
 	add_theme_support( 'editor-styles' );
 	// Enqueue Editor Styles.
 	add_editor_style(
-		'style-editor.css'
+		array( 'build/main.css', 'style-editor.css' )
 	);
 }
 add_action( 'after_setup_theme', 'kogo_theme_support' );
@@ -36,7 +36,10 @@ add_action( 'after_setup_theme', 'kogo_theme_support' );
  */
 function kogo_load_editor_styles() {
 	if ( is_admin() ) {
-		wp_enqueue_style( 'editor-style', get_theme_file_uri( 'style-editor.css' ) );
+		$theme_version = wp_get_theme()->get( 'Version' );
+
+		wp_enqueue_style( 'kogo-editor-main', get_theme_file_uri( 'build/main.css' ), array(), $theme_version );
+		wp_enqueue_style( 'editor-style', get_theme_file_uri( 'style-editor.css' ), array( 'kogo-editor-main' ), $theme_version );
 	}
 }
 add_action( 'enqueue_block_assets', 'kogo_load_editor_styles' );
@@ -67,6 +70,23 @@ function kogo_custom_template_part_area( $areas ) {
 	return $areas;
 }
 add_filter( 'default_wp_template_part_areas', 'kogo_custom_template_part_area' );
+
+/**
+ * Register theme pattern categories.
+ *
+ * @return void
+ */
+function kogo_register_pattern_categories() {
+	if ( function_exists( 'register_block_pattern_category' ) ) {
+		register_block_pattern_category(
+			'kogo',
+			array(
+				'label' => esc_html__( 'Kogo Gallery', 'kogo' ),
+			)
+		);
+	}
+}
+add_action( 'init', 'kogo_register_pattern_categories' );
 
 /**
  * Enqueue CSS Stylesheets and Javascript files.

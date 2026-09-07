@@ -13,7 +13,9 @@
 		"watch": "webpack serve && wp-scripts start",
 		"build": "wp-scripts build"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"swiper": "^14.2.0"
+	},
 	"devDependencies": {
 		"@wordpress/scripts": "^27.7.0",
 		"path": "^0.12.7",
