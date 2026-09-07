@@ -1,10 +1,48 @@
-<!-- wp:group {"align":"wide","layout":{"type":"flex","justifyContent":"space-between"}} -->
-<div class="wp-block-group alignwide">
-	<!-- wp:site-title /-->
+<!-- wp:html -->
+<div class="kogo-footer">
+	<div class="kogo-footer__main">
+		<section class="kogo-footer__newsletter" aria-labelledby="kogo-footer-newsletter-title">
+			<h2 class="kogo-footer__title" id="kogo-footer-newsletter-title">Join our newsletter!</h2>
 
-	<!-- wp:navigation {"overlayMenu":"never","layout":{"type":"flex","justifyContent":"right","orientation":"horizontal"}} -->
-		<!-- wp:navigation-link {"label":"Contact","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"Legal Information","url":"#"} /-->
-	<!-- /wp:navigation -->
+			<form class="kogo-footer__form" action="#" method="post">
+				<label class="kogo-footer__sr-only" for="kogo-footer-email">E-mail</label>
+				<input class="kogo-footer__email" id="kogo-footer-email" name="email" type="email" autocomplete="email" placeholder="E-mail" required>
+				<button class="kogo-footer__submit" type="submit">Send</button>
+			</form>
+
+			<a class="kogo-footer__latest" href="https://mailchi.mp/ede03265cbce/kogo-gallery-news-august-2026" target="_blank" rel="noopener noreferrer">The latest issue</a>
+		</section>
+
+		<section class="kogo-footer__details" aria-labelledby="kogo-footer-gallery-title">
+			<p class="kogo-footer__label" id="kogo-footer-gallery-title">Kogo Gallery</p>
+			<address class="kogo-footer__address">
+				<a href="https://www.google.com/maps/place/Kogo+galerii/@58.3702119,26.7163925,15z/" target="_blank" rel="noopener noreferrer">Kastani 42, Aparaaditehas,<br>Tartu, Estonia</a><br>
+				<a href="mailto:kogo@kogogallery.ee">kogo@kogogallery.ee</a><br>
+				<a href="tel:+37255607971">+372 55 607 971</a>
+			</address>
+		</section>
+
+		<section class="kogo-footer__details" aria-labelledby="kogo-footer-hours-title">
+			<p class="kogo-footer__label" id="kogo-footer-hours-title">Opening hours</p>
+			<p class="kogo-footer__hours">Wed–Fri 12–6 pm<br>Sat 12–4 pm<br>Closed between exhibitions</p>
+		</section>
+
+		<nav class="kogo-footer__social" aria-label="Social media">
+			<p class="kogo-footer__label">Follow us</p>
+			<ul class="kogo-footer__social-links">
+				<li><a class="kogo-footer__social-link" href="https://www.facebook.com/kogogalerii" target="_blank" rel="noopener noreferrer" aria-label="Kogo Gallery on Facebook"><img src="/wp-content/themes/kogo/assets/images/icons/facebook.svg" alt="" width="22" height="22"></a></li>
+				<li><a class="kogo-footer__social-link" href="https://x.com/kogogallery" target="_blank" rel="noopener noreferrer" aria-label="Kogo Gallery on X"><img src="/wp-content/themes/kogo/assets/images/icons/x.svg" alt="" width="18" height="18"></a></li>
+				<li><a class="kogo-footer__social-link" href="https://www.youtube.com/@kogogallery" target="_blank" rel="noopener noreferrer" aria-label="Kogo Gallery on YouTube"><img src="/wp-content/themes/kogo/assets/images/icons/youtube.svg" alt="" width="22" height="16"></a></li>
+				<li><a class="kogo-footer__social-link" href="https://www.instagram.com/kogogallery/" target="_blank" rel="noopener noreferrer" aria-label="Kogo Gallery on Instagram"><img src="/wp-content/themes/kogo/assets/images/icons/instagram.svg" alt="" width="20" height="20"></a></li>
+			</ul>
+		</nav>
+	</div>
+
+	<div class="kogo-footer__legal">
+		<p>We use cookies, read our <a href="https://www.kogogallery.ee/wp-content/uploads/2020/10/Kogo-galerii-andmekaitsetingimused-ENG-10.06.20.pdf" target="_blank" rel="noopener noreferrer">Privacy Policy</a>.</p>
+		<p>© 2026 Kogo Gallery, all rights reserved.</p>
+	</div>
+
+	<img class="kogo-footer__logo" src="/wp-content/themes/kogo/assets/images/logo-metallic.webp" alt="" width="766" height="270" loading="lazy" aria-hidden="true">
 </div>
-<!-- /wp:group -->
+<!-- /wp:html -->

@@ -1,0 +1,292 @@
+footer.site-footer {
+	margin-top: calc(#{$spacing-vertical} * 3);
+	padding: 0;
+	border-top: 1px solid #8f6c5d;
+	background: $white;
+	overflow: hidden;
+}
+
+.kogo-footer {
+	position: relative;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	min-height: clamp(36rem, 47vw, 42rem);
+	margin: 0 auto;
+	padding: clamp(3.5rem, 6vw, 5rem) 40px 36px;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--monospace);
+}
+
+.kogo-footer__main {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	grid-template-columns: minmax(0, 2fr) minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.8fr);
+	gap: clamp(2rem, 4vw, 5rem);
+}
+
+.kogo-footer__newsletter,
+.kogo-footer__details,
+.kogo-footer__social,
+.kogo-footer__legal,
+.kogo-footer__title,
+.kogo-footer__label,
+.kogo-footer__latest,
+.kogo-footer__address,
+.kogo-footer__hours {
+	margin: 0;
+}
+
+.kogo-footer__title {
+	max-width: 7ch;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: clamp(2.5rem, 4.3vw, 4.75rem);
+	font-weight: 600;
+	line-height: 1.08;
+	letter-spacing: -0.04em;
+}
+
+.kogo-footer__form {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: end;
+	margin-top: clamp(2.25rem, 4vw, 3.75rem);
+	gap: 12px;
+}
+
+.kogo-footer .kogo-footer__email {
+	box-sizing: border-box;
+	width: 100%;
+	height: clamp(2.75rem, 4vw, 3.75rem);
+	min-width: 0;
+	padding: 0 12px 5px;
+	border: 0 !important;
+	border-bottom: 2px solid $kogo-red !important;
+	border-radius: 0;
+	background: transparent;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: clamp(1.15rem, 1.9vw, 1.75rem);
+	line-height: 1;
+	outline: 0;
+
+	&::placeholder {
+		color: $dark-gray;
+		opacity: 1;
+	}
+
+	&:focus-visible {
+		box-shadow: 0 3px 0 0 $dark-gray;
+	}
+}
+
+.kogo-footer__submit {
+	height: clamp(2.75rem, 4vw, 3.75rem);
+	padding: 0 clamp(1.25rem, 2vw, 2rem);
+	border: 1px solid $dark-gray;
+	border-radius: 999px;
+	background: transparent;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--preset--font-size--medium);
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	&:hover,
+	&:focus-visible {
+		background: $dark-gray;
+		color: $white;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $kogo-red;
+		outline-offset: 3px;
+	}
+}
+
+.kogo-footer__latest {
+	display: inline-block;
+	margin-top: 30px;
+}
+
+.kogo-footer__label,
+.kogo-footer__address,
+.kogo-footer__hours,
+.kogo-footer__latest,
+.kogo-footer__legal {
+	font-size: clamp(0.824rem, 1.2vw, 1rem);
+	line-height: 1.7;
+}
+
+.kogo-footer__label {
+	margin-bottom: 22px;
+}
+
+.kogo-footer__address {
+	font-style: normal;
+}
+
+.kogo-footer a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+
+	&:focus-visible {
+		outline: 2px solid $kogo-red;
+		outline-offset: 4px;
+	}
+}
+
+.kogo-footer__social-links {
+	display: flex;
+	align-items: center;
+	margin: -11px 0 0 -11px;
+	padding: 0;
+	list-style: none;
+}
+
+.kogo-footer__social-link {
+	display: grid;
+	width: 44px;
+	height: 44px;
+	place-items: center;
+	border-radius: 50%;
+	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	&:hover,
+	&:focus-visible {
+		background: rgba(33, 37, 41, 0.08);
+	}
+
+	&:focus-visible {
+		outline-offset: 0;
+	}
+
+	img {
+		display: block;
+		max-width: 22px;
+		max-height: 22px;
+	}
+}
+
+.kogo-footer__legal {
+	position: absolute;
+	bottom: 42px;
+	left: 40px;
+	z-index: 1;
+	max-width: 34rem;
+}
+
+.kogo-footer__legal p {
+	margin: 0;
+}
+
+.kogo-footer__logo {
+	position: absolute;
+	right: 40px;
+	bottom: -4%;
+	width: min(58vw, 1100px);
+	height: auto;
+	pointer-events: none;
+	user-select: none;
+}
+
+.kogo-footer__sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+@media (max-width: 980px) {
+	.kogo-footer {
+		min-height: 46rem;
+	}
+
+	.kogo-footer__main {
+		grid-template-columns: minmax(0, 1.5fr) repeat(2, minmax(8rem, 1fr));
+		gap: 3rem 2rem;
+	}
+
+	.kogo-footer__newsletter {
+		grid-column: 1 / -1;
+		max-width: 33rem;
+	}
+
+	.kogo-footer__title {
+		max-width: none;
+	}
+
+	.kogo-footer__form {
+		margin-top: 2rem;
+	}
+
+	.kogo-footer__logo {
+		width: min(70vw, 720px);
+	}
+}
+
+@media (max-width: $media-max-width-sm) {
+	footer.site-footer {
+		margin-top: calc(#{$spacing-vertical} * 2);
+	}
+
+	.kogo-footer {
+		min-height: 0;
+		padding: 44px 20px 0;
+	}
+
+	.kogo-footer__main {
+		grid-template-columns: 1fr;
+		gap: 38px;
+	}
+
+	.kogo-footer__newsletter {
+		grid-column: auto;
+	}
+
+	.kogo-footer__title {
+		max-width: 8ch;
+		font-size: clamp(2.5rem, 12vw, 3.75rem);
+	}
+
+	.kogo-footer__form {
+		grid-template-columns: minmax(0, 1fr) auto;
+		margin-top: 2rem;
+	}
+
+	.kogo-footer__label {
+		margin-bottom: 12px;
+	}
+
+	.kogo-footer__latest {
+		margin-top: 22px;
+	}
+
+	.kogo-footer__social-links {
+		margin-top: -7px;
+	}
+
+	.kogo-footer__legal {
+		position: static;
+		margin-top: 64px;
+	}
+
+	.kogo-footer__logo {
+		position: relative;
+		right: auto;
+		bottom: auto;
+		display: block;
+		width: 120%;
+		max-width: none;
+		margin: 44px 0 -4% 8%;
+	}
+}

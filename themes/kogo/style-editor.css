@@ -29,3 +29,21 @@
 	pointer-events: auto !important;
 	visibility: visible !important;
 }
+
+.editor-styles-wrapper .kogo-posts-slider {
+	width: 100% !important;
+	max-width: none !important;
+	margin: 0 !important;
+	overflow: visible;
+}
+
+.editor-styles-wrapper ul.wp-block-post-template.kogo-posts-slider__items {
+	display: grid !important;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px !important;
+	transform: none !important;
+}
+
+.editor-styles-wrapper ul.wp-block-post-template.kogo-posts-slider__items > li {
+	width: auto !important;
+}

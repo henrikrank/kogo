@@ -103,7 +103,52 @@ import 'swiper/css';
 		});
 	};
 
+	const setupPostsSlider = (slider) => {
+		const wrapper = slider.querySelector('.kogo-posts-slider__items');
+		const slides = wrapper ? Array.from(wrapper.children) : [];
+		if (!slides.length || slider.dataset.sliderReady === 'true') {
+			return;
+		}
+
+		slider.dataset.sliderReady = 'true';
+		slider.setAttribute('role', 'region');
+		slider.setAttribute('aria-label', 'Latest posts');
+		slides.forEach((slide) => slide.classList.add('swiper-slide'));
+
+		const controls = document.createElement('div');
+		controls.className = 'kogo-posts-slider__controls';
+		controls.innerHTML =
+			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--previous" type="button" aria-label="Previous posts"></button>' +
+			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--next" type="button" aria-label="Next posts"></button>';
+		slider.querySelector('.kogo-posts-slider__actions')?.appendChild(controls);
+
+		new Swiper(slider, {
+			modules: [A11y, Navigation],
+			speed: 550,
+			slidesPerView: 'auto',
+			spaceBetween: 16,
+			watchOverflow: true,
+			breakpoints: {
+				600: {
+					spaceBetween: 20,
+				},
+				900: {
+					spaceBetween: 24,
+				},
+			},
+			navigation: {
+				prevEl: controls.querySelector('.kogo-posts-slider__arrow--previous'),
+				nextEl: controls.querySelector('.kogo-posts-slider__arrow--next'),
+			},
+			a11y: {
+				prevSlideMessage: 'Previous posts',
+				nextSlideMessage: 'Next posts',
+			},
+		});
+	};
+
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
+	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
 
 	// Switching to mobile: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/onchange
 	const isMobile = window.matchMedia(
