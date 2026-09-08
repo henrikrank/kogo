@@ -215,6 +215,16 @@
 		},
 		"useRootPaddingAwareAlignments": true,
 		"custom": {
+			"border": {
+				"radius": {
+					"lg": "16px"
+				}
+			},
+			"spacing": {
+				"gap": {
+					"xs": "4px"
+				}
+			},
 			"typography": {
 				"line-height": {
 					"body": 1.7,
