@@ -75,7 +75,8 @@ header.site-header {
 		}
 	}
 
-	&.wp-block-navigation .wp-block-navigation-link.current-menu-item .wp-block-navigation-item__label {
+	&.wp-block-navigation .wp-block-navigation-link.current-menu-item .wp-block-navigation-item__label,
+	&.wp-block-navigation .wp-block-navigation-link a:focus .wp-block-navigation-item__label {
 		border-bottom: 0;
 	}
 }
@@ -225,13 +226,14 @@ header.site-header {
 		text-decoration: none;
 	}
 
-	a:not([aria-current="page"]) {
+	a:not([aria-current="page"]):hover {
 		text-decoration: underline;
 		text-underline-offset: 0.3em;
 	}
 
 	a[aria-current="page"] {
 		font-weight: 600;
+		text-decoration: none;
 	}
 
 	a:focus-visible {

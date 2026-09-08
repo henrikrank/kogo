@@ -1,6 +1,10 @@
 <?php
 
 require_once __DIR__ . '/inc/kogo-itgallery.php';
+require_once __DIR__ . '/inc/exhibition-archive.php';
+require_once __DIR__ . '/inc/exhibition-single.php';
+require_once __DIR__ . '/inc/artist-grid.php';
+require_once __DIR__ . '/inc/post-single.php';
 
 /**
  * General Theme Settings.
@@ -102,7 +106,7 @@ add_action( 'init', 'kogo_register_pattern_categories' );
 function kogo_prepend_newsletter_slide( $block_content, $block ) {
 	$class_name = $block['attrs']['className'] ?? '';
 
-	if ( false === strpos( $class_name, 'kogo-posts-slider__items' ) ) {
+	if ( false === strpos( $class_name, 'kogo-posts-slider__items' ) || false !== strpos( $class_name, 'kogo-posts-slider__items--related' ) ) {
 		return $block_content;
 	}
 

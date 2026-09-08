@@ -1,0 +1,67 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"kogo-exhibitions-archive","layout":{"type":"default"}} -->
+<main class="wp-block-group alignfull kogo-exhibitions-archive">
+	<!-- wp:group {"align":"full","className":"kogo-exhibitions-archive__title-wrap","layout":{"type":"default"}} -->
+	<div class="wp-block-group alignfull kogo-exhibitions-archive__title-wrap">
+		<!-- wp:heading {"level":1,"className":"kogo-exhibitions-archive__title"} -->
+		<h1 class="wp-block-heading kogo-exhibitions-archive__title">Exhibitions</h1>
+		<!-- /wp:heading -->
+	</div>
+	<!-- /wp:group -->
+
+	<!-- wp:separator -->
+	<hr class="wp-block-separator has-alpha-channel-opacity"/>
+	<!-- /wp:separator -->
+
+	<!-- wp:pattern {"slug":"kogo/posts-cover-grid"} /-->
+
+	<!-- wp:separator -->
+	<hr class="wp-block-separator has-alpha-channel-opacity"/>
+	<!-- /wp:separator -->
+
+	<!-- wp:group {"align":"full","className":"kogo-exhibitions-archive__past","layout":{"type":"default"}} -->
+	<div class="wp-block-group alignfull kogo-exhibitions-archive__past">
+		<!-- wp:heading {"level":2,"className":"kogo-exhibitions-archive__heading"} -->
+		<h2 class="wp-block-heading kogo-exhibitions-archive__heading">Past exhibitions</h2>
+		<!-- /wp:heading -->
+
+		<!-- wp:query {"queryId":90402,"query":{"perPage":12,"pages":0,"offset":0,"postType":"kogo_exposition","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false},"className":"kogo-exhibitions-archive__query","layout":{"type":"default"}} -->
+		<div class="wp-block-query kogo-exhibitions-archive__query">
+			<!-- wp:post-template {"className":"kogo-exhibitions-archive__grid","layout":{"type":"grid","columnCount":3}} -->
+				<!-- wp:group {"className":"kogo-exhibitions-archive__card","layout":{"type":"default"}} -->
+				<div class="wp-block-group kogo-exhibitions-archive__card">
+					<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/2","sizeSlug":"large","className":"kogo-exhibition-card__image kogo-exhibitions-archive__image"} /-->
+
+					<!-- wp:shortcode -->
+					[kogo_exhibition_dates]
+					<!-- /wp:shortcode -->
+
+					<!-- wp:post-title {"isLink":true,"level":3,"className":"kogo-exhibitions-archive__card-title"} /-->
+
+					<!-- wp:shortcode -->
+					[kogo_exhibition_artists]
+					<!-- /wp:shortcode -->
+				</div>
+				<!-- /wp:group -->
+			<!-- /wp:post-template -->
+
+			<!-- wp:query-no-results -->
+				<!-- wp:paragraph {"fontSize":"small"} -->
+				<p class="has-small-font-size">No past exhibitions.</p>
+				<!-- /wp:paragraph -->
+			<!-- /wp:query-no-results -->
+
+			<!-- wp:query-pagination {"paginationArrow":"arrow","showLabel":false,"className":"kogo-exhibitions-archive__pagination","layout":{"type":"flex","justifyContent":"center"}} -->
+				<!-- wp:query-pagination-previous /-->
+				<!-- wp:query-pagination-numbers /-->
+				<!-- wp:query-pagination-next /-->
+			<!-- /wp:query-pagination -->
+		</div>
+		<!-- /wp:query -->
+	</div>
+	<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"site-footer"} /-->

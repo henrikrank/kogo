@@ -1,6 +1,7 @@
 import Swiper from 'swiper';
 import { A11y, Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
+import { getGalleryLayout } from './gallery-layout.mjs';
 
 (function () {
 	'use strict';
@@ -111,29 +112,34 @@ import 'swiper/css';
 		}
 
 		slider.dataset.sliderReady = 'true';
+		const itemLabel = slider.dataset.sliderItemLabel || 'posts';
+		const isWorksSlider = slider.classList.contains('kogo-exhibition-works');
 		slider.setAttribute('role', 'region');
-		slider.setAttribute('aria-label', 'Latest posts');
+		slider.setAttribute(
+			'aria-label',
+			slider.dataset.sliderLabel || (slider.classList.contains('kogo-related-news') ? 'Related news' : 'Latest posts')
+		);
 		slides.forEach((slide) => slide.classList.add('swiper-slide'));
 
 		const controls = document.createElement('div');
 		controls.className = 'kogo-posts-slider__controls';
 		controls.innerHTML =
-			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--previous" type="button" aria-label="Previous posts"></button>' +
-			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--next" type="button" aria-label="Next posts"></button>';
+			`<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--previous" type="button" aria-label="Previous ${itemLabel}"></button>` +
+			`<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--next" type="button" aria-label="Next ${itemLabel}"></button>`;
 		slider.querySelector('.kogo-posts-slider__actions')?.appendChild(controls);
 
 		new Swiper(slider, {
 			modules: [A11y, Navigation],
 			speed: 550,
 			slidesPerView: 'auto',
-			spaceBetween: 16,
+			spaceBetween: isWorksSlider ? 8 : 16,
 			watchOverflow: true,
 			breakpoints: {
 				600: {
-					spaceBetween: 20,
+					spaceBetween: isWorksSlider ? 8 : 20,
 				},
 				900: {
-					spaceBetween: 24,
+					spaceBetween: isWorksSlider ? 8 : 24,
 				},
 			},
 			navigation: {
@@ -141,14 +147,103 @@ import 'swiper/css';
 				nextEl: controls.querySelector('.kogo-posts-slider__arrow--next'),
 			},
 			a11y: {
-				prevSlideMessage: 'Previous posts',
-				nextSlideMessage: 'Next posts',
+				prevSlideMessage: `Previous ${itemLabel}`,
+				nextSlideMessage: `Next ${itemLabel}`,
 			},
+		});
+	};
+
+	const setupGallery = (gallery) => {
+		const grid = gallery.querySelector('.kogo-gallery-grid');
+		const dialog = gallery.querySelector('.kogo-gallery-lightbox');
+		const data = gallery.querySelector('.kogo-gallery-data');
+		const images = JSON.parse(data?.textContent || '[]');
+		if (!grid || !dialog || !images.length) {
+			return;
+		}
+
+		const lightboxImage = dialog.querySelector('.kogo-gallery-lightbox__image');
+		const count = dialog.querySelector('.kogo-gallery-lightbox__count');
+		const previous = dialog.querySelector('.kogo-gallery-lightbox__arrow--previous');
+		const next = dialog.querySelector('.kogo-gallery-lightbox__arrow--next');
+		let current = 0;
+		let columns = 0;
+		let resizeFrame;
+
+		const showImage = (index) => {
+			current = (index + images.length) % images.length;
+			lightboxImage.src = images[current].full;
+			lightboxImage.alt = images[current].alt;
+			count.textContent = `${current + 1} / ${images.length}`;
+		};
+
+		const open = (index) => {
+			showImage(index);
+			dialog.showModal();
+		};
+
+		const createTile = (index, moreCount = 0) => {
+			const image = images[index];
+			const button = document.createElement('button');
+			const thumbnail = document.createElement('img');
+			button.type = 'button';
+			button.className = 'kogo-gallery-grid__item';
+			button.setAttribute('aria-label', moreCount ? `View ${moreCount} more images` : image.alt);
+			thumbnail.src = image.src;
+			thumbnail.alt = '';
+			thumbnail.loading = 'lazy';
+			thumbnail.decoding = 'async';
+			thumbnail.sizes = '(max-width: 599px) 50vw, (max-width: 1024px) 25vw, 17vw';
+			if (image.srcset) {
+				thumbnail.srcset = image.srcset;
+			}
+			button.appendChild(thumbnail);
+			if (moreCount) {
+				button.classList.add('kogo-gallery-grid__item--more');
+				const label = document.createElement('span');
+				label.textContent = `+${moreCount} more`;
+				button.appendChild(label);
+			}
+			button.addEventListener('click', () => open(index));
+			return button;
+		};
+
+		const render = () => {
+			const nextColumns = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+			if (nextColumns === columns) {
+				return;
+			}
+			columns = nextColumns;
+			const layout = getGalleryLayout(images.length, columns);
+			const fragment = document.createDocumentFragment();
+			for (let index = 0; index < layout.cells; index += 1) {
+				fragment.appendChild(createTile(index, index === layout.moreIndex ? layout.moreCount : 0));
+			}
+			grid.replaceChildren(fragment);
+		};
+
+		previous.addEventListener('click', () => showImage(current - 1));
+		next.addEventListener('click', () => showImage(current + 1));
+		dialog.querySelector('.kogo-gallery-lightbox__close').addEventListener('click', () => dialog.close());
+		dialog.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') {
+				showImage(current - 1);
+			} else if (event.key === 'ArrowRight') {
+				showImage(current + 1);
+			}
+		});
+		previous.hidden = images.length < 2;
+		next.hidden = images.length < 2;
+		render();
+		window.addEventListener('resize', () => {
+			window.cancelAnimationFrame(resizeFrame);
+			resizeFrame = window.requestAnimationFrame(render);
 		});
 	};
 
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
 	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
+	document.querySelectorAll('.kogo-exhibition-single__gallery').forEach(setupGallery);
 
 	// Switching to mobile: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/onchange
 	const isMobile = window.matchMedia(

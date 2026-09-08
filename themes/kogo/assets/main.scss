@@ -785,6 +785,26 @@ ul.wp-block-post-template {
 	gap: clamp(2.5rem, 6vw, 7rem);
 }
 
+.kogo-emphasized-text__columns,
+.kogo-artists__columns,
+.kogo-post-highlight__columns {
+	align-items: flex-start;
+}
+
+.kogo-emphasized-text__columns > .wp-block-column:first-child,
+.kogo-artists__columns > .wp-block-column:first-child,
+.kogo-post-highlight__columns > .wp-block-column:first-child {
+	position: sticky;
+	top: 112px;
+	align-self: flex-start;
+}
+
+body.admin-bar .kogo-emphasized-text__columns > .wp-block-column:first-child,
+body.admin-bar .kogo-artists__columns > .wp-block-column:first-child,
+body.admin-bar .kogo-post-highlight__columns > .wp-block-column:first-child {
+	top: 144px;
+}
+
 .kogo-emphasized-text__label,
 .kogo-emphasized-text__body,
 .kogo-emphasized-text__actions {
@@ -1163,6 +1183,203 @@ ul.wp-block-post-template.kogo-posts-slider__items > li.kogo-posts-slider__newsl
 	}
 }
 
+/* Single post */
+
+body.single-post main,
+body.single-post .wp-block-post-content {
+	margin-block-start: 0;
+}
+
+.kogo-single-post,
+.kogo-single-post__hero,
+.kogo-single-post__hero-columns,
+.kogo-single-post__intro,
+.kogo-single-post__media,
+.kogo-single-post__category,
+.kogo-single-post__title,
+.kogo-single-post__date,
+.kogo-single-post__excerpt,
+.kogo-single-post__excerpt p,
+.kogo-single-post__tags,
+.kogo-single-post__image,
+.kogo-single-post__content {
+	margin: 0;
+}
+
+.kogo-single-post {
+	max-width: none !important;
+}
+
+.kogo-single-post__hero {
+	width: 100%;
+	max-width: none !important;
+	border-bottom: 1px solid $dark-gray;
+}
+
+.kogo-single-post__hero-columns {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg !important;
+	margin-inline: auto !important;
+	padding: 40px;
+	gap: clamp(40px, 6vw, 72px);
+}
+
+.kogo-single-post__intro {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	min-width: 0;
+}
+
+.kogo-single-post__category {
+	margin-bottom: 16px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-single-post__category a,
+.kogo-single-post__tags a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.kogo-single-post__title {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.08;
+	text-wrap: balance;
+}
+
+.kogo-single-post__date {
+	margin-top: 14px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-single-post__excerpt {
+	max-width: 62ch;
+	margin-top: 28px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+}
+
+.kogo-single-post__excerpt .wp-block-post-excerpt__more-text {
+	display: none;
+}
+
+.kogo-single-post__tags {
+	position: relative;
+	margin-top: 22px;
+	padding-left: 26px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-single-post__tags::before {
+	position: absolute;
+	top: 50%;
+	left: 1px;
+	box-sizing: border-box;
+	width: 17px;
+	height: 11px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	content: "";
+	transform: translateY(-50%);
+}
+
+.kogo-single-post__tags::after {
+	position: absolute;
+	top: 50%;
+	left: 4px;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background-color: currentColor;
+	content: "";
+	transform: translateY(-50%);
+}
+
+.kogo-single-post__media {
+	min-width: 0;
+}
+
+.kogo-single-post__image {
+	width: 100%;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	overflow: hidden;
+}
+
+.kogo-single-post__media:not(:has(.kogo-single-post__image))::before {
+	display: block;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	content: "";
+}
+
+.kogo-single-post__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+
+.kogo-single-post__content {
+	box-sizing: border-box;
+	width: min(100%, 900px);
+	max-width: 900px !important;
+	margin-inline: auto !important;
+	padding: clamp(48px, 7vw, 88px) 40px;
+	font-family: var(--wp--preset--font-family--monospace);
+	line-height: 1.7;
+}
+
+.kogo-single-post__content > :first-child {
+	margin-top: 0;
+}
+
+.kogo-single-post__content > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-single-post__content :is(h2, h3, h4) {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-weight: 600;
+	line-height: 1.15;
+}
+
+@media (hover: hover) {
+	.kogo-single-post__category a:hover,
+	.kogo-single-post__tags a:hover {
+		color: $kogo-red;
+	}
+}
+
+@media (max-width: 782px) {
+	.kogo-single-post__hero-columns {
+		padding: 40px 20px 48px;
+		gap: 36px;
+	}
+
+	.kogo-single-post__content {
+		padding: 48px 20px 56px;
+	}
+}
+
 /* Artists query grid */
 
 .kogo-artists {
@@ -1323,6 +1540,79 @@ ul.wp-block-post-template.kogo-artists__grid > li {
 		transform: none !important;
 		transition: none !important;
 	}
+}
+
+/* Artists archive */
+
+.kogo-artists-archive {
+	margin: 0 !important;
+}
+
+.kogo-exhibited-artists {
+	scroll-margin-top: 96px;
+}
+
+.kogo-exhibited-artists__heading,
+.kogo-exhibited-artists__content,
+.kogo-exhibited-artists__years,
+.kogo-exhibited-artists__year,
+.kogo-exhibited-artists__year-heading,
+.kogo-exhibited-artists__list,
+.kogo-exhibited-artists__empty {
+	margin: 0;
+}
+
+.kogo-exhibited-artists__heading {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.kogo-exhibited-artists__years {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: clamp(2.5rem, 6vw, 7rem);
+	row-gap: 48px;
+}
+
+.kogo-exhibited-artists__year-heading {
+	margin-bottom: 16px;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--preset--font-size--medium);
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.kogo-exhibited-artists__list {
+	padding: 0;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.55;
+	list-style: none;
+}
+
+.kogo-exhibited-artists__list a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.16em;
+	transition: color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	&:hover,
+	&:focus-visible {
+		color: $kogo-red;
+	}
+
+	&:focus-visible {
+		border-radius: 2px;
+		outline: 2px solid $kogo-red;
+		outline-offset: 2px;
+	}
+}
+
+.kogo-exhibited-artists__empty {
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
 }
 
 /* Single post highlight */
@@ -1514,6 +1804,8 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 .kogo-posts-cover-grid__card {
 	position: relative;
 	isolation: isolate;
+	display: flex;
+	align-items: flex-end;
 	min-height: 0 !important;
 	margin: 0 !important;
 	aspect-ratio: 3 / 2;
@@ -1522,19 +1814,40 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 	overflow: hidden;
 }
 
-.kogo-posts-cover-grid__card .wp-block-cover__background {
-	background: linear-gradient(to top, rgba(16, 18, 19, 0.86), rgba(16, 18, 19, 0.02) 68%) !important;
-	opacity: 1 !important;
+.kogo-posts-cover-grid__card::after {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(to top, rgba(16, 18, 19, 0.86), rgba(16, 18, 19, 0.02) 68%);
+	pointer-events: none;
+	content: "";
 }
 
-.kogo-posts-cover-grid__card .wp-block-cover__image-background {
+.kogo-posts-cover-grid__image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0 !important;
+}
+
+.kogo-posts-cover-grid__image a,
+.kogo-posts-cover-grid__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.kogo-posts-cover-grid__image img {
+	object-fit: cover;
 	transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.kogo-posts-cover-grid__card .wp-block-cover__inner-container {
-	position: relative;
-	z-index: 2;
-	width: 100%;
+.kogo-posts-cover-grid__card:not(:has(.kogo-posts-cover-grid__image))::before {
+	position: absolute;
+	inset: 0;
+	background-color: $gray;
+	content: "";
 }
 
 .kogo-posts-cover-grid__content,
@@ -1546,6 +1859,8 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 }
 
 .kogo-posts-cover-grid__content {
+	position: relative;
+	z-index: 2;
 	box-sizing: border-box;
 	width: 100%;
 	padding: clamp(24px, 3vw, 36px);
@@ -1554,6 +1869,14 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 .kogo-posts-cover-grid__date {
 	margin-bottom: 12px;
 	font-family: var(--wp--preset--font-family--monospace);
+	line-height: 1.3;
+}
+
+.kogo-posts-cover-grid__content > .kogo-exhibition-card__dates {
+	display: block;
+	margin-bottom: 12px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
 	line-height: 1.3;
 }
 
@@ -1582,8 +1905,17 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 	display: none;
 }
 
+.kogo-posts-cover-grid__content > .kogo-exhibition-card__artists {
+	display: block;
+	max-width: 46ch;
+	margin-top: 12px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.45;
+}
+
 @media (hover: hover) {
-	.kogo-posts-cover-grid__card:hover .wp-block-cover__image-background {
+	.kogo-posts-cover-grid__card:hover .kogo-posts-cover-grid__image img {
 		transform: scale(1.025);
 	}
 
@@ -1594,9 +1926,479 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.kogo-posts-cover-grid__card .wp-block-cover__image-background {
+	.kogo-posts-cover-grid__image img {
 		transform: none !important;
 		transition: none !important;
+	}
+}
+
+/* Single exhibition */
+
+body.single-kogo_exposition main,
+body.single-kogo_exposition .wp-block-post-content {
+	margin-block-start: 0;
+}
+
+.kogo-exhibition-single,
+.kogo-exhibition-single__intro {
+	margin: 0 !important;
+}
+
+.kogo-exhibition-single__intro {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	margin-inline: auto !important;
+}
+
+.kogo-exhibition-single__hero {
+	position: relative;
+	isolation: isolate;
+	min-height: 560px;
+	max-height: 760px;
+	aspect-ratio: 1366 / 666;
+	border-radius: 18px;
+	background-color: $dark-gray;
+	color: $white;
+	overflow: hidden;
+}
+
+.kogo-exhibition-single__hero::after {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(33, 37, 41, 0.04) 35%, rgba(33, 37, 41, 0.72) 100%);
+	content: "";
+}
+
+.kogo-exhibition-single__cover {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.kogo-exhibition-single__hero-inner {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	min-height: inherit;
+	padding: 40px;
+}
+
+.kogo-exhibition-single__status,
+.kogo-exhibition-single__dates,
+.kogo-exhibition-single__title,
+.kogo-exhibition-single__details,
+.kogo-exhibition-single__details dd,
+.kogo-exhibition-single__details dt {
+	margin: 0;
+}
+
+.kogo-exhibition-single__status {
+	display: inline-flex;
+	align-items: center;
+	height: 28px;
+	padding: 0 14px;
+	gap: 9px;
+	border: 1px solid $dark-gray;
+	border-radius: 999px;
+	background-color: $white;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-exhibition-single__status span {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: $kogo-red;
+}
+
+.kogo-exhibition-single__status.is-past span {
+	background-color: $dark-gray;
+}
+
+.kogo-exhibition-single__status.is-upcoming span {
+	background-color: $green;
+}
+
+.kogo-exhibition-single__hero-content {
+	max-width: 58rem;
+}
+
+.kogo-exhibition-single__dates {
+	margin-bottom: 10px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: clamp(0.9rem, 1.5vw, 1.4rem);
+	line-height: 1.25;
+}
+
+.kogo-exhibition-single__title {
+	color: inherit;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.08;
+}
+
+.kogo-exhibition-single__details {
+	display: grid;
+	padding: 30px 40px 34px;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 32px;
+	font-family: var(--wp--preset--font-family--monospace);
+}
+
+.kogo-exhibition-single__details dt {
+	margin-bottom: 10px;
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-exhibition-single__details dd {
+	line-height: 1.5;
+}
+
+.kogo-exhibition-single__idea {
+	padding-block: clamp(64px, 7vw, 96px);
+}
+
+.kogo-exhibition-single__idea-columns,
+.kogo-exhibition-single__columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.kogo-exhibition-single__idea-body > :first-child {
+	margin-top: 0;
+}
+
+.kogo-exhibition-single__idea-body > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-exhibition-single__gallery {
+	padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.kogo-exhibition-single__section,
+.kogo-exhibition-single__split {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	margin: 0 auto;
+	padding: clamp(56px, 6vw, 80px) 40px;
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-exhibition-single__text {
+	padding-top: 0;
+	border-top: 0;
+}
+
+.kogo-exhibition-single__section-title {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.kogo-exhibition-single__prose {
+	max-width: 54rem;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+}
+
+.kogo-exhibition-single__prose > :first-child {
+	margin-top: 0;
+}
+
+.kogo-exhibition-single__prose > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-exhibition-single__publications,
+.kogo-exhibition-single__bios {
+	display: grid;
+	gap: 24px;
+}
+
+.kogo-exhibition-single__publications p,
+.kogo-exhibition-single__bios p {
+	margin: 0;
+}
+
+.kogo-exhibition-single__prose a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+}
+
+.kogo-exhibition-works {
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__card {
+	align-items: center;
+	text-align: center;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__image {
+	aspect-ratio: 1;
+	background-color: #fafafa;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__image img {
+	aspect-ratio: 1;
+	object-fit: contain;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__card:not(:has(.kogo-posts-slider__image))::before {
+	aspect-ratio: 1;
+}
+
+.kogo-exhibition-work-card__artist,
+.kogo-exhibition-work-card__details {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-exhibition-work-card__artist {
+	margin-bottom: 4px;
+}
+
+.kogo-exhibition-work-card__details {
+	margin-top: 10px;
+}
+
+.kogo-exhibition-single__split {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: clamp(48px, 8vw, 120px);
+}
+
+.kogo-exhibition-single__split .kogo-exhibition-single__section-title {
+	margin-bottom: 24px;
+}
+
+@media (max-width: 782px) {
+	.kogo-exhibition-single__hero {
+		min-height: 520px;
+		max-height: 720px;
+		aspect-ratio: auto;
+		border-radius: 14px;
+	}
+
+	.kogo-exhibition-single__hero-inner {
+		padding: 24px;
+	}
+
+	.kogo-exhibition-single__details {
+		padding: 26px 20px 30px;
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.kogo-exhibition-single__idea {
+		padding: 56px 20px;
+	}
+
+	.kogo-exhibition-single__idea-columns,
+	.kogo-exhibition-single__columns,
+	.kogo-exhibition-single__split {
+		grid-template-columns: 1fr;
+	}
+
+	.kogo-exhibition-single__section,
+	.kogo-exhibition-single__split {
+		padding: 48px 20px;
+	}
+
+	.kogo-exhibition-single__text {
+		padding-top: 0;
+	}
+
+	.kogo-exhibition-single__split {
+		gap: 48px;
+	}
+}
+
+/* Exhibitions archive */
+
+.kogo-exhibitions-archive {
+	margin: 0 !important;
+}
+
+.kogo-exhibitions-archive__title-wrap,
+.kogo-exhibitions-archive__past {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg !important;
+	margin: 0 auto !important;
+	padding-inline: 40px;
+}
+
+.kogo-exhibitions-archive__title-wrap {
+	padding-block: 52px 64px;
+}
+
+.kogo-exhibitions-archive__title,
+.kogo-exhibitions-archive__heading,
+.kogo-exhibitions-archive__query,
+.kogo-exhibitions-archive__card,
+.kogo-exhibitions-archive__image,
+.kogo-exhibitions-archive__date,
+.kogo-exhibitions-archive__card-title,
+.kogo-exhibitions-archive__artists {
+	margin: 0;
+}
+
+.kogo-exhibitions-archive__title,
+.kogo-exhibitions-archive__heading {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.kogo-exhibitions-archive__past {
+	padding-block: 64px 80px;
+}
+
+.kogo-exhibitions-archive__heading {
+	margin-bottom: 48px;
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+}
+
+ul.wp-block-post-template.kogo-exhibitions-archive__grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	margin: 0 !important;
+	padding: 0;
+	column-gap: 40px;
+	row-gap: 56px;
+}
+
+ul.wp-block-post-template.kogo-exhibitions-archive__grid > li {
+	min-width: 0;
+	margin: 0;
+}
+
+.kogo-exhibitions-archive__card {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+}
+
+.kogo-exhibitions-archive__image {
+	width: 100%;
+	margin-bottom: 14px;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	overflow: hidden;
+}
+
+.kogo-exhibitions-archive__card:not(:has(.kogo-exhibitions-archive__image))::before {
+	display: block;
+	width: 100%;
+	margin-bottom: 14px;
+	aspect-ratio: 3 / 2;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	content: "";
+}
+
+.kogo-exhibitions-archive__image a,
+.kogo-exhibitions-archive__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.kogo-exhibitions-archive__image img {
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+	transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.kogo-exhibitions-archive__card > .kogo-exhibition-card__dates,
+.kogo-exhibitions-archive__card > .kogo-exhibition-card__artists {
+	display: block;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-exhibitions-archive__card > .kogo-exhibition-card__dates {
+	margin-bottom: 4px;
+}
+
+.kogo-exhibitions-archive__card-title {
+	margin-bottom: 7px;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+	font-weight: 600;
+	line-height: 1.18;
+}
+
+.kogo-exhibitions-archive__card-title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.kogo-exhibitions-archive__pagination {
+	margin-top: 72px;
+	font-size: var(--wp--preset--font-size--small);
+	gap: 16px;
+}
+
+.kogo-exhibitions-archive__pagination .page-numbers.current {
+	display: inline-grid;
+	width: 28px;
+	height: 28px;
+	place-items: center;
+	border-radius: 50%;
+	background-color: $dark-gray;
+	color: $white;
+}
+
+@media (hover: hover) {
+	.kogo-exhibitions-archive__card:hover .kogo-exhibitions-archive__image img {
+		transform: scale(1.025);
+	}
+
+	.kogo-exhibitions-archive__card-title a:hover {
+		color: $kogo-red;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kogo-exhibitions-archive__image img {
+		transform: none !important;
+		transition: none !important;
+	}
+}
+
+@media (max-width: 900px) {
+	ul.wp-block-post-template.kogo-exhibitions-archive__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 }
 
@@ -1610,7 +2412,7 @@ ul.wp-block-post-template.kogo-posts-cover-grid__items > li {
 	padding-inline: 40px;
 }
 
-figure.wp-block-gallery.kogo-gallery-grid {
+.kogo-gallery-grid {
 	display: grid !important;
 	grid-template-columns: repeat(6, minmax(0, 1fr));
 	width: 100%;
@@ -1621,37 +2423,223 @@ figure.wp-block-gallery.kogo-gallery-grid {
 	overflow: hidden;
 }
 
-figure.wp-block-gallery.kogo-gallery-grid > figure.wp-block-image {
-	width: 100% !important;
-	max-width: none !important;
-	margin: 0 !important;
+.kogo-gallery-grid__item {
+	position: relative;
+	display: block;
+	width: 100%;
+	margin: 0;
+	padding: 0;
 	aspect-ratio: 3 / 2;
+	border: 0;
+	background: $gray;
+	color: $white;
+	cursor: zoom-in;
+	overflow: hidden;
 }
 
-.kogo-gallery-grid > .wp-block-image a,
-.kogo-gallery-grid > .wp-block-image img {
+.kogo-gallery-grid__item img {
 	display: block;
 	width: 100%;
 	height: 100%;
+	object-fit: cover;
+	transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.kogo-gallery-grid > .wp-block-image img {
-	object-fit: cover;
+.kogo-gallery-grid__item--more::after {
+	position: absolute;
+	inset: 0;
+	background: rgba(20, 22, 24, 0.68);
+	content: "";
+}
+
+.kogo-gallery-grid__item--more span {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+}
+
+.kogo-gallery-grid__item:focus-visible {
+	z-index: 1;
+	outline: 3px solid $kogo-red;
+	outline-offset: -3px;
+}
+
+@media (hover: hover) {
+	.kogo-gallery-grid__item:hover img {
+		transform: scale(1.025);
+	}
+}
+
+.kogo-gallery-lightbox {
+	box-sizing: border-box;
+	width: 100vw;
+	max-width: none;
+	height: 100dvh;
+	max-height: none;
+	margin: 0;
+	padding: 32px 72px;
+	border: 0;
+	background: $white;
+	color: $dark-gray;
+	overflow: hidden;
+}
+
+.kogo-gallery-lightbox[open] {
+	display: grid;
+	place-items: center;
+}
+
+.kogo-gallery-lightbox::backdrop {
+	background: rgba(20, 22, 24, 0.36);
+}
+
+.kogo-gallery-lightbox__figure {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	place-items: center;
+}
+
+.kogo-gallery-lightbox__image {
+	width: 100%;
+	height: calc(100dvh - 96px);
+	object-fit: contain;
+}
+
+.kogo-gallery-lightbox__count {
+	position: absolute;
+	right: 24px;
+	bottom: 20px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+}
+
+.kogo-gallery-lightbox__close,
+.kogo-gallery-lightbox__arrow {
+	position: absolute;
+	z-index: 1;
+	width: 48px;
+	height: 48px;
+	padding: 0;
+	border: 1px solid $dark-gray;
+	border-radius: 50%;
+	background: $white;
+	color: $dark-gray;
+	cursor: pointer;
+}
+
+.kogo-gallery-lightbox__close {
+	top: 20px;
+	right: 20px;
+	border-color: transparent;
+}
+
+.kogo-gallery-lightbox__close::before,
+.kogo-gallery-lightbox__close::after {
+	position: absolute;
+	top: 23px;
+	left: 13px;
+	width: 22px;
+	height: 1px;
+	background: currentColor;
+	content: "";
+	rotate: 45deg;
+}
+
+.kogo-gallery-lightbox__close::after {
+	rotate: -45deg;
+}
+
+.kogo-gallery-lightbox__arrow {
+	top: 50%;
+	translate: 0 -50%;
+}
+
+.kogo-gallery-lightbox__arrow::before {
+	position: absolute;
+	inset: 14px;
+	background: currentColor;
+	content: "";
+	-webkit-mask: center / contain no-repeat;
+	mask: center / contain no-repeat;
+}
+
+.kogo-gallery-lightbox__arrow--previous {
+	left: 16px;
+}
+
+.kogo-gallery-lightbox__arrow--previous::before {
+	-webkit-mask-image: url("./images/icons/arrow-left.svg");
+	mask-image: url("./images/icons/arrow-left.svg");
+}
+
+.kogo-gallery-lightbox__arrow--next {
+	right: 16px;
+}
+
+.kogo-gallery-lightbox__arrow--next::before {
+	-webkit-mask-image: url("./images/icons/arrow-right.svg");
+	mask-image: url("./images/icons/arrow-right.svg");
+}
+
+.kogo-gallery-lightbox__close:focus-visible,
+.kogo-gallery-lightbox__arrow:focus-visible {
+	outline: 2px solid $kogo-red;
+	outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.kogo-gallery-grid__item img {
+		transform: none !important;
+		transition: none !important;
+	}
+}
+
+@media (max-width: 1919px) {
+	.kogo-exhibition-single__gallery {
+		max-width: none !important;
+		padding-inline: 0;
+	}
+
+	.kogo-exhibition-single__gallery .kogo-gallery-grid {
+		border-radius: 0;
+	}
 }
 
 @media (max-width: 1024px) {
-	figure.wp-block-gallery.kogo-gallery-grid {
+	.kogo-gallery-grid {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 	}
 }
 
 @media (max-width: $media-max-width-sm) {
-	.kogo-gallery-grid-wrap {
-		padding-inline: 20px;
+	.kogo-gallery-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	figure.wp-block-gallery.kogo-gallery-grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
+	.kogo-gallery-lightbox {
+		padding: 56px 20px 44px;
+	}
+
+	.kogo-gallery-lightbox__image {
+		height: calc(100dvh - 100px);
+	}
+
+	.kogo-gallery-lightbox__arrow {
+		top: auto;
+		bottom: 12px;
+		width: 40px;
+		height: 40px;
+		translate: none;
+	}
+
+	.kogo-gallery-lightbox__arrow::before {
+		inset: 11px;
 	}
 }
 
@@ -1672,6 +2660,32 @@ figure.wp-block-gallery.kogo-gallery-grid > figure.wp-block-image {
 		min-height: 320px !important;
 		aspect-ratio: auto;
 	}
+
+	.kogo-exhibitions-archive__title-wrap,
+	.kogo-exhibitions-archive__past {
+		padding-inline: 20px;
+	}
+
+	.kogo-exhibitions-archive__title-wrap {
+		padding-block: 40px 48px;
+	}
+
+	.kogo-exhibitions-archive__past {
+		padding-block: 48px 64px;
+	}
+
+	.kogo-exhibitions-archive__heading {
+		margin-bottom: 32px;
+	}
+
+	ul.wp-block-post-template.kogo-exhibitions-archive__grid {
+		grid-template-columns: 1fr;
+		row-gap: 40px;
+	}
+
+	.kogo-exhibitions-archive__pagination {
+		margin-top: 48px;
+	}
 }
 
 @media (max-width: 782px) {
@@ -1680,11 +2694,40 @@ figure.wp-block-gallery.kogo-gallery-grid > figure.wp-block-image {
 	.kogo-post-highlight__columns {
 		gap: 32px;
 	}
+
+	.kogo-emphasized-text__columns > .wp-block-column:first-child,
+	.kogo-artists__columns > .wp-block-column:first-child,
+	.kogo-post-highlight__columns > .wp-block-column:first-child {
+		position: static;
+	}
+}
+
+@media (min-width: 783px) and (max-width: 1024px) {
+	.kogo-emphasized-text__columns > .wp-block-column:first-child,
+	.kogo-artists__columns > .wp-block-column:first-child,
+	.kogo-post-highlight__columns > .wp-block-column:first-child {
+		top: 80px;
+	}
+
+	body.admin-bar .kogo-emphasized-text__columns > .wp-block-column:first-child,
+	body.admin-bar .kogo-artists__columns > .wp-block-column:first-child,
+	body.admin-bar .kogo-post-highlight__columns > .wp-block-column:first-child {
+		top: 112px;
+	}
 }
 
 @media (max-width: $media-max-width-sm) {
 	ul.wp-block-post-template.kogo-artists__grid {
 		grid-template-columns: 1fr;
+	}
+
+	.kogo-exhibited-artists {
+		padding-inline: 20px;
+	}
+
+	.kogo-exhibited-artists__years {
+		grid-template-columns: 1fr;
+		row-gap: 40px;
 	}
 }
 

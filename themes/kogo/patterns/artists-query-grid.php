@@ -9,8 +9,6 @@
  * Description: Introductory artist listing with a configurable two-column Query Loop.
  */
 
-$artist_category    = get_category_by_slug( 'artist' );
-$artist_category_id = $artist_category ? (int) $artist_category->term_id : 0;
 ?>
 <!-- wp:group {"align":"full","className":"kogo-artists","layout":{"type":"default"}} -->
 <div class="wp-block-group alignfull kogo-artists">
@@ -25,7 +23,7 @@ $artist_category_id = $artist_category ? (int) $artist_category->term_id : 0;
 			<!-- wp:group {"className":"kogo-artists__intro","layout":{"type":"default"}} -->
 			<div class="wp-block-group kogo-artists__intro">
 				<!-- wp:heading {"level":2,"className":"kogo-artists__heading"} -->
-				<h2 class="wp-block-heading kogo-artists__heading">Artists</h2>
+				<h2 class="wp-block-heading kogo-artists__heading">Gallery artists</h2>
 				<!-- /wp:heading -->
 
 				<!-- wp:paragraph {"fontSize":"small","className":"kogo-artists__description"} -->
@@ -35,7 +33,7 @@ $artist_category_id = $artist_category ? (int) $artist_category->term_id : 0;
 				<!-- wp:buttons -->
 				<div class="wp-block-buttons">
 					<!-- wp:button {"className":"is-style-outline kogo-artists__more"} -->
-					<div class="wp-block-button is-style-outline kogo-artists__more"><a class="wp-block-button__link wp-element-button" href="/posts">All artists</a></div>
+					<div class="wp-block-button is-style-outline kogo-artists__more"><a class="wp-block-button__link wp-element-button" href="/artists#exhibited-artists">Exhibited artists</a></div>
 					<!-- /wp:button -->
 				</div>
 				<!-- /wp:buttons -->
@@ -46,8 +44,8 @@ $artist_category_id = $artist_category ? (int) $artist_category->term_id : 0;
 
 		<!-- wp:column {"width":"66.667%","className":"kogo-artists__listing"} -->
 		<div class="wp-block-column kogo-artists__listing" style="flex-basis:66.667%">
-			<!-- wp:query {"query":{"perPage":8,"pages":0,"offset":0,"postType":"post","categoryIds":[<?php echo $artist_category_id; ?>],"order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":false},"className":"kogo-artists__query","layout":{"type":"default"}} -->
-			<div class="wp-block-query kogo-artists__query">
+			<!-- wp:query {"queryId":90403,"query":{"perPage":8,"pages":0,"offset":0,"postType":"kogo_artist","order":"asc","orderBy":"title","author":"","search":"","exclude":[],"sticky":"","inherit":false},"className":"kogo-artists__query kogo-artists__query--featured","layout":{"type":"default"}} -->
+			<div class="wp-block-query kogo-artists__query kogo-artists__query--featured">
 				<!-- wp:post-template {"className":"kogo-artists__grid","layout":{"type":"grid","columnCount":2}} -->
 					<!-- wp:group {"className":"kogo-artists__card","layout":{"type":"default"}} -->
 					<div class="wp-block-group kogo-artists__card">
@@ -55,7 +53,9 @@ $artist_category_id = $artist_category ? (int) $artist_category->term_id : 0;
 
 						<!-- wp:post-title {"isLink":true,"level":3,"className":"kogo-artists__title"} /-->
 
-						<!-- wp:post-excerpt {"moreText":"","showMoreOnNewLine":false,"className":"kogo-artists__disciplines"} /-->
+						<!-- wp:shortcode {"className":"kogo-artists__disciplines"} -->
+						<div class="wp-block-shortcode kogo-artists__disciplines">[kogo_artist_disciplines]</div>
+						<!-- /wp:shortcode -->
 					</div>
 					<!-- /wp:group -->
 				<!-- /wp:post-template -->

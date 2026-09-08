@@ -13,7 +13,7 @@ final class Kogo_ITGallery {
 	const LAST_SYNC       = 'kogo_itgallery_last_sync';
 	const SYNC_LOCK       = 'kogo_itgallery_sync_lock';
 	const HASH_VERSION    = 1;
-	const REWRITE_VERSION = 1;
+	const REWRITE_VERSION = 2;
 
 	private static $post_types = array(
 		'artist'     => 'kogo_artist',
@@ -26,6 +26,7 @@ final class Kogo_ITGallery {
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 99 );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
+		add_action( 'admin_head-edit.php', array( $this, 'render_admin_thumbnail_styles' ) );
 		add_action( 'admin_post_kogo_itgallery_sync', array( $this, 'handle_sync' ) );
 
 		foreach ( self::$post_types as $post_type ) {
@@ -58,6 +59,30 @@ final class Kogo_ITGallery {
 			'exhibitions',
 			'dashicons-format-gallery'
 		);
+
+		register_taxonomy(
+			'kogo_artist_category',
+			self::$post_types['artist'],
+			array(
+				'labels'            => array(
+					'name'          => __( 'Artist Categories', 'kogo' ),
+					'singular_name' => __( 'Artist Category', 'kogo' ),
+					'search_items'  => __( 'Search Artist Categories', 'kogo' ),
+					'all_items'     => __( 'All Artist Categories', 'kogo' ),
+					'parent_item'   => __( 'Parent Artist Category', 'kogo' ),
+					'edit_item'     => __( 'Edit Artist Category', 'kogo' ),
+					'update_item'   => __( 'Update Artist Category', 'kogo' ),
+					'add_new_item'  => __( 'Add New Artist Category', 'kogo' ),
+					'new_item_name' => __( 'New Artist Category Name', 'kogo' ),
+					'menu_name'     => __( 'Categories', 'kogo' ),
+				),
+				'public'            => true,
+				'hierarchical'      => true,
+				'show_admin_column' => true,
+				'show_in_rest'      => true,
+				'rewrite'           => array( 'slug' => 'artist-category' ),
+			)
+		);
 	}
 
 	private static function register_post_type( $post_type, $plural, $singular, $slug, $icon ) {
@@ -78,7 +103,7 @@ final class Kogo_ITGallery {
 				'show_in_rest' => true,
 				'menu_icon'    => $icon,
 				'rewrite'      => array( 'slug' => $slug ),
-				'supports'     => array( 'title', 'editor', 'excerpt', 'custom-fields' ),
+				'supports'     => array( 'title', 'editor', 'excerpt', 'thumbnail', 'custom-fields' ),
 			)
 		);
 	}
@@ -780,16 +805,58 @@ final class Kogo_ITGallery {
 	}
 
 	public function add_admin_columns( $columns ) {
+		$with_thumbnail = array();
+		foreach ( $columns as $key => $label ) {
+			if ( 'title' === $key ) {
+				$with_thumbnail['kogo_itgallery_thumbnail'] = __( 'Image', 'kogo' );
+			}
+			$with_thumbnail[ $key ] = $label;
+		}
+		$columns                            = $with_thumbnail;
 		$columns['kogo_itgallery_id']       = __( 'ITGallery ID', 'kogo' );
-		$columns['kogo_itgallery_modified'] = __( 'ITGallery updated', 'kogo' );
+		$columns['kogo_itgallery_modified'] = __( 'Updated in ITGallery', 'kogo' );
 		return $columns;
 	}
 
 	public function render_admin_column( $column, $post_id ) {
-		if ( 'kogo_itgallery_id' === $column ) {
+		if ( 'kogo_itgallery_thumbnail' === $column ) {
+			$image_url = kogo_itgallery_get_image_url( $post_id, 'small' );
+			if ( $image_url ) {
+				printf( '<img class="kogo-itgallery-thumbnail" src="%s" alt="" width="44" height="44" loading="lazy" decoding="async">', esc_url( $image_url ) );
+			} else {
+				echo '<span class="kogo-itgallery-thumbnail kogo-itgallery-thumbnail--empty dashicons dashicons-format-image" aria-hidden="true"></span>';
+			}
+		} elseif ( 'kogo_itgallery_id' === $column ) {
 			echo esc_html( get_post_meta( $post_id, '_kogo_itgallery_id', true ) );
 		} elseif ( 'kogo_itgallery_modified' === $column ) {
-			echo esc_html( get_post_meta( $post_id, '_kogo_itgallery_last_modified', true ) );
+			echo esc_html( self::format_itgallery_datetime( get_post_meta( $post_id, '_kogo_itgallery_last_modified', true ) ) );
+		}
+	}
+
+	public function render_admin_thumbnail_styles() {
+		$screen = get_current_screen();
+		if ( ! $screen || ! in_array( $screen->post_type, self::$post_types, true ) ) {
+			return;
+		}
+		?>
+		<style>
+			.fixed .column-kogo_itgallery_thumbnail { width: 52px; }
+			.kogo-itgallery-thumbnail { display: block; width: 44px; height: 44px; object-fit: cover; border-radius: 2px; background: #f0f0f1; }
+			.kogo-itgallery-thumbnail--empty { box-sizing: border-box; padding: 12px; color: #a7aaad; font-size: 20px; }
+		</style>
+		<?php
+	}
+
+	private static function format_itgallery_datetime( $value ) {
+		if ( ! $value ) {
+			return '';
+		}
+
+		try {
+			$date = new DateTimeImmutable( $value, new DateTimeZone( 'UTC' ) );
+			return $date->setTimezone( new DateTimeZone( 'Europe/Tallinn' ) )->format( 'd.m.Y H:i' );
+		} catch ( Exception $exception ) {
+			return $value;
 		}
 	}
 }
