@@ -36,7 +36,14 @@ $media-max-width-lg: 1366px; // var(--wp--custom--media-max-width--lg);
 }
 
 html {
-  font-size: 17px;
+	font-size: 17px;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
 }
 
 /**
@@ -816,12 +823,14 @@ ul.wp-block-post-template {
 	font-size: var(--wp--preset--font-size--small);
 	font-weight: 600;
 	line-height: 1;
-	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+	transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
 	&:hover,
 	&:focus-visible {
-		background-color: $dark-gray;
-		color: $white;
+		border-color: $kogo-red;
+		background-color: transparent;
+		box-shadow: inset 0 0 0 1px $kogo-red;
+		color: $dark-gray;
 	}
 
 	&:focus-visible {
@@ -883,12 +892,14 @@ ul.wp-block-post-template {
 	font-size: var(--wp--preset--font-size--small);
 	font-weight: 600;
 	line-height: 1;
-	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+	transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
 	&:hover,
 	&:focus-visible {
-		background-color: $dark-gray;
-		color: $white;
+		border-color: $kogo-red;
+		background-color: transparent;
+		box-shadow: inset 0 0 0 1px $kogo-red;
+		color: $dark-gray;
 	}
 
 	&:focus-visible {
@@ -967,6 +978,78 @@ ul.wp-block-post-template.kogo-posts-slider__items > li {
 	margin: 0;
 }
 
+ul.wp-block-post-template.kogo-posts-slider__items > li.kogo-posts-slider__newsletter-slide {
+	display: grid;
+	width: clamp(150px, 14vw, 190px) !important;
+	place-items: start center;
+}
+
+@keyframes kogo-newsletter-spin {
+	to {
+		rotate: 1turn;
+	}
+}
+
+.kogo-posts-slider__newsletter {
+	position: relative;
+	isolation: isolate;
+	display: grid;
+	width: clamp(150px, 14vw, 190px);
+	aspect-ratio: 1;
+	place-content: center;
+	color: $white;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+
+	&::before {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-color: $kogo-red;
+		content: "";
+		-webkit-mask: url("./images/newsletter-badge.svg") center / contain no-repeat;
+		mask: url("./images/newsletter-badge.svg") center / contain no-repeat;
+		rotate: 0deg;
+		scale: 0.88;
+		transition: scale 420ms cubic-bezier(0.22, 1, 0.36, 1);
+		will-change: rotate, scale;
+	}
+
+	span,
+	strong {
+		position: relative;
+		z-index: 1;
+		display: block;
+	}
+
+	span {
+		font-family: var(--wp--preset--font-family--monospace);
+		font-size: var(--wp--preset--font-size--medium);
+		font-weight: 400;
+		line-height: 1.25;
+	}
+
+	strong {
+		font-family: var(--wp--preset--font-family--sans-serif);
+		font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+		font-weight: 600;
+		line-height: 1.15;
+	}
+
+	&:hover::before,
+	&:focus-visible::before {
+		animation: kogo-newsletter-spin 3.2s linear infinite;
+		scale: 1;
+	}
+
+	&:focus-visible {
+		border-radius: 50%;
+		outline: 2px solid $kogo-red;
+		outline-offset: 3px;
+	}
+}
+
 .kogo-posts-slider__card {
 	display: flex;
 	flex-direction: column;
@@ -1042,6 +1125,13 @@ ul.wp-block-post-template.kogo-posts-slider__items > li {
 	.kogo-posts-slider__image img,
 	.kogo-posts-slider__arrow {
 		transform: none !important;
+		transition: none !important;
+	}
+
+	.kogo-posts-slider__newsletter::before {
+		animation: none !important;
+		rotate: 0deg !important;
+		scale: 0.88 !important;
 		transition: none !important;
 	}
 }
@@ -1129,12 +1219,14 @@ ul.wp-block-post-template.kogo-posts-slider__items > li {
 	font-size: var(--wp--preset--font-size--small);
 	font-weight: 600;
 	line-height: 1;
-	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+	transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
 	&:hover,
 	&:focus-visible {
-		background-color: $dark-gray;
-		color: $white;
+		border-color: $kogo-red;
+		background-color: transparent;
+		box-shadow: inset 0 0 0 1px $kogo-red;
+		color: $dark-gray;
 	}
 
 	&:focus-visible {
@@ -1316,7 +1408,7 @@ ul.wp-block-post-template.kogo-post-highlight__items {
 	font-weight: 600;
 	line-height: 1;
 	text-decoration: none;
-	transition: background-color 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+	transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
 
 	&::after {
 		margin-left: 8px;
@@ -1328,12 +1420,10 @@ ul.wp-block-post-template.kogo-post-highlight__items {
 
 	&:hover,
 	&:focus-visible {
-		background-color: $dark-gray;
-		color: $white;
-
-		&::after {
-			color: inherit;
-		}
+		border-color: $kogo-red;
+		background-color: transparent;
+		box-shadow: inset 0 0 0 1px $kogo-red;
+		color: $dark-gray;
 	}
 
 	&:focus-visible {

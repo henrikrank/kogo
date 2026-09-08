@@ -89,6 +89,32 @@ function kogo_register_pattern_categories() {
 add_action( 'init', 'kogo_register_pattern_categories' );
 
 /**
+ * Add the newsletter callout as the first slide in the News query.
+ *
+ * @param string $block_content Rendered Post Template markup.
+ * @param array  $block         Parsed Post Template block.
+ *
+ * @return string
+ */
+function kogo_prepend_newsletter_slide( $block_content, $block ) {
+	$class_name = $block['attrs']['className'] ?? '';
+
+	if ( false === strpos( $class_name, 'kogo-posts-slider__items' ) ) {
+		return $block_content;
+	}
+
+	$newsletter_slide = sprintf(
+		'<li class="kogo-posts-slider__newsletter-slide swiper-slide"><a class="kogo-posts-slider__newsletter" href="#kogo-footer-newsletter" aria-label="%1$s"><span>%2$s</span><strong>%3$s</strong></a></li>',
+		esc_attr__( 'Join our newsletter', 'kogo' ),
+		esc_html__( 'Join our', 'kogo' ),
+		esc_html__( 'newsletter!', 'kogo' )
+	);
+
+	return preg_replace( '/(<ul\b[^>]*>)/', '$1' . $newsletter_slide, $block_content, 1 );
+}
+add_filter( 'render_block_core/post-template', 'kogo_prepend_newsletter_slide', 10, 2 );
+
+/**
  * Enqueue CSS Stylesheets and Javascript files.
  *
  * @return void

@@ -51,7 +51,7 @@ header.site-header {
 	justify-self: start;
 
 	.wp-block-navigation__container {
-		column-gap: clamp(1rem, 1.8vw, 1.75rem);
+		column-gap: 0;
 		flex-wrap: nowrap;
 	}
 
@@ -60,6 +60,7 @@ header.site-header {
 		border-radius: 999px;
 		font-size: var(--wp--preset--font-size--small);
 		line-height: 1.2;
+		text-decoration: none;
 		white-space: nowrap;
 
 		&:hover,
@@ -72,6 +73,10 @@ header.site-header {
 			outline: 2px solid $kogo-red;
 			outline-offset: 2px;
 		}
+	}
+
+	&.wp-block-navigation .wp-block-navigation-link.current-menu-item .wp-block-navigation-item__label {
+		border-bottom: 0;
 	}
 }
 
