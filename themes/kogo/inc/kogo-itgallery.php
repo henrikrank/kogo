@@ -1,12 +1,6 @@
 <?php
 /**
- * Plugin Name: Kogo ITGallery
- * Description: Syncs ITGallery artists, works, and expositions into WordPress.
- * Version: 1.0.0
- * Author: Kogo Gallery
- * Requires at least: 6.0
- * Requires PHP: 7.4
- * Text Domain: kogo-itgallery
+ * ITGallery connector for the Kogo theme.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,11 +8,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Kogo_ITGallery {
-	const API_BASE_URL = 'https://api.itgalleryapp.com/api/public';
-	const OPTION       = 'kogo_itgallery_settings';
-	const LAST_SYNC    = 'kogo_itgallery_last_sync';
-	const SYNC_LOCK    = 'kogo_itgallery_sync_lock';
-	const HASH_VERSION = 1;
+	const API_BASE_URL    = 'https://api.itgalleryapp.com/api/public';
+	const OPTION          = 'kogo_itgallery_settings';
+	const LAST_SYNC       = 'kogo_itgallery_last_sync';
+	const SYNC_LOCK       = 'kogo_itgallery_sync_lock';
+	const HASH_VERSION    = 1;
+	const REWRITE_VERSION = 1;
 
 	private static $post_types = array(
 		'artist'     => 'kogo_artist',
@@ -28,10 +23,10 @@ final class Kogo_ITGallery {
 
 	public function __construct() {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ) );
+		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 99 );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
 		add_action( 'admin_post_kogo_itgallery_sync', array( $this, 'handle_sync' ) );
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
 
 		foreach ( self::$post_types as $post_type ) {
 			add_filter( "manage_{$post_type}_posts_columns", array( $this, 'add_admin_columns' ) );
@@ -42,24 +37,24 @@ final class Kogo_ITGallery {
 	public static function register_post_types() {
 		self::register_post_type(
 			self::$post_types['artist'],
-			__( 'Artists', 'kogo-itgallery' ),
-			__( 'Artist', 'kogo-itgallery' ),
+			__( 'Artists', 'kogo' ),
+			__( 'Artist', 'kogo' ),
 			'artists',
 			'dashicons-admin-users'
 		);
 
 		self::register_post_type(
 			self::$post_types['work'],
-			__( 'Works', 'kogo-itgallery' ),
-			__( 'Work', 'kogo-itgallery' ),
+			__( 'Works', 'kogo' ),
+			__( 'Work', 'kogo' ),
 			'works',
 			'dashicons-art'
 		);
 
 		self::register_post_type(
 			self::$post_types['exposition'],
-			__( 'Exhibitions', 'kogo-itgallery' ),
-			__( 'Exhibition', 'kogo-itgallery' ),
+			__( 'Exhibitions', 'kogo' ),
+			__( 'Exhibition', 'kogo' ),
 			'exhibitions',
 			'dashicons-format-gallery'
 		);
@@ -72,11 +67,11 @@ final class Kogo_ITGallery {
 				'labels'       => array(
 					'name'          => $plural,
 					'singular_name' => $singular,
-					'add_new_item'  => sprintf( __( 'Add New %s', 'kogo-itgallery' ), $singular ),
-					'edit_item'     => sprintf( __( 'Edit %s', 'kogo-itgallery' ), $singular ),
-					'view_item'     => sprintf( __( 'View %s', 'kogo-itgallery' ), $singular ),
-					'search_items'  => sprintf( __( 'Search %s', 'kogo-itgallery' ), $plural ),
-					'not_found'     => sprintf( __( 'No %s found.', 'kogo-itgallery' ), strtolower( $plural ) ),
+					'add_new_item'  => sprintf( __( 'Add New %s', 'kogo' ), $singular ),
+					'edit_item'     => sprintf( __( 'Edit %s', 'kogo' ), $singular ),
+					'view_item'     => sprintf( __( 'View %s', 'kogo' ), $singular ),
+					'search_items'  => sprintf( __( 'Search %s', 'kogo' ), $plural ),
+					'not_found'     => sprintf( __( 'No %s found.', 'kogo' ), strtolower( $plural ) ),
 				),
 				'public'       => true,
 				'has_archive'  => true,
@@ -88,13 +83,13 @@ final class Kogo_ITGallery {
 		);
 	}
 
-	public static function activate() {
-		self::register_post_types();
-		flush_rewrite_rules();
-	}
+	public static function maybe_flush_rewrite_rules() {
+		if ( (int) get_option( 'kogo_itgallery_rewrite_version' ) === self::REWRITE_VERSION ) {
+			return;
+		}
 
-	public static function deactivate() {
 		flush_rewrite_rules();
+		update_option( 'kogo_itgallery_rewrite_version', self::REWRITE_VERSION, false );
 	}
 
 	public function register_settings() {
@@ -119,7 +114,7 @@ final class Kogo_ITGallery {
 			add_settings_error(
 				self::OPTION,
 				'kogo_itgallery_language',
-				__( 'The API language must use a five-character locale such as en_EN.', 'kogo-itgallery' )
+				__( 'The API language must use a five-character locale such as en_EN.', 'kogo' )
 			);
 		}
 
@@ -139,20 +134,12 @@ final class Kogo_ITGallery {
 
 	public function add_settings_page() {
 		add_options_page(
-			__( 'Kogo ITGallery', 'kogo-itgallery' ),
-			__( 'Kogo ITGallery', 'kogo-itgallery' ),
+			__( 'Kogo ITGallery', 'kogo' ),
+			__( 'Kogo ITGallery', 'kogo' ),
 			'manage_options',
 			'kogo-itgallery',
 			array( $this, 'render_settings_page' )
 		);
-	}
-
-	public function add_settings_link( $links ) {
-		array_unshift(
-			$links,
-			'<a href="' . esc_url( admin_url( 'options-general.php?page=kogo-itgallery' ) ) . '">' . esc_html__( 'Settings', 'kogo-itgallery' ) . '</a>'
-		);
-		return $links;
 	}
 
 	public function render_settings_page() {
@@ -167,7 +154,7 @@ final class Kogo_ITGallery {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Kogo ITGallery', 'kogo-itgallery' ); ?></h1>
+			<h1><?php esc_html_e( 'Kogo ITGallery', 'kogo' ); ?></h1>
 			<?php settings_errors( self::OPTION ); ?>
 			<?php if ( is_array( $notice ) ) : ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible"><p><?php echo esc_html( $notice['message'] ); ?></p></div>
@@ -177,53 +164,53 @@ final class Kogo_ITGallery {
 				<?php settings_fields( 'kogo_itgallery' ); ?>
 				<table class="form-table" role="presentation">
 					<tr>
-						<th scope="row"><?php esc_html_e( 'Enabled', 'kogo-itgallery' ); ?></th>
+						<th scope="row"><?php esc_html_e( 'Enabled', 'kogo' ); ?></th>
 						<td>
 							<label>
 								<input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[enabled]" value="1" <?php checked( $settings['enabled'] ); ?>>
-								<?php esc_html_e( 'Allow ITGallery synchronization', 'kogo-itgallery' ); ?>
+								<?php esc_html_e( 'Allow ITGallery synchronization', 'kogo' ); ?>
 							</label>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="kogo-itgallery-api-key"><?php esc_html_e( 'API key', 'kogo-itgallery' ); ?></label></th>
+						<th scope="row"><label for="kogo-itgallery-api-key"><?php esc_html_e( 'API key', 'kogo' ); ?></label></th>
 						<td>
 							<?php if ( defined( 'KOGO_ITGALLERY_API_KEY' ) ) : ?>
-								<p><?php esc_html_e( 'The API key is defined by KOGO_ITGALLERY_API_KEY in the site configuration.', 'kogo-itgallery' ); ?></p>
+								<p><?php esc_html_e( 'The API key is defined by KOGO_ITGALLERY_API_KEY in the site configuration.', 'kogo' ); ?></p>
 							<?php else : ?>
-								<input id="kogo-itgallery-api-key" class="regular-text" type="password" autocomplete="new-password" name="<?php echo esc_attr( self::OPTION ); ?>[api_key]" value="" placeholder="<?php echo esc_attr( $settings['api_key'] ? __( 'Saved — leave blank to keep', 'kogo-itgallery' ) : '' ); ?>">
+								<input id="kogo-itgallery-api-key" class="regular-text" type="password" autocomplete="new-password" name="<?php echo esc_attr( self::OPTION ); ?>[api_key]" value="" placeholder="<?php echo esc_attr( $settings['api_key'] ? __( 'Saved — leave blank to keep', 'kogo' ) : '' ); ?>">
 								<?php if ( $settings['api_key'] ) : ?>
-									<p><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[clear_api_key]" value="1"> <?php esc_html_e( 'Remove the saved API key', 'kogo-itgallery' ); ?></label></p>
+									<p><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION ); ?>[clear_api_key]" value="1"> <?php esc_html_e( 'Remove the saved API key', 'kogo' ); ?></label></p>
 								<?php endif; ?>
 							<?php endif; ?>
 						</td>
 					</tr>
 					<tr>
-						<th scope="row"><label for="kogo-itgallery-language"><?php esc_html_e( 'API language', 'kogo-itgallery' ); ?></label></th>
+						<th scope="row"><label for="kogo-itgallery-language"><?php esc_html_e( 'API language', 'kogo' ); ?></label></th>
 						<td>
 							<input id="kogo-itgallery-language" class="small-text" type="text" maxlength="5" pattern="[a-z]{2}_[A-Z]{2}" name="<?php echo esc_attr( self::OPTION ); ?>[language]" value="<?php echo esc_attr( $settings['language'] ); ?>">
-							<p class="description"><?php esc_html_e( 'Five-character ITGallery locale, for example en_EN or et_EE.', 'kogo-itgallery' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Five-character ITGallery locale, for example en_EN or et_EE.', 'kogo' ); ?></p>
 						</td>
 					</tr>
 				</table>
-				<?php submit_button( __( 'Save settings', 'kogo-itgallery' ) ); ?>
+				<?php submit_button( __( 'Save settings', 'kogo' ) ); ?>
 			</form>
 
 			<hr>
-			<h2><?php esc_html_e( 'Synchronization', 'kogo-itgallery' ); ?></h2>
+			<h2><?php esc_html_e( 'Synchronization', 'kogo' ); ?></h2>
 			<p>
 				<?php
 				$last_sync = get_option( self::LAST_SYNC );
 				echo $last_sync
-					? esc_html( sprintf( __( 'Last successful sync: %s UTC', 'kogo-itgallery' ), $last_sync ) )
-					: esc_html__( 'No successful sync has run yet.', 'kogo-itgallery' );
+					? esc_html( sprintf( __( 'Last successful sync: %s UTC', 'kogo' ), $last_sync ) )
+					: esc_html__( 'No successful sync has run yet.', 'kogo' );
 				?>
 			</p>
-			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo-itgallery' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="kogo_itgallery_sync">
 				<?php wp_nonce_field( 'kogo_itgallery_sync' ); ?>
-				<?php submit_button( __( 'Sync now', 'kogo-itgallery' ), 'primary', 'submit', false ); ?>
+				<?php submit_button( __( 'Sync now', 'kogo' ), 'primary', 'submit', false ); ?>
 			</form>
 		</div>
 		<?php
@@ -231,7 +218,7 @@ final class Kogo_ITGallery {
 
 	public function handle_sync() {
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to synchronize ITGallery.', 'kogo-itgallery' ) );
+			wp_die( esc_html__( 'You are not allowed to synchronize ITGallery.', 'kogo' ) );
 		}
 
 		check_admin_referer( 'kogo_itgallery_sync' );
@@ -259,15 +246,15 @@ final class Kogo_ITGallery {
 		$api_key  = self::api_key();
 
 		if ( ! $settings['enabled'] ) {
-			return new WP_Error( 'kogo_itgallery_disabled', __( 'Enable Kogo ITGallery before synchronizing.', 'kogo-itgallery' ) );
+			return new WP_Error( 'kogo_itgallery_disabled', __( 'Enable Kogo ITGallery before synchronizing.', 'kogo' ) );
 		}
 
 		if ( '' === $api_key ) {
-			return new WP_Error( 'kogo_itgallery_missing_key', __( 'Enter an ITGallery API key before synchronizing.', 'kogo-itgallery' ) );
+			return new WP_Error( 'kogo_itgallery_missing_key', __( 'Enter an ITGallery API key before synchronizing.', 'kogo' ) );
 		}
 
 		if ( get_transient( self::SYNC_LOCK ) ) {
-			return new WP_Error( 'kogo_itgallery_locked', __( 'An ITGallery sync is already running. Try again shortly.', 'kogo-itgallery' ) );
+			return new WP_Error( 'kogo_itgallery_locked', __( 'An ITGallery sync is already running. Try again shortly.', 'kogo' ) );
 		}
 
 		set_transient( self::SYNC_LOCK, 1, 5 * MINUTE_IN_SECONDS );
@@ -333,7 +320,7 @@ final class Kogo_ITGallery {
 			if ( is_wp_error( $response ) ) {
 				return new WP_Error(
 					'kogo_itgallery_request',
-					sprintf( __( 'Could not retrieve ITGallery %1$s: %2$s', 'kogo-itgallery' ), $endpoint, $response->get_error_message() )
+					sprintf( __( 'Could not retrieve ITGallery %1$s: %2$s', 'kogo' ), $endpoint, $response->get_error_message() )
 				);
 			}
 
@@ -353,7 +340,7 @@ final class Kogo_ITGallery {
 				}
 				return new WP_Error(
 					'kogo_itgallery_http',
-					sprintf( __( 'ITGallery returned HTTP %1$d for %2$s%3$s', 'kogo-itgallery' ), $status, $endpoint, $message )
+					sprintf( __( 'ITGallery returned HTTP %1$d for %2$s%3$s', 'kogo' ), $status, $endpoint, $message )
 				);
 			}
 
@@ -368,7 +355,7 @@ final class Kogo_ITGallery {
 			if ( ! is_array( $decoded ) || ! self::is_list( $decoded ) ) {
 				return new WP_Error(
 					'kogo_itgallery_json',
-					sprintf( __( 'ITGallery returned an unexpected response for %s.', 'kogo-itgallery' ), $endpoint )
+					sprintf( __( 'ITGallery returned an unexpected response for %s.', 'kogo' ), $endpoint )
 				);
 			}
 
@@ -377,7 +364,7 @@ final class Kogo_ITGallery {
 				if ( ! is_array( $item ) || ! isset( $item['id'] ) || '' === (string) $item['id'] ) {
 					return new WP_Error(
 						'kogo_itgallery_missing_id',
-						sprintf( __( 'ITGallery returned a %s record without an ID.', 'kogo-itgallery' ), $endpoint )
+						sprintf( __( 'ITGallery returned a %s record without an ID.', 'kogo' ), $endpoint )
 					);
 				}
 				$id           = (string) $item['id'];
@@ -389,7 +376,7 @@ final class Kogo_ITGallery {
 			if ( isset( $page_hashes[ $page_hash ] ) && ! empty( $decoded ) ) {
 				return new WP_Error(
 					'kogo_itgallery_pagination',
-					sprintf( __( 'ITGallery pagination did not advance while retrieving %s.', 'kogo-itgallery' ), $endpoint )
+					sprintf( __( 'ITGallery pagination did not advance while retrieving %s.', 'kogo' ), $endpoint )
 				);
 			}
 			$page_hashes[ $page_hash ] = true;
@@ -401,7 +388,7 @@ final class Kogo_ITGallery {
 
 		return new WP_Error(
 			'kogo_itgallery_page_limit',
-			sprintf( __( 'ITGallery returned more than 10,000 %s records; synchronization stopped safely.', 'kogo-itgallery' ), $endpoint )
+			sprintf( __( 'ITGallery returned more than 10,000 %s records; synchronization stopped safely.', 'kogo' ), $endpoint )
 		);
 	}
 
@@ -479,7 +466,7 @@ final class Kogo_ITGallery {
 		if ( is_wp_error( $result ) ) {
 			return new WP_Error(
 				'kogo_itgallery_post',
-				sprintf( __( 'Could not save ITGallery %1$s %2$s: %3$s', 'kogo-itgallery' ), $kind, $item['id'], $result->get_error_message() )
+				sprintf( __( 'Could not save ITGallery %1$s %2$s: %3$s', 'kogo' ), $kind, $item['id'], $result->get_error_message() )
 			);
 		}
 
@@ -784,7 +771,7 @@ final class Kogo_ITGallery {
 			}
 		}
 		return sprintf(
-			__( 'ITGallery sync complete: %1$d created, %2$d updated, %3$d unchanged, %4$d moved to Trash.', 'kogo-itgallery' ),
+			__( 'ITGallery sync complete: %1$d created, %2$d updated, %3$d unchanged, %4$d moved to Trash.', 'kogo' ),
 			$totals['created'],
 			$totals['updated'],
 			$totals['unchanged'],
@@ -793,8 +780,8 @@ final class Kogo_ITGallery {
 	}
 
 	public function add_admin_columns( $columns ) {
-		$columns['kogo_itgallery_id']       = __( 'ITGallery ID', 'kogo-itgallery' );
-		$columns['kogo_itgallery_modified'] = __( 'ITGallery updated', 'kogo-itgallery' );
+		$columns['kogo_itgallery_id']       = __( 'ITGallery ID', 'kogo' );
+		$columns['kogo_itgallery_modified'] = __( 'ITGallery updated', 'kogo' );
 		return $columns;
 	}
 
@@ -807,8 +794,6 @@ final class Kogo_ITGallery {
 	}
 }
 
-register_activation_hook( __FILE__, array( 'Kogo_ITGallery', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'Kogo_ITGallery', 'deactivate' ) );
 new Kogo_ITGallery();
 
 /**

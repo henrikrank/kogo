@@ -4,10 +4,6 @@ define( 'ABSPATH', __DIR__ . '/' );
 
 function add_action() {}
 function add_filter() {}
-function register_activation_hook() {}
-function register_deactivation_hook() {}
-function plugin_basename( $file ) {
-	return basename( $file ); }
 function wp_json_encode( $value, $flags = 0 ) {
 	return json_encode( $value, $flags ); }
 function get_post_meta( $post_id, $key ) {
@@ -16,7 +12,7 @@ function get_post_meta( $post_id, $key ) {
 function get_post_status() {
 	return 'publish'; }
 
-require dirname( __DIR__ ) . '/kogo-itgallery.php';
+require dirname( __DIR__ ) . '/themes/kogo/inc/kogo-itgallery.php';
 
 $original                   = array(
 	'id'     => 42,

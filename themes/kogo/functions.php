@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/inc/kogo-itgallery.php';
+
 /**
  * General Theme Settings.
  *
