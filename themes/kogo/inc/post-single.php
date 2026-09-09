@@ -34,3 +34,21 @@ function kogo_filter_related_news_query( $query, $block ) {
 	return $query;
 }
 add_filter( 'query_loop_block_query_vars', 'kogo_filter_related_news_query', 10, 2 );
+
+/**
+ * Remove the related-news section, including its separators, when it has no cards.
+ *
+ * @param string $block_content Rendered Group block markup.
+ * @param array  $block         Parsed Group block.
+ * @return string
+ */
+function kogo_hide_empty_related_news_section( $block_content, $block ) {
+	$class_name = $block['attrs']['className'] ?? '';
+
+	if ( false !== strpos( $class_name, 'kogo-related-news-section' ) && false === strpos( $block_content, 'kogo-posts-slider__card' ) ) {
+		return '';
+	}
+
+	return $block_content;
+}
+add_filter( 'render_block_core/group', 'kogo_hide_empty_related_news_section', 10, 2 );

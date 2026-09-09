@@ -32,4 +32,18 @@ if ( array( 11, 42 ) !== $related['post__not_in'] || array( 3, 7 ) !== $related[
 	exit( 1 );
 }
 
+$empty_section  = kogo_hide_empty_related_news_section(
+	'<div class="kogo-related-news-section">No related news.</div>',
+	array( 'attrs' => array( 'className' => 'kogo-related-news-section' ) )
+);
+$filled_section = kogo_hide_empty_related_news_section(
+	'<div class="kogo-related-news-section"><div class="kogo-posts-slider__card"></div></div>',
+	array( 'attrs' => array( 'className' => 'kogo-related-news-section' ) )
+);
+
+if ( '' !== $empty_section || false === strpos( $filled_section, 'kogo-posts-slider__card' ) ) {
+	fwrite( STDERR, "Related news section visibility does not match its results.\n" );
+	exit( 1 );
+}
+
 echo "Kogo single post test passed.\n";
