@@ -57,6 +57,7 @@ header.site-header {
 
 	.wp-block-navigation-item__content {
 		padding: 8px 16px;
+		border: 1px solid transparent;
 		border-radius: 999px;
 		font-size: var(--wp--preset--font-size--small);
 		line-height: 1.2;
@@ -75,9 +76,10 @@ header.site-header {
 		}
 	}
 
-	&.wp-block-navigation .wp-block-navigation-link.current-menu-item .wp-block-navigation-item__label,
-	&.wp-block-navigation .wp-block-navigation-link a:focus .wp-block-navigation-item__label {
-		border-bottom: 0;
+	&.wp-block-navigation .wp-block-navigation-link.current-menu-item > .wp-block-navigation-item__content {
+		border-color: currentColor;
+		background-color: transparent;
+		color: inherit;
 	}
 }
 
@@ -249,6 +251,125 @@ header.site-header {
 	background-image: url("./images/icons/hamburger.svg");
 }
 
+.kogo-search-panel {
+	position: relative;
+	display: grid;
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 120px;
+	padding: 32px clamp(4rem, 12vw, 11rem);
+	place-items: center;
+	border-bottom: 4px solid $white;
+	background: $dark-gray;
+}
+
+.kogo-search-panel[hidden] {
+	display: none;
+}
+
+.kogo-search-panel__form {
+	width: min(520px, 100%);
+	margin: 0;
+}
+
+.kogo-search-panel__label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.kogo-search-panel__field {
+	position: relative;
+}
+
+.kogo-search-panel .kogo-search-panel__input {
+	box-sizing: border-box;
+	width: 100%;
+	height: 56px;
+	padding: 0 56px 0 18px;
+	border: 0 !important;
+	border-radius: 10px;
+	background: $white;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1;
+	outline: 0;
+
+	&::placeholder {
+		color: $dark-gray;
+		opacity: 1;
+	}
+
+	&::-webkit-search-cancel-button {
+		display: none;
+		appearance: none;
+	}
+
+	&:focus-visible {
+		box-shadow: inset 0 0 0 3px $kogo-red;
+	}
+}
+
+.kogo-search-panel__submit,
+.kogo-search-panel__close {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	cursor: pointer;
+
+	&:focus-visible {
+		outline: 2px solid $kogo-red;
+		outline-offset: 5px;
+	}
+}
+
+.kogo-search-panel__submit {
+	top: 50%;
+	right: 18px;
+	width: 24px;
+	height: 24px;
+	background-color: $kogo-red;
+	-webkit-mask: url("./images/icons/search.svg") center / contain no-repeat;
+	mask: url("./images/icons/search.svg") center / contain no-repeat;
+	transform: translateY(-50%);
+}
+
+.kogo-search-panel__close {
+	top: 50%;
+	right: 40px;
+	width: 28px;
+	height: 28px;
+	transform: translateY(-50%);
+
+	&::before,
+	&::after {
+		position: absolute;
+		top: 13px;
+		left: 2px;
+		width: 24px;
+		height: 2px;
+		background: $white;
+		content: "";
+	}
+
+	&::before {
+		transform: rotate(45deg);
+	}
+
+	&::after {
+		transform: rotate(-45deg);
+	}
+}
+
 @media screen and (min-width: 783px) {
 	body.admin-bar header.site-header {
 		top: 32px;
@@ -274,9 +395,13 @@ header.site-header {
 		height: 56px;
 	}
 
-	.kogo-header__navigation,
-	.kogo-header__utilities {
+	.kogo-header__navigation {
 		display: none !important;
+	}
+
+	.kogo-header__icon-button--heart,
+	.kogo-header__icon-button--eye {
+		display: none;
 	}
 
 	.kogo-header__logo {
@@ -294,5 +419,52 @@ header.site-header {
 		display: inline-block;
 		width: clamp(1.412rem, 5.44vw, 2.471rem);
 		height: clamp(1.412rem, 5.44vw, 2.471rem);
+	}
+
+	.kogo-search-panel {
+		min-height: 104px;
+		padding: 24px 72px 24px 24px;
+	}
+
+	.kogo-search-panel .kogo-search-panel__input {
+		height: 56px;
+	}
+
+	.kogo-search-panel__close {
+		right: 24px;
+	}
+}
+
+@media (max-width: $media-max-width-sm) {
+	.kogo-header {
+		padding-inline: 20px;
+	}
+
+	.kogo-header__actions {
+		gap: 1rem;
+	}
+
+	.kogo-header__languages {
+		display: none;
+	}
+
+	.kogo-search-panel {
+		padding-left: 20px;
+		padding-right: 64px;
+	}
+
+	.kogo-search-panel .kogo-search-panel__input {
+		padding-right: 58px;
+		padding-left: 18px;
+	}
+
+	.kogo-search-panel__submit {
+		right: 18px;
+		width: 26px;
+		height: 26px;
+	}
+
+	.kogo-search-panel__close {
+		right: 18px;
 	}
 }

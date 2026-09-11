@@ -882,5 +882,12 @@ function kogo_itgallery_get_image_url( $post_id, $size = 'large' ) {
 		}
 	}
 
+	$payload     = get_post_meta( $post_id, '_kogo_itgallery_payload', true );
+	$photo_sizes = is_array( $payload ) && is_array( $payload['photo_sizes'] ?? null ) ? $payload['photo_sizes'] : array();
+	$photo_key   = in_array( $size, array( 'small', 'medium', 'large' ), true ) ? $size : 'url';
+	if ( ! empty( $photo_sizes[ $photo_key ] ) ) {
+		return esc_url_raw( $photo_sizes[ $photo_key ] );
+	}
+
 	return esc_url_raw( get_post_meta( $post_id, '_kogo_itgallery_image_url', true ) );
 }

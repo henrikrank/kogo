@@ -241,9 +241,109 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 		});
 	};
 
+	const setupArtistBio = (bio) => {
+		const preview = bio.querySelector('.kogo-artist-single__bio-preview');
+		const full = bio.querySelector('.kogo-artist-single__bio-full');
+		const toggle = bio.querySelector('.kogo-artist-single__bio-toggle');
+		if (!preview || !full || !toggle) {
+			return;
+		}
+
+		preview.hidden = false;
+		full.hidden = true;
+		toggle.hidden = false;
+		toggle.addEventListener('click', () => {
+			const expanded = toggle.getAttribute('aria-expanded') === 'true';
+			preview.hidden = !expanded;
+			full.hidden = expanded;
+			toggle.setAttribute('aria-expanded', String(!expanded));
+			toggle.textContent = expanded ? 'Show full text' : 'Show less';
+		});
+	};
+
+	const setupArtistWorks = (section) => {
+		const items = Array.from(section.querySelectorAll('.kogo-artist-works__grid > li'));
+		const button = section.querySelector('.kogo-artist-works__more button');
+		const status = section.querySelector('[aria-live]');
+		const initial = Number(section.dataset.initialItems) || 12;
+		const pageSize = Number(section.dataset.pageSize) || 8;
+		let visible = Math.min(initial, items.length);
+
+		if (!button || items.length <= initial) {
+			return;
+		}
+
+		const update = () => {
+			items.forEach((item, index) => {
+				item.hidden = index >= visible;
+			});
+			button.hidden = visible >= items.length;
+			if (status) {
+				status.textContent = `${visible} of ${items.length} works shown`;
+			}
+		};
+
+		button.addEventListener('click', () => {
+			visible = Math.min(visible + pageSize, items.length);
+			update();
+		});
+		update();
+	};
+
+	const setupSiteSearch = () => {
+		const toggle = document.querySelector('.kogo-header__icon-button--search');
+		const panel = document.querySelector('#kogo-site-search');
+		const input = panel?.querySelector('input[type="search"]');
+		const close = panel?.querySelector('.kogo-search-panel__close');
+		const pagePanel = document.querySelector('#kogo-search-page');
+		const pageInput = pagePanel?.querySelector('input[type="search"]');
+
+		if (!toggle || !panel || !input) {
+			return;
+		}
+
+		const searchTerm = new URLSearchParams(window.location.search).get('s');
+		if (searchTerm) {
+			input.value = searchTerm;
+			if (pageInput) {
+				pageInput.value = searchTerm;
+			}
+		}
+
+		if (pageInput) {
+			toggle.setAttribute('aria-controls', 'kogo-search-page');
+			toggle.removeAttribute('aria-expanded');
+			toggle.addEventListener('click', () => pageInput.focus());
+			return;
+		}
+
+		if (!close) {
+			return;
+		}
+
+		const setOpen = (open, focus = true) => {
+			panel.hidden = !open;
+			toggle.setAttribute('aria-expanded', String(open));
+			if (focus) {
+				(open ? input : toggle).focus();
+			}
+		};
+
+		toggle.addEventListener('click', () => setOpen(panel.hidden));
+		close.addEventListener('click', () => setOpen(false));
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !panel.hidden) {
+				setOpen(false);
+			}
+		});
+	};
+
+	setupSiteSearch();
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
 	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
-	document.querySelectorAll('.kogo-exhibition-single__gallery').forEach(setupGallery);
+	document.querySelectorAll('.kogo-gallery-grid-wrap').forEach(setupGallery);
+	document.querySelectorAll('[data-artist-bio]').forEach(setupArtistBio);
+	document.querySelectorAll('[data-artist-works]').forEach(setupArtistWorks);
 
 	// Switching to mobile: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/onchange
 	const isMobile = window.matchMedia(

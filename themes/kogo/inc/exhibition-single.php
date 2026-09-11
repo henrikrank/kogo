@@ -127,6 +127,55 @@ function kogo_get_exhibition_gallery_images( $post_id ) {
 }
 
 /**
+ * Render the shared responsive gallery and image viewer.
+ *
+ * @param array  $images     Normalized image records.
+ * @param string $label      Accessible gallery label.
+ * @param string $class_name Optional section class.
+ * @return string
+ */
+function kogo_render_gallery( $images, $label, $class_name = '' ) {
+	if ( ! $images ) {
+		return '';
+	}
+
+	$gallery_data = array();
+	foreach ( $images as $index => $image ) {
+		$srcset = array_filter(
+			array(
+				$image['small'] ? $image['small'] . ' 100w' : '',
+				$image['medium'] ? $image['medium'] . ' 500w' : '',
+				$image['large'] ? $image['large'] . ' 1000w' : '',
+			)
+		);
+		$gallery_data[] = array(
+			'full'   => $image['url'],
+			'src'    => $image['src'],
+			'srcset' => implode( ', ', $srcset ),
+			'alt'    => sprintf( __( '%1$s, gallery image %2$d', 'kogo' ), $label, $index + 1 ),
+		);
+	}
+
+	ob_start();
+	?>
+	<section id="gallery" class="kogo-gallery-grid-wrap <?php echo esc_attr( $class_name ); ?>" aria-label="<?php echo esc_attr( $label ); ?>">
+		<div class="kogo-gallery-grid kogo-gallery-grid--count-<?php echo esc_attr( min( 6, count( $gallery_data ) ) ); ?>"></div>
+		<dialog class="kogo-gallery-lightbox" aria-label="<?php esc_attr_e( 'Image viewer', 'kogo' ); ?>">
+			<button class="kogo-gallery-lightbox__close" type="button" aria-label="<?php esc_attr_e( 'Close image viewer', 'kogo' ); ?>"></button>
+			<button class="kogo-gallery-lightbox__arrow kogo-gallery-lightbox__arrow--previous" type="button" aria-label="<?php esc_attr_e( 'Previous image', 'kogo' ); ?>"></button>
+			<figure class="kogo-gallery-lightbox__figure">
+				<img class="kogo-gallery-lightbox__image" alt="">
+				<figcaption class="kogo-gallery-lightbox__count" aria-live="polite"></figcaption>
+			</figure>
+			<button class="kogo-gallery-lightbox__arrow kogo-gallery-lightbox__arrow--next" type="button" aria-label="<?php esc_attr_e( 'Next image', 'kogo' ); ?>"></button>
+		</dialog>
+		<script class="kogo-gallery-data" type="application/json"><?php echo wp_json_encode( $gallery_data, JSON_HEX_TAG | JSON_HEX_AMP ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></script>
+	</section>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Split the imported description into the page's editorial sections.
  *
  * The first paragraph is the short idea unless an excerpt is supplied. ITGallery
@@ -316,47 +365,7 @@ add_shortcode( 'kogo_exhibition_idea', 'kogo_exhibition_idea_shortcode' );
 function kogo_exhibition_gallery_shortcode() {
 	$post_id = get_the_ID();
 	$images  = kogo_get_exhibition_gallery_images( $post_id );
-
-	if ( ! $images ) {
-		return '';
-	}
-
-	$gallery_data = array();
-	foreach ( $images as $index => $image ) {
-		$srcset = array_filter(
-			array(
-				$image['small'] ? $image['small'] . ' 100w' : '',
-				$image['medium'] ? $image['medium'] . ' 500w' : '',
-				$image['large'] ? $image['large'] . ' 1000w' : '',
-			)
-		);
-		/* translators: 1: Exhibition title, 2: Gallery image number. */
-		$alt            = sprintf( __( '%1$s, gallery image %2$d', 'kogo' ), get_the_title( $post_id ), $index + 1 );
-		$gallery_data[] = array(
-			'full'   => $image['url'],
-			'src'    => $image['src'],
-			'srcset' => implode( ', ', $srcset ),
-			'alt'    => $alt,
-		);
-	}
-
-	ob_start();
-	?>
-	<section id="gallery" class="kogo-gallery-grid-wrap kogo-exhibition-single__gallery" aria-label="<?php esc_attr_e( 'Exhibition gallery', 'kogo' ); ?>">
-		<div class="kogo-gallery-grid"></div>
-		<dialog class="kogo-gallery-lightbox" aria-label="<?php esc_attr_e( 'Exhibition image viewer', 'kogo' ); ?>">
-			<button class="kogo-gallery-lightbox__close" type="button" aria-label="<?php esc_attr_e( 'Close image viewer', 'kogo' ); ?>"></button>
-			<button class="kogo-gallery-lightbox__arrow kogo-gallery-lightbox__arrow--previous" type="button" aria-label="<?php esc_attr_e( 'Previous image', 'kogo' ); ?>"></button>
-			<figure class="kogo-gallery-lightbox__figure">
-				<img class="kogo-gallery-lightbox__image" alt="">
-				<figcaption class="kogo-gallery-lightbox__count" aria-live="polite"></figcaption>
-			</figure>
-			<button class="kogo-gallery-lightbox__arrow kogo-gallery-lightbox__arrow--next" type="button" aria-label="<?php esc_attr_e( 'Next image', 'kogo' ); ?>"></button>
-		</dialog>
-		<script class="kogo-gallery-data" type="application/json"><?php echo wp_json_encode( $gallery_data, JSON_HEX_TAG | JSON_HEX_AMP ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></script>
-	</section>
-	<?php
-	return ob_get_clean();
+	return kogo_render_gallery( $images, sprintf( __( '%s gallery', 'kogo' ), get_the_title( $post_id ) ), 'kogo-exhibition-single__gallery' );
 }
 add_shortcode( 'kogo_exhibition_gallery', 'kogo_exhibition_gallery_shortcode' );
 
@@ -388,6 +397,47 @@ function kogo_exhibition_text_shortcode() {
 add_shortcode( 'kogo_exhibition_text', 'kogo_exhibition_text_shortcode' );
 
 /**
+ * Render a work card shared by exhibition sliders and artist grids.
+ *
+ * @param int $work_post_id Work post ID.
+ * @return string
+ */
+function kogo_render_work_card( $work_post_id ) {
+	$payload        = get_post_meta( $work_post_id, '_kogo_itgallery_payload', true );
+	$image_url      = function_exists( 'kogo_itgallery_get_image_url' ) ? kogo_itgallery_get_image_url( $work_post_id, 'large' ) : '';
+	$image_url      = $image_url ? $image_url : get_the_post_thumbnail_url( $work_post_id, 'large' );
+	$artist_post_id = absint( get_post_meta( $work_post_id, '_kogo_itgallery_artist_post_id', true ) );
+	$artist         = $artist_post_id ? get_the_title( $artist_post_id ) : '';
+	if ( ! $artist && is_array( $payload ) && is_array( $payload['artist'] ?? null ) ) {
+		$artist = trim( ( $payload['artist']['name'] ?? '' ) . ' ' . ( $payload['artist']['surname'] ?? '' ) );
+	}
+	$details = array_filter(
+		array(
+			get_post_meta( $work_post_id, '_kogo_itgallery_technique', true ),
+			kogo_format_work_dimensions( get_post_meta( $work_post_id, '_kogo_itgallery_dimensions', true ) ),
+			get_post_meta( $work_post_id, '_kogo_itgallery_year', true ),
+		)
+	);
+
+	ob_start();
+	?>
+	<article class="kogo-posts-slider__card kogo-exhibition-work-card">
+		<?php if ( $image_url ) : ?>
+			<figure class="kogo-posts-slider__image"><a href="<?php echo esc_url( get_permalink( $work_post_id ) ); ?>"><img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( get_the_title( $work_post_id ) ); ?>" loading="lazy" decoding="async"></a></figure>
+		<?php endif; ?>
+		<?php if ( $artist ) : ?>
+			<p class="kogo-exhibition-work-card__artist"><?php echo esc_html( $artist ); ?></p>
+		<?php endif; ?>
+		<h3 class="kogo-posts-slider__title"><a href="<?php echo esc_url( get_permalink( $work_post_id ) ); ?>"><?php echo esc_html( get_the_title( $work_post_id ) ); ?></a></h3>
+		<?php if ( $details ) : ?>
+			<p class="kogo-exhibition-work-card__details"><?php echo esc_html( implode( ', ', $details ) ); ?></p>
+		<?php endif; ?>
+	</article>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Render works linked to the exhibition as a horizontal slider.
  *
  * @return string
@@ -414,36 +464,8 @@ function kogo_exhibition_works_shortcode() {
 
 		<ul class="wp-block-post-template kogo-posts-slider__items swiper-wrapper">
 			<?php foreach ( $work_post_ids as $work_post_id ) : ?>
-				<?php
-				$payload        = get_post_meta( $work_post_id, '_kogo_itgallery_payload', true );
-				$image_url      = function_exists( 'kogo_itgallery_get_image_url' ) ? kogo_itgallery_get_image_url( $work_post_id, 'large' ) : '';
-				$image_url      = $image_url ? $image_url : get_the_post_thumbnail_url( $work_post_id, 'large' );
-				$artist_post_id = absint( get_post_meta( $work_post_id, '_kogo_itgallery_artist_post_id', true ) );
-				$artist         = $artist_post_id ? get_the_title( $artist_post_id ) : '';
-				if ( ! $artist && is_array( $payload ) && is_array( $payload['artist'] ?? null ) ) {
-					$artist = trim( ( $payload['artist']['name'] ?? '' ) . ' ' . ( $payload['artist']['surname'] ?? '' ) );
-				}
-				$details = array_filter(
-					array(
-						get_post_meta( $work_post_id, '_kogo_itgallery_technique', true ),
-						kogo_format_work_dimensions( get_post_meta( $work_post_id, '_kogo_itgallery_dimensions', true ) ),
-						get_post_meta( $work_post_id, '_kogo_itgallery_year', true ),
-					)
-				);
-				?>
 				<li>
-					<article class="kogo-posts-slider__card kogo-exhibition-work-card">
-						<?php if ( $image_url ) : ?>
-							<figure class="kogo-posts-slider__image"><a href="<?php echo esc_url( get_permalink( $work_post_id ) ); ?>"><img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( get_the_title( $work_post_id ) ); ?>" loading="lazy" decoding="async"></a></figure>
-						<?php endif; ?>
-						<?php if ( $artist ) : ?>
-							<p class="kogo-exhibition-work-card__artist"><?php echo esc_html( $artist ); ?></p>
-						<?php endif; ?>
-						<h3 class="kogo-posts-slider__title"><a href="<?php echo esc_url( get_permalink( $work_post_id ) ); ?>"><?php echo esc_html( get_the_title( $work_post_id ) ); ?></a></h3>
-						<?php if ( $details ) : ?>
-							<p class="kogo-exhibition-work-card__details"><?php echo esc_html( implode( ', ', $details ) ); ?></p>
-						<?php endif; ?>
-					</article>
+					<?php echo kogo_render_work_card( $work_post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				</li>
 			<?php endforeach; ?>
 		</ul>

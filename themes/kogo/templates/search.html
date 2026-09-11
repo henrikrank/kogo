@@ -1,14 +1,22 @@
 <!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
 
-<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->
-<main class="wp-block-group">
-	<!-- wp:heading {"level":1,"align":"wide","className":"wp-block-post-title"} -->
-	<h1 class="wp-block-post-title alignwide">
-		<!-- wp:query-title {"type":"search"} /-->
-	</h1>
-	<!-- /wp:heading -->
+<!-- wp:group {"tagName":"main","align":"full","className":"kogo-search-results","layout":{"type":"default"}} -->
+<main class="wp-block-group alignfull kogo-search-results">
+	<!-- wp:html -->
+	<div class="kogo-search-panel kogo-search-panel--page" id="kogo-search-page">
+		<form class="kogo-search-panel__form" role="search" method="get" action="/">
+			<label class="kogo-search-panel__label" for="kogo-search-page-input">Search the site</label>
+			<div class="kogo-search-panel__field">
+				<input class="kogo-search-panel__input" id="kogo-search-page-input" name="s" type="search" placeholder="Search…" autocomplete="off" required>
+				<button class="kogo-search-panel__submit" type="submit" aria-label="Submit search"></button>
+			</div>
+		</form>
+	</div>
+	<!-- /wp:html -->
 
-	<!-- wp:template-part {"slug":"query"} /-->
+	<!-- wp:shortcode -->
+	[kogo_search_results]
+	<!-- /wp:shortcode -->
 </main>
 <!-- /wp:group -->
 

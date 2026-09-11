@@ -15,7 +15,7 @@
 	<!-- wp:html -->
 	<div class="kogo-header__actions">
 		<div class="kogo-header__utilities" role="group" aria-label="Site tools">
-			<button class="kogo-header__icon-button kogo-header__icon-button--search" type="button" aria-label="Search"></button>
+			<button class="kogo-header__icon-button kogo-header__icon-button--search" type="button" aria-label="Search" aria-controls="kogo-site-search" aria-expanded="false"></button>
 			<button class="kogo-header__icon-button kogo-header__icon-button--heart" type="button" aria-label="Favourites"></button>
 			<button class="kogo-header__icon-button kogo-header__icon-button--eye" type="button" aria-label="Accessibility options"></button>
 		</div>
@@ -30,3 +30,16 @@
 	<!-- /wp:html -->
 </div>
 <!-- /wp:group -->
+
+<!-- wp:html -->
+<div class="kogo-search-panel" id="kogo-site-search" hidden>
+	<form class="kogo-search-panel__form" role="search" method="get" action="/">
+		<label class="kogo-search-panel__label" for="kogo-site-search-input">Search the site</label>
+		<div class="kogo-search-panel__field">
+			<input class="kogo-search-panel__input" id="kogo-site-search-input" name="s" type="search" placeholder="Search…" autocomplete="off" required>
+			<button class="kogo-search-panel__submit" type="submit" aria-label="Submit search"></button>
+		</div>
+	</form>
+	<button class="kogo-search-panel__close" type="button" aria-label="Close search"></button>
+</div>
+<!-- /wp:html -->
