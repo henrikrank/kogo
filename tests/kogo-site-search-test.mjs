@@ -4,7 +4,7 @@ import { runInNewContext } from 'node:vm';
 import { setImmediate } from 'node:timers/promises';
 
 const source = readFileSync(new URL('../themes/kogo/assets/main.js', import.meta.url), 'utf8');
-const setup = source.slice(source.indexOf('\tconst setupSiteSearch = () => {'), source.indexOf('\n\tsetupSiteSearch();'));
+const setup = source.slice(source.indexOf('\tconst setupSiteSearch = () => {'), source.indexOf('\n\t// Native number-input'));
 const headerStyles = readFileSync(new URL('../themes/kogo/assets/_header.scss', import.meta.url), 'utf8');
 const stickyHeader = headerStyles.slice(0, headerStyles.indexOf('\n.kogo-header {'));
 assert.match(stickyHeader, /background: transparent;/, 'The sticky header must not paint white over the collapsing search area');

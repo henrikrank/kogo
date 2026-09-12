@@ -14,6 +14,7 @@ require_once __DIR__ . '/inc/announcements.php';
 require_once __DIR__ . '/inc/admin-bar.php';
 require_once __DIR__ . '/inc/editions.php';
 require_once __DIR__ . '/inc/product-single.php';
+require_once __DIR__ . '/inc/visibility.php';
 
 /**
  * General Theme Settings.
@@ -155,7 +156,7 @@ function kogo_load_scripts() {
 
 	// 1. Styles.
 	wp_enqueue_style( 'style', get_stylesheet_uri(), array(), $theme_version );
-	wp_enqueue_style( 'main', get_theme_file_uri( 'build/main.css' ), array(), $theme_version, 'all' ); // main.scss: Compiled custom styles.
+	wp_enqueue_style( 'main', get_theme_file_uri( 'build/main.css' ), array(), $theme_version . '.' . filemtime( get_theme_file_path( 'build/main.css' ) ), 'all' ); // Refresh cached styles after each build.
 
 	if ( is_rtl() ) {
 		wp_enqueue_style( 'rtl', get_theme_file_uri( 'build/rtl.css' ), array(), $theme_version, 'all' );

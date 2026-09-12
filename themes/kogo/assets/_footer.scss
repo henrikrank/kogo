@@ -67,7 +67,7 @@ footer.site-footer {
 .kogo-footer__title {
 	max-width: 400px;
 	font-family: var(--wp--preset--font-family--sans-serif);
-	font-size: 52px;
+	font-size: calc(52px * var(--kogo-text-scale, 1));
 	font-weight: 700;
 	line-height: 1.2;
 	letter-spacing: 0;
@@ -93,7 +93,7 @@ footer.site-footer {
 	background: transparent;
 	color: $dark-gray;
 	font-family: var(--wp--preset--font-family--monospace);
-	font-size: 24px;
+	font-size: calc(24px * var(--kogo-text-scale, 1));
 	line-height: 1;
 	outline: 0;
 
@@ -116,7 +116,7 @@ footer.site-footer {
 	background: transparent;
 	color: $dark-gray;
 	font-family: var(--wp--preset--font-family--sans-serif);
-	font-size: 16px;
+	font-size: calc(16px * var(--kogo-text-scale, 1));
 	font-weight: 700;
 	line-height: 1;
 	cursor: pointer;
@@ -152,7 +152,7 @@ footer.site-footer {
 
 .kogo-footer__legal {
 	padding-bottom: 32px;
-	font-size: 12px;
+	font-size: calc(12px * var(--kogo-text-scale, 1));
 	line-height: 1.5;
 }
 
@@ -322,7 +322,7 @@ footer.site-footer {
 
 	.kogo-footer__title {
 		max-width: 300px;
-		font-size: 40px;
+		font-size: calc(40px * var(--kogo-text-scale, 1));
 	}
 
 	.kogo-footer__label {
