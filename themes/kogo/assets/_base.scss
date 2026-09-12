@@ -1,0 +1,80 @@
+:root {
+	--custom--media-max-width--sm: #{$media-max-width-sm};
+	--custom--media-max-width--lg: #{$media-max-width-lg};
+}
+
+html {
+	font-size: 17px;
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+/**
+ * General
+ */
+
+img {
+	vertical-align: middle;
+}
+
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="url"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+input[type="search"] {
+	display: flex;
+	border: 1px solid $dark-gray !important;
+}
+
+h1,
+.h1 {
+	font-size: var(--wp--custom--typography--font-size--colossal);
+	line-height: var(--wp--custom--typography--line-height--page-title);
+}
+
+/**
+ * WordPress customization
+ */
+
+body {
+	&.author {
+		.wp-block-post-author {
+			align-items: center;
+			margin-bottom: calc(#{$spacing-vertical} * 3);
+
+			.wp-block-post-author__avatar {
+				margin-right: calc(#{$spacing-horizontal} * 2);
+
+				.avatar {
+					width: 180px;
+					height: auto;
+				}
+			}
+
+			.wp-block-post-author__name {
+				@extend .h1;
+			}
+
+			.wp-block-post-author__bio {
+				font-size: var(--wp--preset--font-size--normal);
+				line-height: var(--wp--custom--typography--line-height--body);
+			}
+		}
+	}
+
+	&.category {
+		.wp-block-term-description {
+			font-size: var(--wp--preset--font-size--normal);
+			line-height: var(--wp--custom--typography--line-height--body);
+			margin-bottom: calc(#{$spacing-vertical} * 3);
+		}
+	}
+}

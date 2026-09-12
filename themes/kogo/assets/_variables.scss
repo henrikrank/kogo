@@ -1,0 +1,28 @@
+/**
+ * Add custom styles
+ *
+ * CSS variables are defined in "theme.json"
+ * https://developer.wordpress.org/block-editor/how-to-guides/themes/theme-json
+ */
+
+// Grayscale vars
+$black: var(--wp--preset--color--black) !default;
+$dark-gray: var(--wp--preset--color--dark-gray) !default;
+$gray: var(--wp--preset--color--gray) !default;
+$white: var(--wp--preset--color--white) !default;
+
+// Color vars
+$charcoal: var(--wp--preset--color--charcoal) !default;
+$green: var(--wp--preset--color--green) !default;
+$yellow: var(--wp--preset--color--yellow) !default;
+$orange: var(--wp--preset--color--orange) !default;
+$red: var(--wp--preset--color--red) !default;
+$kogo-red: #da2700;
+
+// Spacing
+$spacing-vertical: var(--wp--preset--spacing--3, 1rem) !default;
+$spacing-horizontal: var(--wp--preset--spacing--4, 1.5rem) !default;
+
+// Responsive breakpoints
+$media-max-width-sm: 599px; // var(--wp--custom--media-max-width--sm);
+$media-max-width-lg: 1366px; // var(--wp--custom--media-max-width--lg);

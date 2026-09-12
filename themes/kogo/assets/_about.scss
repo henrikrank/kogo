@@ -1,0 +1,65 @@
+/* About uses the shared page title, section menu and emphasized-text grid. */
+.kogo-about {
+	max-width: none !important;
+	margin-block: 0 !important;
+}
+
+main:has(.kogo-about),
+.wp-block-post-content:has(.kogo-about) {
+	margin-block-start: 0;
+}
+
+.kogo-about .kogo-exhibitions-archive__title-wrap {
+	padding-inline: 40px;
+}
+
+.kogo-about > .kogo-section-nav,
+.kogo-about > .wp-block-group:has(.kogo-gallery-grid-wrap) {
+	width: auto;
+	max-width: none;
+	margin-inline: calc(-1 * var(--wp--style--root--padding-left)) calc(-1 * var(--wp--style--root--padding-right)) !important;
+}
+
+.kogo-about :is(#kogo-gallery, #gallery, #team, #programme-curation, #supporters, #partners) {
+	scroll-margin-top: 176px;
+}
+
+.kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+	top: 144px;
+}
+
+body.admin-bar .kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+	top: 176px;
+}
+
+.kogo-about__intro-media {
+	width: 100%;
+	margin-bottom: 32px;
+}
+
+.kogo-about__intro-media img {
+	width: 100%;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+}
+
+.kogo-about__intro-media figcaption {
+	text-align: center;
+}
+
+.kogo-about .kogo-about__partners .wp-block-column {
+	position: static;
+}
+
+@media (max-width: 1024px) {
+	.kogo-about :is(#kogo-gallery, #gallery, #team, #programme-curation, #supporters, #partners) {
+		scroll-margin-top: 144px;
+	}
+
+	.kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+		top: 112px;
+	}
+
+	body.admin-bar .kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+		top: 144px;
+	}
+}

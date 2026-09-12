@@ -1,0 +1,196 @@
+/* Single post */
+
+body.single-post main,
+body.single-post .wp-block-post-content {
+	margin-block-start: 0;
+}
+
+.kogo-single-post,
+.kogo-single-post__hero,
+.kogo-single-post__hero-columns,
+.kogo-single-post__intro,
+.kogo-single-post__media,
+.kogo-single-post__category,
+.kogo-single-post__title,
+.kogo-single-post__date,
+.kogo-single-post__excerpt,
+.kogo-single-post__excerpt p,
+.kogo-single-post__tags,
+.kogo-single-post__image,
+.kogo-single-post__content {
+	margin: 0;
+}
+
+.kogo-single-post {
+	max-width: none !important;
+}
+
+.kogo-single-post__hero {
+	width: 100%;
+	max-width: none !important;
+	border-bottom: 1px solid $dark-gray;
+}
+
+.kogo-single-post__hero-columns {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg !important;
+	margin-inline: auto !important;
+	padding: 40px;
+	gap: clamp(40px, 6vw, 72px);
+}
+
+.kogo-single-post__intro {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	min-width: 0;
+}
+
+.kogo-single-post__category {
+	margin-bottom: 16px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-single-post__category a,
+.kogo-single-post__tags a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.kogo-single-post__title {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.08;
+	text-wrap: balance;
+}
+
+.kogo-single-post__date {
+	margin-top: 14px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-single-post__excerpt {
+	max-width: 62ch;
+	margin-top: 28px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+}
+
+.kogo-single-post__excerpt .wp-block-post-excerpt__more-text {
+	display: none;
+}
+
+.kogo-single-post__tags {
+	position: relative;
+	margin-top: 22px;
+	padding-left: 26px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-single-post__tags::before {
+	position: absolute;
+	top: 50%;
+	left: 1px;
+	box-sizing: border-box;
+	width: 17px;
+	height: 11px;
+	border: 1px solid currentColor;
+	border-radius: 3px;
+	content: "";
+	transform: translateY(-50%);
+}
+
+.kogo-single-post__tags::after {
+	position: absolute;
+	top: 50%;
+	left: 4px;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background-color: currentColor;
+	content: "";
+	transform: translateY(-50%);
+}
+
+.kogo-single-post__media {
+	min-width: 0;
+}
+
+.kogo-single-post__image {
+	width: 100%;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	overflow: hidden;
+}
+
+.kogo-single-post__media:not(:has(.kogo-single-post__image))::before {
+	display: block;
+	width: 100%;
+	aspect-ratio: 3 / 2;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	background-color: $gray;
+	content: "";
+}
+
+.kogo-single-post__image img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 3 / 2;
+	object-fit: cover;
+}
+
+.kogo-single-post__content {
+	box-sizing: border-box;
+	width: min(100%, 900px);
+	max-width: 900px !important;
+	margin-inline: auto !important;
+	padding: clamp(48px, 7vw, 88px) 40px;
+	font-family: var(--wp--preset--font-family--monospace);
+	line-height: 1.7;
+}
+
+.kogo-single-post__content > :first-child {
+	margin-top: 0;
+}
+
+.kogo-single-post__content > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-single-post__content :is(h2, h3, h4) {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-weight: 600;
+	line-height: 1.15;
+}
+
+@media (hover: hover) {
+	.kogo-single-post__category a:hover,
+	.kogo-single-post__tags a:hover {
+		color: $kogo-red;
+	}
+}
+
+@media (max-width: 782px) {
+	.kogo-single-post__hero-columns {
+		padding: 40px 20px 48px;
+		gap: 36px;
+	}
+
+	.kogo-single-post__content {
+		padding: 48px 20px 56px;
+	}
+}

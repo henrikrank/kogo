@@ -1,0 +1,14 @@
+/* Main */
+
+main {
+	.wp-block-query {
+		.wp-block-post-title {
+			padding: 0;
+		}
+	}
+}
+
+body.page .wp-block-post-title.alignwide {
+	width: calc(100% - 80px);
+	max-width: 1286px;
+}

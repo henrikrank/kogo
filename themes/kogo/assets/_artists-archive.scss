@@ -1,0 +1,72 @@
+/* Artists archive */
+
+.kogo-artists-archive {
+	margin: 0 !important;
+}
+
+.kogo-exhibited-artists {
+	scroll-margin-top: 96px;
+}
+
+.kogo-exhibited-artists__heading,
+.kogo-exhibited-artists__content,
+.kogo-exhibited-artists__years,
+.kogo-exhibited-artists__year,
+.kogo-exhibited-artists__year-heading,
+.kogo-exhibited-artists__list,
+.kogo-exhibited-artists__empty {
+	margin: 0;
+}
+
+.kogo-exhibited-artists__heading {
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.kogo-exhibited-artists__years {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: clamp(2.5rem, 6vw, 7rem);
+	row-gap: 48px;
+}
+
+.kogo-exhibited-artists__year-heading {
+	margin-bottom: 16px;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--preset--font-size--medium);
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.kogo-exhibited-artists__list {
+	padding: 0;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.55;
+	list-style: none;
+}
+
+.kogo-exhibited-artists__list a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.16em;
+	transition: color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	&:hover,
+	&:focus-visible {
+		color: $kogo-red;
+	}
+
+	&:focus-visible {
+		border-radius: 2px;
+		outline: 2px solid $kogo-red;
+		outline-offset: 2px;
+	}
+}
+
+.kogo-exhibited-artists__empty {
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+}

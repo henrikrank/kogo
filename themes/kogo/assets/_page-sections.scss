@@ -1,0 +1,61 @@
+/* Split page header and information sections */
+
+main:has(.kogo-page-split-header),
+.wp-block-post-content:has(.kogo-page-split-header) {
+	margin-block-start: 0;
+}
+
+.kogo-page-split-header {
+	width: auto;
+}
+
+.kogo-page-split-header__copy a,
+.kogo-page-section a:not(.wp-element-button) {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.kogo-page-split-header .kogo-single-post__hero-columns {
+	padding-block: 24px;
+}
+
+.kogo-page-split-header__copy {
+	width: 100%;
+	margin: 24px 0 0;
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+
+	> * {
+		margin: 0;
+	}
+
+	> * + * {
+		margin-top: 12px;
+	}
+}
+
+.kogo-page-section-divider {
+	margin-block: 0 !important;
+	border: 0;
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-page-section h2 {
+	margin: 0 0 24px;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--huge);
+	font-weight: 600;
+	line-height: 1.15;
+}
+
+.kogo-page-section__content {
+	line-height: 1.7;
+
+	> * {
+		margin-block: 0;
+	}
+
+	> p {
+		max-width: 72ch;
+	}
+}

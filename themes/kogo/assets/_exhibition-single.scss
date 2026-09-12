@@ -1,0 +1,314 @@
+/* Single exhibition */
+
+body.single-kogo_exposition main,
+body.single-kogo_exposition .wp-block-post-content {
+	margin-block-start: 0;
+}
+
+.kogo-exhibition-single,
+.kogo-exhibition-single__intro {
+	margin: 0 !important;
+}
+
+.kogo-exhibition-single__intro {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	margin-inline: auto !important;
+}
+
+.kogo-exhibition-single__hero {
+	position: relative;
+	isolation: isolate;
+	min-height: 560px;
+	max-height: 760px;
+	aspect-ratio: 1366 / 666;
+	border-radius: 18px;
+	background-color: $dark-gray;
+	color: $white;
+	overflow: hidden;
+}
+
+.kogo-exhibition-single__hero::after {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(33, 37, 41, 0.04) 35%, rgba(33, 37, 41, 0.72) 100%);
+	content: "";
+}
+
+.kogo-exhibition-single__cover {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.kogo-exhibition-single__hero-inner {
+	position: relative;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-between;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100%;
+	min-height: inherit;
+	padding: 40px;
+}
+
+.kogo-exhibition-single__status,
+.kogo-exhibition-single__dates,
+.kogo-exhibition-single__title,
+.kogo-exhibition-single__details,
+.kogo-exhibition-single__details dd,
+.kogo-exhibition-single__details dt {
+	margin: 0;
+}
+
+.kogo-exhibition-single__status {
+	display: inline-flex;
+	align-items: center;
+	height: 28px;
+	padding: 0 14px;
+	gap: 9px;
+	border: 1px solid $dark-gray;
+	border-radius: 999px;
+	background-color: $white;
+	color: $dark-gray;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-exhibition-single__status span {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background-color: $kogo-red;
+}
+
+.kogo-exhibition-single__status.is-past span {
+	background-color: $dark-gray;
+}
+
+.kogo-exhibition-single__status.is-upcoming span {
+	background-color: $green;
+}
+
+.kogo-exhibition-single__hero-content {
+	max-width: 58rem;
+}
+
+.kogo-exhibition-single__dates {
+	margin-bottom: 10px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: clamp(0.9rem, 1.5vw, 1.4rem);
+	line-height: 1.25;
+}
+
+.kogo-exhibition-single__title {
+	color: inherit;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.08;
+}
+
+.kogo-exhibition-single__details {
+	display: grid;
+	padding: 30px 40px 34px;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: 32px;
+	font-family: var(--wp--preset--font-family--monospace);
+}
+
+.kogo-exhibition-single__details--with-curator {
+	grid-template-columns: minmax(0, 3fr) repeat(2, minmax(0, 1fr));
+}
+
+.kogo-exhibition-single__details a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.12em;
+}
+
+.kogo-exhibition-single__details dt {
+	margin-bottom: 10px;
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-exhibition-single__details dd {
+	line-height: 1.5;
+}
+
+.kogo-exhibition-single__idea-columns,
+.kogo-exhibition-single__columns {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+}
+
+.kogo-exhibition-single__idea-body > :first-child {
+	margin-top: 0;
+}
+
+.kogo-exhibition-single__idea-body > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-exhibition-single__gallery {
+	padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.kogo-exhibition-single__section,
+.kogo-exhibition-single__split {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	margin: 0 auto;
+	padding: clamp(56px, 6vw, 80px) 40px;
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-exhibition-single__text {
+	padding-top: 0;
+	border-top: 0;
+}
+
+.kogo-exhibition-single__section-title {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--gigantic);
+	font-weight: 600;
+	line-height: 1.1;
+}
+
+.kogo-exhibition-single__prose {
+	max-width: 54rem;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+}
+
+.kogo-exhibition-single__prose > :first-child {
+	margin-top: 0;
+}
+
+.kogo-exhibition-single__prose > :last-child {
+	margin-bottom: 0;
+}
+
+.kogo-exhibition-single__publications,
+.kogo-exhibition-single__bios {
+	display: grid;
+	gap: 24px;
+}
+
+.kogo-exhibition-single__publications p,
+.kogo-exhibition-single__bios p {
+	margin: 0;
+}
+
+.kogo-exhibition-single__prose a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.12em;
+}
+
+.kogo-exhibition-works {
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__card {
+	align-items: center;
+	text-align: center;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__image {
+	aspect-ratio: 1;
+	background-color: #fafafa;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__image img {
+	aspect-ratio: 1;
+	object-fit: contain;
+}
+
+.kogo-exhibition-works .kogo-posts-slider__card:not(:has(.kogo-posts-slider__image))::before {
+	aspect-ratio: 1;
+}
+
+.kogo-exhibition-work-card__artist,
+.kogo-exhibition-work-card__details {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: var(--wp--preset--font-size--small);
+	line-height: 1.4;
+}
+
+.kogo-exhibition-work-card__artist {
+	margin-bottom: 4px;
+}
+
+.kogo-exhibition-work-card__details {
+	margin-top: 10px;
+}
+
+.kogo-exhibition-single__split {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: clamp(48px, 8vw, 120px);
+}
+
+.kogo-exhibition-single__split .kogo-exhibition-single__section-title {
+	margin-bottom: 24px;
+}
+
+@media (max-width: 782px) {
+	.kogo-exhibition-single__hero {
+		min-height: 520px;
+		max-height: 720px;
+		aspect-ratio: auto;
+		border-radius: 14px;
+	}
+
+	.kogo-exhibition-single__hero-inner {
+		padding: 24px;
+	}
+
+	.kogo-exhibition-single__details {
+		padding: 26px 20px 30px;
+		grid-template-columns: 1fr;
+		gap: 24px;
+	}
+
+	.kogo-exhibition-single__idea {
+		padding-inline: 20px;
+	}
+
+	.kogo-exhibition-single__idea-columns,
+	.kogo-exhibition-single__columns,
+	.kogo-exhibition-single__split {
+		grid-template-columns: 1fr;
+	}
+
+	.kogo-exhibition-single__section,
+	.kogo-exhibition-single__split {
+		padding: 48px 20px;
+	}
+
+	.kogo-exhibition-single__text {
+		padding-top: 0;
+	}
+
+	.kogo-exhibition-single__split {
+		gap: 48px;
+	}
+}

@@ -1,0 +1,32 @@
+@media (max-width: 782px) {
+	.kogo-hero-slider {
+		height: calc(100svh - 80px);
+		min-height: 520px;
+		max-height: 720px;
+		aspect-ratio: auto;
+		border-radius: 14px;
+	}
+
+	.kogo-hero-slider__slide-inner {
+		padding: 24px;
+	}
+
+	.kogo-hero-slider__progress {
+		top: 24px;
+		right: 24px;
+	}
+
+	.kogo-hero-slider__controls {
+		right: 24px;
+		bottom: 24px;
+	}
+
+	.kogo-hero-slider__content {
+		max-width: 100%;
+		padding-bottom: 4.5rem;
+	}
+
+	.kogo-hero-slider__title {
+		font-size: clamp(2.75rem, 12vw, 4.5rem);
+	}
+}

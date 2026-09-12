@@ -1,0 +1,129 @@
+@media (max-width: $media-max-width-sm) {
+	.kogo-posts-cover-grid {
+		padding: 48px 20px;
+	}
+
+	.kogo-posts-cover-grid__heading {
+		margin-bottom: 32px;
+	}
+
+	ul.wp-block-post-template.kogo-posts-cover-grid__items {
+		grid-template-columns: 1fr;
+	}
+
+	.kogo-posts-cover-grid__card {
+		min-height: 320px !important;
+		aspect-ratio: auto;
+	}
+
+	.kogo-exhibitions-archive__title-wrap,
+	.kogo-exhibitions-archive__past {
+		padding-inline: 20px;
+	}
+
+	.kogo-exhibitions-archive__title-wrap {
+		padding-block: 40px 48px;
+	}
+
+	.kogo-exhibitions-archive__past {
+		padding-block: 48px 64px;
+	}
+
+	.kogo-exhibitions-archive__heading {
+		margin-bottom: 32px;
+	}
+
+	ul.wp-block-post-template.kogo-exhibitions-archive__grid {
+		grid-template-columns: 1fr;
+		row-gap: 40px;
+	}
+
+	.kogo-exhibitions-archive__pagination {
+		margin-top: 48px;
+	}
+}
+
+@media (max-width: 782px) {
+	.kogo-emphasized-text__columns,
+	.kogo-artists__columns,
+	.kogo-post-highlight__columns {
+		gap: 32px;
+	}
+
+	.kogo-emphasized-text__columns > .wp-block-column:first-child,
+	.kogo-artists__columns > .wp-block-column:first-child,
+	.kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-highlight__content) {
+		position: static;
+	}
+}
+
+@media (min-width: 783px) and (max-width: 1024px) {
+	.kogo-emphasized-text__columns > .wp-block-column:first-child,
+	.kogo-artists__columns > .wp-block-column:first-child,
+	.kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-highlight__content) {
+		top: 80px;
+	}
+
+	body.admin-bar .kogo-emphasized-text__columns > .wp-block-column:first-child,
+	body.admin-bar .kogo-artists__columns > .wp-block-column:first-child,
+	body.admin-bar .kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-highlight__content) {
+		top: 112px;
+	}
+}
+
+@media (max-width: $media-max-width-sm) {
+	ul.wp-block-post-template.kogo-artists__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.kogo-exhibited-artists {
+		padding-inline: 20px;
+	}
+
+	.kogo-exhibited-artists__years {
+		grid-template-columns: 1fr;
+		row-gap: 40px;
+	}
+}
+
+@media (max-width: $media-max-width-sm) {
+
+	main {
+		[type="submit"],
+		#submit {
+			width: 100%;
+		}
+	}
+
+	footer {
+		&.site-footer {
+			.wp-block-site-title,
+			[class*="has-text-align-"] {
+				text-align: center;
+			}
+
+			.wp-block-site-title,
+			.wp-block-navigation {
+				width: 100%;
+			}
+
+			.wp-block-site-title {
+				margin-bottom: $spacing-vertical;
+			}
+
+			.wp-block-navigation {
+				justify-content: center;
+			}
+		}
+	}
+
+	.wp-block-post-navigation-link {
+		margin: $spacing-vertical 0;
+		padding: 0 $spacing-horizontal;
+		text-align: center;
+
+		&.post-navigation-link-previous {
+			margin-top: calc(#{$spacing-vertical} * 3);
+		}
+	}
+}

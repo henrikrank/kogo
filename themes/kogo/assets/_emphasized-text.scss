@@ -1,0 +1,97 @@
+/* Emphasized text block */
+
+.kogo-emphasized-text {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg !important;
+	margin: 0 auto !important;
+	padding: 0 40px;
+}
+
+.kogo-artist-single__essence,
+.kogo-exhibition-single__idea {
+	padding-block: 64px;
+}
+
+.kogo-emphasized-text__columns {
+	margin: 0;
+	gap: clamp(2.5rem, 6vw, 7rem);
+}
+
+.kogo-emphasized-text__columns > p:empty {
+	display: none;
+}
+
+.kogo-emphasized-text__columns,
+.kogo-artists__columns,
+.kogo-post-highlight__columns {
+	align-items: flex-start;
+}
+
+.kogo-emphasized-text__columns > .wp-block-column:first-child,
+.kogo-artists__columns > .wp-block-column:first-child,
+.kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-highlight__content) {
+	position: sticky;
+	top: 112px;
+	align-self: flex-start;
+}
+
+body.admin-bar .kogo-emphasized-text__columns > .wp-block-column:first-child,
+body.admin-bar .kogo-artists__columns > .wp-block-column:first-child,
+body.admin-bar .kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-highlight__content) {
+	top: 144px;
+}
+
+.kogo-emphasized-text__label,
+.kogo-emphasized-text__body,
+.kogo-emphasized-text__actions {
+	margin: 0;
+}
+
+.kogo-emphasized-text__label {
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	line-height: 1.2;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+
+.kogo-emphasized-text__content {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 24px;
+}
+
+.kogo-emphasized-text__body {
+	max-width: 47rem;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--huge);
+	font-weight: 600;
+	line-height: var(--wp--custom--typography--line-height--heading);
+}
+
+.kogo-emphasized-text__more .wp-block-button__link {
+	padding: 7px 18px;
+	border: 1px solid $dark-gray;
+	border-radius: 999px;
+	background-color: transparent;
+	color: $dark-gray;
+	font-size: var(--wp--preset--font-size--small);
+	font-weight: 600;
+	line-height: 1;
+	transition: border-color 180ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 180ms cubic-bezier(0.22, 1, 0.36, 1), color 180ms cubic-bezier(0.22, 1, 0.36, 1);
+
+	&:hover,
+	&:focus-visible {
+		border-color: $kogo-red;
+		background-color: transparent;
+		box-shadow: inset 0 0 0 1px $kogo-red;
+		color: $dark-gray;
+	}
+
+	&:focus-visible {
+		outline: 2px solid $kogo-red;
+		outline-offset: 3px;
+	}
+}
