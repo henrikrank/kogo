@@ -27,8 +27,7 @@
 	gap: clamp(40px, 6vw, 72px);
 }
 
-.kogo-artist-single__hero-columns > p:empty,
-.kogo-artist-single__columns > p:empty {
+.kogo-artist-single__hero-columns > p:empty {
 	display: none;
 }
 
@@ -161,10 +160,6 @@ body.admin-bar .kogo-section-nav {
 
 .kogo-artist-single :is(#in-essence, #gallery, #introduction, #press, #works) {
 	scroll-margin-top: 145px;
-}
-
-.kogo-artist-single__essence {
-	padding-block: clamp(64px, 7vw, 96px);
 }
 
 .kogo-artist-single__columns {
@@ -376,7 +371,6 @@ body.admin-bar .kogo-artist-single .kogo-artist-single__columns > .kogo-artist-s
 		padding-inline: 20px;
 	}
 
-	.kogo-artist-single__essence,
 	.kogo-artist-single__section {
 		padding: 48px 20px 56px;
 	}

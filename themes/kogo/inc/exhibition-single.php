@@ -62,6 +62,30 @@ function kogo_get_exhibition_venue( $post_id ) {
 }
 
 /**
+ * Read an editorial curator override or explicit credits in imported copy.
+ *
+ * ITGallery currently supplies no separate curator field. Do not treat generic
+ * mentions of curated sections or earlier exhibitions as this show's curator.
+ *
+ * @param int $post_id Exhibition post ID.
+ * @return string
+ */
+function kogo_get_exhibition_curator( $post_id ) {
+	$curator = sanitize_text_field( get_post_meta( $post_id, 'kogo_exhibition_curator', true ) );
+	if ( $curator ) {
+		return $curator;
+	}
+
+	$description = wp_strip_all_tags( get_post_field( 'post_content', $post_id ) );
+	if ( preg_match( '/^[\t ]*(?:Curated by|Curator|Curation|Coordination and curation)[\t ]*:[\t ]*([^\r\n]+)/imu', $description, $match ) ||
+		preg_match( '/\bthe (?:show|exhibition) is curated by[\t ]+([^.!?\r\n]+)/iu', $description, $match ) ) {
+		return sanitize_text_field( trim( $match[1] ) );
+	}
+
+	return '';
+}
+
+/**
  * Normalize an imported image record.
  *
  * @param mixed $image Image record or URL.
@@ -283,9 +307,9 @@ function kogo_exhibition_hero_shortcode() {
 	$status     = kogo_get_exhibition_status( $post_id );
 	$image_url  = kogo_get_exhibition_cover_url( $post_id );
 	$date_range = wp_strip_all_tags( kogo_render_exhibition_dates( $post_id ) );
-	$artists    = wp_strip_all_tags( kogo_render_exhibition_artists( $post_id ) );
+	$artists    = kogo_render_exhibition_artists( $post_id, true );
 	$venue      = kogo_get_exhibition_venue( $post_id );
-	$curator    = sanitize_text_field( get_post_meta( $post_id, 'kogo_exhibition_curator', true ) );
+	$curator    = kogo_get_exhibition_curator( $post_id );
 	$details    = array_filter(
 		array(
 			__( 'Artists', 'kogo' )    => $artists,
@@ -313,11 +337,11 @@ function kogo_exhibition_hero_shortcode() {
 		</div>
 
 		<?php if ( $details ) : ?>
-			<dl class="kogo-exhibition-single__details">
+			<dl class="kogo-exhibition-single__details<?php echo $curator ? ' kogo-exhibition-single__details--with-curator' : ''; ?>">
 				<?php foreach ( $details as $label => $value ) : ?>
 					<div>
 						<dt><?php echo esc_html( $label ); ?></dt>
-						<dd><?php echo esc_html( $value ); ?></dd>
+						<dd><?php echo wp_kses_post( $value ); ?></dd>
 					</div>
 				<?php endforeach; ?>
 			</dl>

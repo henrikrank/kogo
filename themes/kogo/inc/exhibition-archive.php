@@ -100,37 +100,63 @@ add_shortcode( 'kogo_exhibition_dates', 'kogo_exhibition_dates_shortcode' );
 /**
  * Render imported artist names for an exhibition.
  *
- * @param int $post_id Exhibition post ID.
+ * @param int  $post_id      Exhibition post ID.
+ * @param bool $link_artists Link matching published artist pages.
  * @return string
  */
-function kogo_render_exhibition_artists( $post_id ) {
+function kogo_render_exhibition_artists( $post_id, $link_artists = false ) {
 	$payload = get_post_meta( $post_id, '_kogo_itgallery_payload', true );
 	$artists = is_array( $payload ) && isset( $payload['artists'] ) && is_array( $payload['artists'] ) ? $payload['artists'] : array();
 	$names   = array();
+	$pages_by_id = array();
+	$pages_by_name = array();
+
+	if ( $link_artists ) {
+		foreach ( get_posts( array( 'post_type' => 'kogo_artist', 'post_status' => 'publish', 'posts_per_page' => -1 ) ) as $artist_page ) {
+			$remote_id = get_post_meta( $artist_page->ID, '_kogo_itgallery_id', true );
+			if ( $remote_id ) {
+				$pages_by_id[ (string) $remote_id ] = $artist_page->ID;
+			}
+			$page_name = sanitize_text_field( $artist_page->post_title );
+			$pages_by_name[ $page_name ] = isset( $pages_by_name[ $page_name ] ) ? 0 : $artist_page->ID;
+		}
+	}
 
 	foreach ( $artists as $artist ) {
 		if ( is_string( $artist ) ) {
 			$name = $artist;
 		} elseif ( is_array( $artist ) ) {
-			$name = $artist['display_name'] ?? $artist['title'] ?? trim( ( $artist['name'] ?? $artist['first_name'] ?? '' ) . ' ' . ( $artist['surname'] ?? $artist['last_name'] ?? '' ) );
+			$name = $artist['display_name'] ?? $artist['title'] ?? $artist['complete_name'] ?? trim( ( $artist['name'] ?? $artist['first_name'] ?? '' ) . ' ' . ( $artist['surname'] ?? $artist['last_name'] ?? '' ) );
 		} else {
 			$name = '';
 		}
 
 		if ( $name ) {
-			$names[] = sanitize_text_field( $name );
+			$name = sanitize_text_field( $name );
+			if ( ! $name ) {
+				continue;
+			}
+			$remote_id = is_array( $artist ) ? (string) ( $artist['id'] ?? '' ) : '';
+			$names[ $name ] = $pages_by_id[ $remote_id ] ?? $pages_by_name[ $name ] ?? 0;
 		}
 	}
 
 	if ( ! $names ) {
 		$artist_post_ids = get_post_meta( $post_id, '_kogo_itgallery_artist_post_ids', true );
 		foreach ( is_array( $artist_post_ids ) ? $artist_post_ids : array() as $artist_post_id ) {
-			$names[] = get_the_title( $artist_post_id );
+			$name = sanitize_text_field( get_the_title( $artist_post_id ) );
+			if ( $name ) {
+				$names[ $name ] = $link_artists && 'publish' === get_post_status( $artist_post_id ) && 'kogo_artist' === get_post_type( $artist_post_id ) ? $artist_post_id : 0;
+			}
 		}
 	}
 
-	$artist_names = implode( ', ', array_filter( array_unique( $names ) ) );
-	return $artist_names ? '<span class="kogo-exhibition-card__artists">' . esc_html( $artist_names ) . '</span>' : '';
+	$artist_names = array();
+	foreach ( $names as $name => $artist_post_id ) {
+		$artist_names[] = $artist_post_id ? '<a href="' . esc_url( get_permalink( $artist_post_id ) ) . '">' . esc_html( $name ) . '</a>' : esc_html( $name );
+	}
+	$class_name = $link_artists ? 'kogo-exhibition-single__artists' : 'kogo-exhibition-card__artists';
+	return $artist_names ? '<span class="' . $class_name . '">' . implode( ', ', $artist_names ) . '</span>' : '';
 }
 
 /**

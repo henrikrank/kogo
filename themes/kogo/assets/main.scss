@@ -1086,9 +1086,18 @@ ul.wp-block-post-template {
 	padding: 0 40px;
 }
 
+.kogo-artist-single__essence,
+.kogo-exhibition-single__idea {
+	padding-block: 64px;
+}
+
 .kogo-emphasized-text__columns {
 	margin: 0;
 	gap: clamp(2.5rem, 6vw, 7rem);
+}
+
+.kogo-emphasized-text__columns > p:empty {
+	display: none;
 }
 
 .kogo-emphasized-text__columns,
@@ -2585,6 +2594,16 @@ body.single-kogo_exposition .wp-block-post-content {
 	font-family: var(--wp--preset--font-family--monospace);
 }
 
+.kogo-exhibition-single__details--with-curator {
+	grid-template-columns: minmax(0, 3fr) repeat(2, minmax(0, 1fr));
+}
+
+.kogo-exhibition-single__details a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.12em;
+}
+
 .kogo-exhibition-single__details dt {
 	margin-bottom: 10px;
 	font-size: var(--wp--preset--font-size--small);
@@ -2595,10 +2614,6 @@ body.single-kogo_exposition .wp-block-post-content {
 
 .kogo-exhibition-single__details dd {
 	line-height: 1.5;
-}
-
-.kogo-exhibition-single__idea {
-	padding-block: clamp(64px, 7vw, 96px);
 }
 
 .kogo-exhibition-single__idea-columns,
@@ -2742,7 +2757,7 @@ body.single-kogo_exposition .wp-block-post-content {
 	}
 
 	.kogo-exhibition-single__idea {
-		padding: 56px 20px;
+		padding-inline: 20px;
 	}
 
 	.kogo-exhibition-single__idea-columns,
