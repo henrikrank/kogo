@@ -3,6 +3,7 @@
 require_once __DIR__ . '/inc/kogo-itgallery.php';
 require_once __DIR__ . '/inc/exhibition-archive.php';
 require_once __DIR__ . '/inc/exhibition-single.php';
+require_once __DIR__ . '/inc/exhibition-links.php';
 require_once __DIR__ . '/inc/artist-grid.php';
 require_once __DIR__ . '/inc/artist-single.php';
 require_once __DIR__ . '/inc/post-single.php';

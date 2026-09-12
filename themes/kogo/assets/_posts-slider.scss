@@ -3,11 +3,12 @@
 .kogo-posts-slider {
 	--kogo-posts-card-width: clamp(250px, calc((min(100vw, #{$media-max-width-lg}) - 152px) / 4), 304px);
 	--kogo-posts-page-padding: var(--wp--style--root--padding-left, 0px);
+	--kogo-posts-page-padding-right: var(--wp--style--root--padding-right, 0px);
 	--kogo-posts-slider-left: max(40px, calc((100vw - #{$media-max-width-lg}) / 2 + 40px - var(--kogo-posts-page-padding)));
 
 	box-sizing: border-box;
 	// Six maximum-width cards: four in the content area and at most two beyond it.
-	width: min(calc(100% + var(--wp--style--root--padding-right, 0px) - var(--kogo-posts-slider-left)), 1944px) !important;
+	width: min(calc(100% + var(--kogo-posts-page-padding-right) - var(--kogo-posts-slider-left)), 1944px) !important;
 	max-width: none !important;
 	margin: 0 0 0 var(--kogo-posts-slider-left) !important;
 	padding: 64px 0;

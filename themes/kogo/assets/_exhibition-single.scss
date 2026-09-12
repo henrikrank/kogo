@@ -104,6 +104,11 @@ body.single-kogo_exposition .wp-block-post-content {
 	max-width: 58rem;
 }
 
+// WordPress can insert empty paragraphs into shortcode output.
+.kogo-exhibition-single__hero p:empty {
+	display: none;
+}
+
 .kogo-exhibition-single__dates {
 	margin-bottom: 10px;
 	font-family: var(--wp--preset--font-family--monospace);
@@ -223,6 +228,10 @@ body.single-kogo_exposition .wp-block-post-content {
 }
 
 .kogo-exhibition-works {
+	// This slider sits in an unpadded, full-width exhibition section.
+	--kogo-posts-page-padding: 0px;
+	--kogo-posts-page-padding-right: 0px;
+
 	border-top: 1px solid $dark-gray;
 }
 
@@ -269,6 +278,24 @@ body.single-kogo_exposition .wp-block-post-content {
 
 .kogo-exhibition-single__split .kogo-exhibition-single__section-title {
 	margin-bottom: 24px;
+}
+
+@media (max-width: 1919px) {
+	.kogo-exhibition-single__intro {
+		max-width: none;
+	}
+
+	.kogo-exhibition-single__hero {
+		width: calc(100% - 8px);
+		margin-inline: 4px;
+	}
+
+	.kogo-exhibition-single__details {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: $media-max-width-lg;
+		margin-inline: auto;
+	}
 }
 
 @media (max-width: 782px) {

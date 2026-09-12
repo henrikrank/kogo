@@ -1,3 +1,11 @@
+@media (max-width: 1919px) {
+	body.home .kogo-hero-slider {
+		width: calc(100% + var(--wp--style--root--padding-left, 0px) + var(--wp--style--root--padding-right, 0px) - 8px);
+		max-width: none !important;
+		margin-inline: calc(4px - var(--wp--style--root--padding-left, 0px)) calc(4px - var(--wp--style--root--padding-right, 0px)) !important;
+	}
+}
+
 @media (max-width: 782px) {
 	.kogo-hero-slider {
 		height: calc(100svh - 80px);

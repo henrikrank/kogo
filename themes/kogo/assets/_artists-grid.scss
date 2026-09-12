@@ -143,6 +143,24 @@ ul.wp-block-post-template.kogo-artists__grid > li {
 	display: none;
 }
 
+.kogo-artists.kogo-linked-exhibitions-section {
+	padding-block: 64px;
+	border-block: 1px solid $dark-gray;
+}
+
+.kogo-linked-exhibitions__card > .kogo-exhibition-card__dates {
+	margin: 0 0 6px;
+	font-family: var(--wp--preset--font-family--monospace);
+	font-size: 0.7rem;
+	line-height: 1.4;
+}
+
+@media (max-width: 782px) {
+	.kogo-artists.kogo-linked-exhibitions-section {
+		padding: 48px 20px;
+	}
+}
+
 @media (hover: hover) {
 	.kogo-artists__card:hover .kogo-artists__image img {
 		transform: scale(1.025);
