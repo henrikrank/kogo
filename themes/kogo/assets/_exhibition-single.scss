@@ -160,6 +160,11 @@ body.single-kogo_exposition .wp-block-post-content {
 	grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
 }
 
+.kogo-exhibition-single__idea-body {
+	max-width: 100%;
+	overflow-wrap: anywhere;
+}
+
 .kogo-exhibition-single__idea-body > :first-child {
 	margin-top: 0;
 }
@@ -227,6 +232,7 @@ body.single-kogo_exposition .wp-block-post-content {
 	text-underline-offset: 0.12em;
 }
 
+.kogo-exhibition-events,
 .kogo-exhibition-works {
 	// This slider sits in an unpadded, full-width exhibition section.
 	--kogo-posts-page-padding: 0px;
@@ -299,6 +305,18 @@ body.single-kogo_exposition .wp-block-post-content {
 }
 
 @media (max-width: 782px) {
+	.kogo-exhibition-events,
+	.kogo-exhibition-works {
+		--kogo-posts-slider-left: 20px;
+	}
+
+	.kogo-exhibition-events .kogo-posts-slider__header,
+	.kogo-exhibition-works .kogo-posts-slider__header {
+		width: calc(100% - 20px) !important;
+		flex-wrap: wrap;
+		gap: 20px;
+	}
+
 	.kogo-exhibition-single__hero {
 		min-height: 520px;
 		max-height: 720px;

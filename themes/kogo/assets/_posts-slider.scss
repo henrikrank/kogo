@@ -12,10 +12,15 @@
 	max-width: none !important;
 	margin: 0 0 0 var(--kogo-posts-slider-left) !important;
 	padding: 64px 0;
-	overflow: hidden;
+	// Clip slides without letting browser focus scroll the entire header sideways.
+	overflow: clip;
 }
 
 .kogo-posts-slider__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: nowrap;
 	box-sizing: border-box;
 	width: min(calc(100% - 40px), calc(#{$media-max-width-lg} - 80px)) !important;
 	max-width: 100%;
@@ -48,6 +53,11 @@ body.home .kogo-posts-slider__header {
 	flex-wrap: nowrap;
 	margin: 0 !important;
 	gap: 12px;
+}
+
+.kogo-posts-slider__actions {
+	flex-shrink: 0;
+	margin-left: auto !important;
 }
 
 .kogo-posts-slider__more .wp-block-button__link {

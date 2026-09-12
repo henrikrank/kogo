@@ -4,6 +4,7 @@ require_once __DIR__ . '/inc/kogo-itgallery.php';
 require_once __DIR__ . '/inc/exhibition-archive.php';
 require_once __DIR__ . '/inc/exhibition-single.php';
 require_once __DIR__ . '/inc/exhibition-links.php';
+require_once __DIR__ . '/inc/exhibition-posts.php';
 require_once __DIR__ . '/inc/artist-grid.php';
 require_once __DIR__ . '/inc/artist-single.php';
 require_once __DIR__ . '/inc/post-single.php';
@@ -11,6 +12,8 @@ require_once __DIR__ . '/inc/search.php';
 require_once __DIR__ . '/inc/comments.php';
 require_once __DIR__ . '/inc/announcements.php';
 require_once __DIR__ . '/inc/admin-bar.php';
+require_once __DIR__ . '/inc/editions.php';
+require_once __DIR__ . '/inc/product-single.php';
 
 /**
  * General Theme Settings.
@@ -102,14 +105,14 @@ function kogo_register_pattern_categories() {
 add_action( 'init', 'kogo_register_pattern_categories' );
 
 /**
- * Add the newsletter callout as the first slide in the News query.
+ * Add the newsletter callout after the first three posts in the News query.
  *
  * @param string $block_content Rendered Post Template markup.
  * @param array  $block         Parsed Post Template block.
  *
  * @return string
  */
-function kogo_prepend_newsletter_slide( $block_content, $block ) {
+function kogo_insert_newsletter_slide( $block_content, $block ) {
 	$class_name = $block['attrs']['className'] ?? '';
 
 	if ( false === strpos( $class_name, 'kogo-posts-slider__items' ) || false !== strpos( $class_name, 'kogo-posts-slider__items--related' ) ) {
@@ -123,9 +126,24 @@ function kogo_prepend_newsletter_slide( $block_content, $block ) {
 		esc_html__( 'newsletter!', 'kogo' )
 	);
 
-	return preg_replace( '/(<ul\b[^>]*>)/', '$1' . $newsletter_slide, $block_content, 1 );
+	// Count complete slides, including any nested lists inside their content.
+	preg_match_all( '/<\/?li\b[^>]*>|<\/ul\s*>/i', $block_content, $tags, PREG_OFFSET_CAPTURE );
+	$depth = 0;
+	$posts = 0;
+	foreach ( $tags[0] as list( $tag, $offset ) ) {
+		if ( 0 === stripos( $tag, '</ul' ) && 0 === $depth ) {
+			// With fewer than three posts, place the callout after the available posts.
+			return substr_replace( $block_content, $newsletter_slide, $offset, 0 );
+		}
+		if ( 0 === stripos( $tag, '<li' ) ) {
+			++$depth;
+		} elseif ( 0 === stripos( $tag, '</li' ) && 0 === --$depth && 3 === ++$posts ) {
+			return substr_replace( $block_content, $newsletter_slide, $offset + strlen( $tag ), 0 );
+		}
+	}
+	return $block_content;
 }
-add_filter( 'render_block_core/post-template', 'kogo_prepend_newsletter_slide', 10, 2 );
+add_filter( 'render_block_core/post-template', 'kogo_insert_newsletter_slide', 10, 2 );
 
 /**
  * Enqueue CSS Stylesheets and Javascript files.

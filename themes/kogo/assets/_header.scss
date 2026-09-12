@@ -315,10 +315,10 @@ header.site-header {
 	color: $kogo-red;
 }
 
-.kogo-header__icon-button--heart {
-	--kogo-header-icon: url("./images/icons/heart.svg");
-	--kogo-header-icon-width: 20px;
-	--kogo-header-icon-height: 19px;
+.kogo-header__icon-button--cart {
+	--kogo-header-icon: url("./images/icons/shopping-cart.svg");
+	--kogo-header-icon-width: 24px;
+	--kogo-header-icon-height: 24px;
 	color: $kogo-red;
 }
 
@@ -351,7 +351,7 @@ header.site-header {
 	--kogo-header-icon: url("./images/icons/eye.svg");
 	--kogo-header-icon-width: 22px;
 	--kogo-header-icon-height: 15px;
-	color: $dark-gray;
+	color: $kogo-red;
 
 	&::after {
 		transform-origin: center;
@@ -608,7 +608,6 @@ header.site-header {
 		}
 	}
 
-	.kogo-header__icon-button--heart,
 	.kogo-header__icon-button--eye {
 		display: none;
 	}

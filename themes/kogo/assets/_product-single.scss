@@ -1,0 +1,187 @@
+.kogo-product-page {
+	box-sizing: border-box;
+	width: 100%;
+	margin: 0 !important;
+	padding: 0;
+	> .woocommerce { max-width: none !important; margin: 0; padding: 0; }
+}
+
+.kogo-product-page .woocommerce-breadcrumb,
+.kogo-product__layout,
+.kogo-product > .woocommerce-tabs,
+.kogo-product > .upsells {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: $media-max-width-lg;
+	margin-inline: auto;
+	padding-inline: 40px;
+}
+
+.kogo-product-page .woocommerce-breadcrumb {
+	margin-block: 32px 20px;
+	font-size: 12px;
+	line-height: 1.5;
+	color: $dark-gray;
+	&::before, &::after { display: none; }
+	a { color: inherit; text-decoration: none; }
+	a:hover { text-decoration: underline; }
+	a:first-child {
+		display: inline-block;
+		width: 16px;
+		height: 16px;
+		overflow: hidden;
+		vertical-align: -3px;
+		font-size: 0;
+		background: currentColor;
+		-webkit-mask: url("./images/icons/home.svg") center / contain no-repeat;
+		mask: url("./images/icons/home.svg") center / contain no-repeat;
+	}
+}
+
+.kogo-product__layout {
+	display: grid;
+	grid-template-columns: minmax(0, .85fr) minmax(0, 1fr);
+	align-items: start;
+	gap: 40px;
+	padding-bottom: 64px;
+}
+
+.woocommerce .kogo-product-page .kogo-product {
+	.woocommerce-product-gallery, .summary { float: none; width: 100%; min-width: 0; margin: 0; }
+	.product_title { margin: 0; font-family: var(--wp--preset--font-family--sans-serif); font-size: clamp(28px, 3.2vw, 44px); font-weight: 600; line-height: 1.2; }
+	.kogo-product__sku { margin: 12px 0 24px; font-size: var(--wp--preset--font-size--small); line-height: 1.5; }
+	.summary > .price, .woocommerce-variation-price > .price {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin: 24px 0 28px;
+		color: $dark-gray;
+		font-size: 20px;
+		font-weight: 600;
+		> .amount, ins { order: 1; text-decoration: none; }
+		del { order: 2; padding: 5px 8px; border-radius: 4px; background: $kogo-red; color: $white; font-size: var(--wp--preset--font-size--small); font-weight: var(--wp--custom--typography--font-weight--normal); opacity: 1; }
+		.kogo-product__vat { order: 3; font-size: var(--wp--preset--font-size--small); font-weight: var(--wp--custom--typography--font-weight--normal); }
+	}
+	.kogo-product__description, .woocommerce-product-details__short-description { margin: 0 0 40px; font-size: var(--wp--preset--font-size--medium); line-height: var(--wp--custom--typography--line-height--body); p { margin: 0 0 16px; } }
+	.kogo-product__terms { position: relative; margin: 0; padding-left: 30px; font-size: var(--wp--preset--font-size--small); line-height: 1.5; a { color: inherit; text-decoration: none; &:hover { text-decoration: underline; } } }
+	.kogo-product__terms::before { position: absolute; top: 3px; left: 0; width: 22px; height: 14px; content: ""; background: currentColor; -webkit-mask: url("./images/icons/tag.svg") center / contain no-repeat; mask: url("./images/icons/tag.svg") center / contain no-repeat; }
+	a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid $kogo-red; outline-offset: 3px; }
+}
+
+.woocommerce .kogo-product-page .kogo-product .woocommerce-product-gallery {
+	position: relative;
+	.woocommerce-product-gallery__wrapper, .flex-viewport { border-radius: var(--wp--custom--border--radius--lg); overflow: hidden; background: #f2f2f2; }
+	.flex-viewport { height: auto !important; aspect-ratio: 1; }
+	.woocommerce-product-gallery__image, .woocommerce-product-gallery__image--placeholder {
+		aspect-ratio: 1;
+		> a { display: block; aspect-ratio: 1; }
+		img:not(.zoomImg) { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: contain; }
+	}
+	.flex-control-thumbs {
+		display: flex;
+		gap: 2px;
+		width: max-content;
+		max-width: min(312px, 100%);
+		height: 76.5px;
+		margin: 8px auto 0;
+		padding: 0;
+		border-radius: var(--wp--custom--border--radius--lg);
+		list-style: none;
+		overflow-x: auto;
+		li { flex: 0 0 76.5px; float: none; width: 76.5px; margin: 0; }
+		img { width: 76.5px; height: 76.5px; object-fit: cover; opacity: 1; }
+		img.flex-active { filter: brightness(.65); }
+	}
+	.flex-direction-nav { position: absolute; inset: 50% 8px auto; z-index: 5; margin: 0; padding: 0; list-style: none; }
+	&:has(.flex-control-thumbs) .flex-direction-nav { top: calc((100% - 84.5px) / 2); }
+	.flex-direction-nav a {
+		position: absolute;
+		top: 0;
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		transform: translateY(-50%);
+		color: $white;
+		font-size: 0;
+		&::before { width: 10px; height: 20px; content: ""; background: currentColor; -webkit-mask: url("./images/icons/chevron-left.svg") center / contain no-repeat; mask: url("./images/icons/chevron-left.svg") center / contain no-repeat; filter: drop-shadow(0 1px 2px $dark-gray); }
+		&.flex-prev { left: 0; }
+		&.flex-next { right: 0; &::before { transform: rotate(180deg); } }
+		&.flex-disabled { opacity: .35; cursor: default; }
+	}
+	.woocommerce-product-gallery__trigger {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		z-index: 6;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: $dark-gray;
+		span { display: none; }
+		&::before { position: absolute; top: 12px; left: 12px; width: 16px; height: 16px; border: 2px solid $white; border-radius: 50%; content: ""; }
+		&::after { position: absolute; top: 18px; left: 18px; width: 8px; height: 8px; content: ""; background: $white; -webkit-mask: url("./images/icons/plus.svg") center / contain no-repeat; mask: url("./images/icons/plus.svg") center / contain no-repeat; transform: none; }
+	}
+}
+
+.woocommerce .kogo-product-page .kogo-product form.cart {
+	margin: 0 0 40px;
+	&::before, &::after, .woocommerce-variation-add-to-cart::before, .woocommerce-variation-add-to-cart::after { display: none; }
+	&:not(.variations_form):not(.grouped_form), .woocommerce-variation-add-to-cart { box-sizing: border-box; display: flex; align-items: center; flex-wrap: wrap; gap: 24px; min-height: 80px; padding: 16px 20px; border: 1px solid $dark-gray; border-radius: 6px; }
+	.quantity { display: inline-flex; align-items: center; gap: 6px; float: none; margin: 0; }
+	.quantity:has(input[type="hidden"]) { display: none; }
+	input.qty { box-sizing: border-box; width: 58px; height: 40px; padding: 8px; border: 1px solid $dark-gray; border-radius: 6px; background: $white; color: $dark-gray; font: inherit; text-align: center; appearance: textfield; &::-webkit-inner-spin-button, &::-webkit-outer-spin-button { appearance: none; margin: 0; } }
+	.single_add_to_cart_button { float: none; width: auto; min-height: 40px; padding: 12px 24px; border: 0; border-radius: 999px; background: $dark-gray; color: $white; font-family: var(--wp--preset--font-family--monospace); font-size: var(--wp--preset--font-size--small); font-weight: 600; line-height: 1.2; white-space: nowrap; cursor: pointer; &:hover { background: $kogo-red; } }
+}
+
+.kogo-product__quantity-button {
+	position: relative;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: $dark-gray;
+	cursor: pointer;
+	&[hidden] { display: none; }
+	&:disabled { opacity: .35; cursor: default; }
+	&::before { position: absolute; inset: 7px; border-radius: 50%; background: #ececec; content: ""; }
+	&::after { position: absolute; inset: 14px; background: currentColor; content: ""; -webkit-mask: url("./images/icons/plus.svg") center / contain no-repeat; mask: url("./images/icons/plus.svg") center / contain no-repeat; }
+	&--minus::after { -webkit-mask-image: url("./images/icons/minus.svg"); mask-image: url("./images/icons/minus.svg"); }
+}
+
+.kogo-product__related { border-top: 1px solid $dark-gray; }
+.kogo-related-products {
+	--kogo-posts-slider-left: max(40px, calc((100% - #{$media-max-width-lg}) / 2 + 40px));
+	border: 0;
+	.kogo-posts-slider__header { align-items: center; justify-content: space-between; }
+	.kogo-posts-slider__card { align-items: center; gap: 0; text-align: center; }
+	.kogo-edition-card__media { width: 100%; }
+	.kogo-posts-slider__title { margin: 20px 0 12px; font-size: 22px; }
+}
+.kogo-related-products__image { display: block; aspect-ratio: 1; img { display: block; width: 100%; height: 100%; aspect-ratio: 1; object-fit: contain; } }
+.kogo-related-products__price { font-size: var(--wp--preset--font-size--small); ins { font-weight: 600; text-decoration: none; } }
+.kogo-related-products__cart {
+	position: absolute;
+	bottom: 16px;
+	right: 16px;
+	> a.button { box-sizing: border-box; display: grid; place-items: center; width: 44px; height: 44px; min-height: 44px; padding: 0; border: 1px solid $dark-gray; border-radius: 50%; background: $white; color: $dark-gray; font-size: 0; &::before { width: 24px; height: 24px; content: ""; background: currentColor; -webkit-mask: url("./images/icons/shopping-cart-dark.svg") center / contain no-repeat; mask: url("./images/icons/shopping-cart-dark.svg") center / contain no-repeat; } &:hover { border-color: $kogo-red; color: $kogo-red; } }
+	.added_to_cart { position: absolute; right: 0; bottom: 52px; padding: 10px 12px; border: 1px solid $dark-gray; border-radius: 4px; background: $white; white-space: nowrap; }
+}
+
+@media (max-width: 782px) {
+	.kogo-product__layout { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+	.woocommerce .kogo-product-page .kogo-product .product_title { font-size: 32px; }
+}
+
+@media (max-width: $media-max-width-sm) {
+	.kogo-product-page .woocommerce-breadcrumb, .kogo-product__layout, .kogo-product > .woocommerce-tabs, .kogo-product > .upsells { padding-inline: 20px; }
+	.kogo-product-page .woocommerce-breadcrumb { margin-top: 24px; }
+	.kogo-product__layout { padding-bottom: 40px; }
+	.woocommerce .kogo-product-page .kogo-product .product_title { font-size: 28px; }
+	.woocommerce .kogo-product-page .kogo-product form.cart { &:not(.variations_form):not(.grouped_form), .woocommerce-variation-add-to-cart { gap: 12px; padding: 12px 16px; } .single_add_to_cart_button { flex: 1; padding-inline: 16px; } }
+	.kogo-related-products { --kogo-posts-slider-left: 20px; }
+	.kogo-related-products .kogo-posts-slider__header { flex-wrap: wrap; gap: 20px; width: calc(100% - 20px) !important; }
+	.kogo-related-products .kogo-posts-slider__title { font-size: 18px; }
+}

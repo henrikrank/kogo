@@ -1,6 +1,7 @@
 import Swiper from 'swiper';
 import { A11y, Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
+import 'swiper/css/a11y';
 import { getGalleryLayout } from './gallery-layout.mjs';
 
 (function () {
@@ -141,6 +142,7 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 			modules: [A11y, Navigation],
 			speed: 550,
 			slidesPerView: 'auto',
+			rewind: document.body.classList.contains('home') && !isWorksSlider,
 			spaceBetween: isWorksSlider ? 8 : 16,
 			watchOverflow: true,
 			breakpoints: {
@@ -471,6 +473,34 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 			}
 		});
 	};
+
+	// Native number-input stepping respects WooCommerce's quantity bounds.
+	document.querySelectorAll('.kogo-product form.cart .quantity').forEach((quantity) => {
+		const input = quantity.querySelector('input.qty');
+		const minus = quantity.querySelector('.kogo-product__quantity-button--minus');
+		const plus = quantity.querySelector('.kogo-product__quantity-button--plus');
+		if (!input || !minus || !plus) return;
+		if (input.type !== 'number' || input.readOnly) {
+			minus.hidden = plus.hidden = true;
+			return;
+		}
+		const update = () => {
+			minus.disabled = input.valueAsNumber <= Number(input.min || 0);
+			plus.disabled = Boolean(input.max) && input.valueAsNumber >= Number(input.max);
+		};
+		const step = (up) => {
+			if (up) input.stepUp(); else input.stepDown();
+			input.dispatchEvent(new Event('input', { bubbles: true }));
+			input.dispatchEvent(new Event('change', { bubbles: true }));
+			update();
+		};
+		minus.addEventListener('click', () => step(false));
+		plus.addEventListener('click', () => step(true));
+		input.addEventListener('input', update);
+		input.addEventListener('change', update);
+		new MutationObserver(update).observe(input, { attributes: true, attributeFilter: ['min', 'max'] });
+		update();
+	});
 
 	setupSiteSearch();
 	setupHeaderNavigation();

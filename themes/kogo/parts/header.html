@@ -2,11 +2,11 @@
 <div class="wp-block-group alignfull kogo-header">
 	<!-- wp:site-logo {"width":100,"className":"kogo-header__logo"} /-->
 
-	<!-- wp:navigation {"overlayMenu":"mobile","submenuVisibility":"click","showSubmenuIcon":false,"className":"kogo-header__navigation","layout":{"type":"flex","orientation":"horizontal","flexWrap":"nowrap"}} -->
+	<!-- wp:navigation {"overlayMenu":"mobile","submenuVisibility":"click","showSubmenuIcon":false,"className":"kogo-header__navigation","metadata":{"ignoredHookedBlocks":["woocommerce/customer-account","woocommerce/mini-cart"]},"layout":{"type":"flex","orientation":"horizontal","flexWrap":"nowrap"}} -->
 		<!-- wp:navigation-link {"label":"Exhibitions","url":"/exhibitions/"} /-->
 		<!-- wp:navigation-link {"label":"Fairs","url":"#"} /-->
 		<!-- wp:navigation-link {"label":"Artists","url":"/artists/"} /-->
-		<!-- wp:navigation-link {"label":"Editions","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Editions","url":"/editions/"} /-->
 		<!-- wp:navigation-link {"label":"Buy art","url":"/works/"} /-->
 		<!-- wp:navigation-submenu {"label":"Info","className":"kogo-header__info"} -->
 			<!-- wp:navigation-link {"label":"Visit","type":"page","id":463,"url":"/visit/","kind":"post-type"} /-->
@@ -20,7 +20,7 @@
 	<div class="kogo-header__actions">
 		<div class="kogo-header__utilities" role="group" aria-label="Site tools">
 			<button class="kogo-header__icon-button kogo-header__icon-button--search" type="button" aria-label="Search" aria-controls="kogo-site-search" aria-expanded="false"></button>
-			<button class="kogo-header__icon-button kogo-header__icon-button--heart" type="button" aria-label="Favourites"></button>
+			<a class="kogo-header__icon-button kogo-header__icon-button--cart" href="/cart/" aria-label="Cart"></a>
 			<button class="kogo-header__icon-button kogo-header__icon-button--eye" type="button" aria-label="Accessibility options"></button>
 		</div>
 
