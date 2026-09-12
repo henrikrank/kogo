@@ -248,6 +248,17 @@ final class Kogo_ITGallery {
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible"><p><?php echo esc_html( $notice['message'] ); ?></p></div>
 			<?php endif; ?>
 
+			<h2><?php esc_html_e( 'Synchronization', 'kogo' ); ?></h2>
+			<p><?php echo esc_html( self::last_sync_label() ); ?></p>
+			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo' ); ?></p>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="kogo_itgallery_sync">
+				<?php wp_nonce_field( 'kogo_itgallery_sync' ); ?>
+				<?php submit_button( __( 'Sync now', 'kogo' ), 'primary', 'submit', false ); ?>
+			</form>
+
+			<hr>
+			<h2><?php esc_html_e( 'Settings', 'kogo' ); ?></h2>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'kogo_itgallery' ); ?>
 				<table class="form-table" role="presentation">
@@ -282,20 +293,6 @@ final class Kogo_ITGallery {
 					</tr>
 				</table>
 				<?php submit_button( __( 'Save settings', 'kogo' ) ); ?>
-			</form>
-
-			<hr>
-			<h2><?php esc_html_e( 'Synchronization', 'kogo' ); ?></h2>
-			<p>
-				<?php
-				echo esc_html( self::last_sync_label() );
-				?>
-			</p>
-			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo' ); ?></p>
-			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-				<input type="hidden" name="action" value="kogo_itgallery_sync">
-				<?php wp_nonce_field( 'kogo_itgallery_sync' ); ?>
-				<?php submit_button( __( 'Sync now', 'kogo' ), 'primary', 'submit', false ); ?>
 			</form>
 		</div>
 		<?php

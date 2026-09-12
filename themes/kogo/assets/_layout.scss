@@ -12,3 +12,21 @@ body.page .wp-block-post-title.alignwide {
 	width: calc(100% - 80px);
 	max-width: 1286px;
 }
+
+// Homepage sections provide their own gutters; avoid adding the editor's root padding twice.
+body.home .wp-block-post-content {
+	--wp--style--root--padding-left: 0px;
+	--wp--style--root--padding-right: 0px;
+	--kogo-homepage-gutter: 40px;
+	padding-inline: 0;
+
+	> :is(.kogo-emphasized-text, .kogo-artists, .kogo-post-highlight) {
+		padding-inline: var(--kogo-homepage-gutter);
+	}
+}
+
+@media (max-width: $media-max-width-sm) {
+	body.home .wp-block-post-content {
+		--kogo-homepage-gutter: 20px;
+	}
+}

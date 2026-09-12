@@ -24,6 +24,15 @@
 	gap: 24px;
 }
 
+body.home .kogo-posts-slider {
+	// Use the content width, which excludes the browser's scrollbar.
+	--kogo-posts-slider-left: max(var(--kogo-homepage-gutter), calc((100% - #{$media-max-width-lg}) / 2 + var(--kogo-homepage-gutter)));
+}
+
+body.home .kogo-posts-slider__header {
+	width: min(calc(100% - var(--kogo-homepage-gutter)), calc(#{$media-max-width-lg} - 2 * var(--kogo-homepage-gutter))) !important;
+}
+
 .kogo-posts-slider__heading {
 	margin: 0;
 	font-family: var(--wp--preset--font-family--sans-serif);
