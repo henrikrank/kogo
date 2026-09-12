@@ -324,20 +324,14 @@ header.site-header {
 
 @keyframes kogo-eye-blink {
 	0%,
-	11.4%,
+	11.8%,
 	13.3%,
-	52%,
+	52.4%,
 	53.9%,
-	56.6%,
+	57%,
 	58.5%,
 	100% {
 		transform: scaleY(1);
-	}
-
-	11.8%,
-	52.4%,
-	57% {
-		transform: scaleY(1.08);
 	}
 
 	12.2%,
@@ -349,7 +343,7 @@ header.site-header {
 
 .kogo-header__icon-button--eye {
 	--kogo-header-icon: url("./images/icons/eye.svg");
-	--kogo-header-icon-width: 22px;
+	--kogo-header-icon-width: 24px;
 	--kogo-header-icon-height: 15px;
 	color: $kogo-red;
 
