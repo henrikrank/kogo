@@ -158,12 +158,14 @@ final class Kogo_ITGallery {
 	}
 
 	public function add_settings_page() {
-		add_options_page(
-			__( 'Kogo ITGallery', 'kogo' ),
-			__( 'Kogo ITGallery', 'kogo' ),
+		add_menu_page(
+			__( 'ITGallery', 'kogo' ),
+			__( 'ITGallery', 'kogo' ),
 			'manage_options',
 			'kogo-itgallery',
-			array( $this, 'render_settings_page' )
+			array( $this, 'render_settings_page' ),
+			'data:image/svg+xml;base64,' . base64_encode( file_get_contents( __DIR__ . '/../assets/images/icons/itgallery.svg' ) ),
+			29
 		);
 	}
 
@@ -179,7 +181,7 @@ final class Kogo_ITGallery {
 		}
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Kogo ITGallery', 'kogo' ); ?></h1>
+			<h1><?php esc_html_e( 'ITGallery', 'kogo' ); ?></h1>
 			<?php settings_errors( self::OPTION ); ?>
 			<?php if ( is_array( $notice ) ) : ?>
 				<div class="notice notice-<?php echo esc_attr( $notice['type'] ); ?> is-dismissible"><p><?php echo esc_html( $notice['message'] ); ?></p></div>
@@ -262,7 +264,7 @@ final class Kogo_ITGallery {
 		}
 
 		set_transient( 'kogo_itgallery_notice_' . get_current_user_id(), $notice, MINUTE_IN_SECONDS );
-		wp_safe_redirect( admin_url( 'options-general.php?page=kogo-itgallery' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=kogo-itgallery' ) );
 		exit;
 	}
 

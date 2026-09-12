@@ -8,6 +8,7 @@ require_once __DIR__ . '/inc/artist-grid.php';
 require_once __DIR__ . '/inc/artist-single.php';
 require_once __DIR__ . '/inc/post-single.php';
 require_once __DIR__ . '/inc/search.php';
+require_once __DIR__ . '/inc/comments.php';
 
 /**
  * General Theme Settings.
