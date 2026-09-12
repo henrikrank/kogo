@@ -996,7 +996,8 @@ ul.wp-block-post-template {
 	border-top: 1px solid $dark-gray;
 	opacity: 1;
 
-	.wp-block-post-content > & {
+	.wp-block-post-content > &,
+	.kogo-about > & {
 		width: calc(100% + var(--wp--style--root--padding-left, 0px) + var(--wp--style--root--padding-right, 0px)) !important;
 		margin-right: calc(-1 * var(--wp--style--root--padding-right, 0px)) !important;
 		margin-left: calc(-1 * var(--wp--style--root--padding-left, 0px)) !important;
@@ -1173,7 +1174,7 @@ body.admin-bar .kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-h
 
 	box-sizing: border-box;
 	// Six maximum-width cards: four in the content area and at most two beyond it.
-	width: min(calc(100vw - var(--kogo-posts-page-padding) - var(--kogo-posts-slider-left)), 1944px) !important;
+	width: min(calc(100% + var(--wp--style--root--padding-right, 0px) - var(--kogo-posts-slider-left)), 1944px) !important;
 	max-width: none !important;
 	margin: 0 0 0 var(--kogo-posts-slider-left) !important;
 	padding: 64px 0;
@@ -1182,7 +1183,7 @@ body.admin-bar .kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-h
 
 .kogo-posts-slider__header {
 	box-sizing: border-box;
-	width: min(calc(100vw - var(--kogo-posts-page-padding) - var(--kogo-posts-slider-left) - 40px), calc(#{$media-max-width-lg} - 80px)) !important;
+	width: min(calc(100% - 40px), calc(#{$media-max-width-lg} - 80px)) !important;
 	max-width: 100%;
 	margin: 0 0 48px !important;
 	padding: 0;
@@ -1682,6 +1683,224 @@ body.single-post .wp-block-post-content {
 
 	.kogo-single-post__content {
 		padding: 48px 20px 56px;
+	}
+}
+
+/* Split page header and information sections */
+
+main:has(.kogo-page-split-header),
+.wp-block-post-content:has(.kogo-page-split-header) {
+	margin-block-start: 0;
+}
+
+.kogo-page-split-header {
+	width: auto;
+}
+
+.kogo-page-split-header__copy a,
+.kogo-page-section a:not(.wp-element-button) {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.kogo-page-split-header .kogo-single-post__hero-columns {
+	padding-block: 24px;
+}
+
+.kogo-page-split-header__copy {
+	width: 100%;
+	margin: 24px 0 0;
+	font-size: var(--wp--preset--font-size--medium);
+	line-height: 1.6;
+
+	> * {
+		margin: 0;
+	}
+
+	> * + * {
+		margin-top: 12px;
+	}
+}
+
+.kogo-page-section-divider {
+	margin-block: 0 !important;
+	border: 0;
+	border-top: 1px solid $dark-gray;
+}
+
+.kogo-page-section h2 {
+	margin: 0 0 24px;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: var(--wp--custom--typography--font-size--huge);
+	font-weight: 600;
+	line-height: 1.15;
+}
+
+.kogo-page-section__content {
+	line-height: 1.7;
+
+	> * {
+		margin-block: 0;
+	}
+
+	> p {
+		max-width: 72ch;
+	}
+}
+
+/* About uses the shared page title, section menu and emphasized-text grid. */
+.kogo-about {
+	max-width: none !important;
+	margin-block: 0 !important;
+}
+
+main:has(.kogo-about),
+.wp-block-post-content:has(.kogo-about) {
+	margin-block-start: 0;
+}
+
+.kogo-about .kogo-exhibitions-archive__title-wrap {
+	padding-inline: 40px;
+}
+
+.kogo-about > .kogo-section-nav,
+.kogo-about > .wp-block-group:has(.kogo-gallery-grid-wrap) {
+	width: auto;
+	max-width: none;
+	margin-inline: calc(-1 * var(--wp--style--root--padding-left)) calc(-1 * var(--wp--style--root--padding-right)) !important;
+}
+
+.kogo-about :is(#kogo-gallery, #gallery, #team, #programme-curation, #supporters, #partners) {
+	scroll-margin-top: 176px;
+}
+
+.kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+	top: 144px;
+}
+
+body.admin-bar .kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+	top: 176px;
+}
+
+.kogo-about__intro-media {
+	width: 100%;
+	margin-bottom: 32px;
+}
+
+.kogo-about__intro-media img {
+	width: 100%;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+}
+
+.kogo-about__intro-media figcaption {
+	text-align: center;
+}
+
+.kogo-about .kogo-about__partners .wp-block-column {
+	position: static;
+}
+
+@media (max-width: 1024px) {
+	.kogo-about :is(#kogo-gallery, #gallery, #team, #programme-curation, #supporters, #partners) {
+		scroll-margin-top: 144px;
+	}
+
+	.kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+		top: 112px;
+	}
+
+	body.admin-bar .kogo-about .kogo-emphasized-text__columns > .wp-block-column:first-child {
+		top: 144px;
+	}
+}
+
+/* Native WordPress gallery, enhanced with Swiper */
+
+.kogo-image-slider {
+	width: 100%;
+}
+
+.kogo-image-slider__viewport {
+	position: relative;
+	margin: 0;
+	border-radius: var(--wp--custom--border--radius--lg, 16px);
+	overflow: hidden;
+}
+
+.kogo-image-slider__slides.wp-block-gallery.has-nested-images {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	gap: 0 !important;
+	margin: 0;
+
+	> figure.wp-block-image {
+		flex: 0 0 auto;
+		width: 100% !important;
+		max-width: none;
+		margin: 0 !important;
+		aspect-ratio: 3 / 2;
+
+		img {
+			display: block;
+			width: 100%;
+			height: 100%;
+			aspect-ratio: 3 / 2;
+			object-fit: cover;
+		}
+	}
+}
+
+.kogo-image-slider__controls {
+	position: absolute;
+	inset: 50% 16px auto;
+	z-index: 5;
+	margin: 0;
+	display: flex;
+	justify-content: space-between;
+	transform: translateY(-50%);
+	pointer-events: none;
+
+	&[hidden] {
+		display: none;
+	}
+
+	button {
+		pointer-events: auto;
+	}
+}
+
+.kogo-image-slider__count {
+	position: absolute;
+	top: 16px;
+	left: 16px;
+	z-index: 5;
+	margin: 0;
+	color: $white;
+	font-size: var(--wp--preset--font-size--small);
+	text-shadow: 0 1px 3px $dark-gray;
+	pointer-events: none;
+}
+
+.kogo-image-slider__caption {
+	margin: 16px 0 0;
+	color: $dark-gray;
+	font-size: var(--wp--preset--font-size--small);
+	text-align: center;
+}
+
+@media (max-width: 782px) {
+	.kogo-page-split-header .kogo-single-post__hero-columns {
+		padding-block: 32px;
+	}
+
+	.kogo-image-slider__controls {
+		inset-inline: 8px;
+	}
+
+	.kogo-image-slider__count {
+		top: 8px;
+		left: 12px;
 	}
 }
 

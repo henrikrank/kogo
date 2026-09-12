@@ -8,6 +8,14 @@
 	border-bottom: 1px solid $dark-gray;
 }
 
+.kogo-artist-single__hero:has(+ .kogo-section-nav) {
+	border-bottom: 0;
+}
+
+.wp-block-separator:has(+ .kogo-section-nav) {
+	display: none;
+}
+
 .kogo-artist-single__hero-columns {
 	display: grid;
 	box-sizing: border-box;
@@ -94,16 +102,18 @@
 
 .kogo-section-nav {
 	position: sticky;
-	top: 88px;
+	// Sticky offsets include the header's 1px top border.
+	top: 89px;
 	z-index: 900;
 	box-sizing: border-box;
 	width: 100%;
-	border-bottom: 1px solid $dark-gray;
+	margin-block: 0 !important;
+	border-block: 1px solid $dark-gray;
 	background: $white;
 }
 
 body.admin-bar .kogo-section-nav {
-	top: 120px;
+	top: 121px;
 }
 
 .kogo-section-nav__scroller {
@@ -329,11 +339,11 @@ body.admin-bar .kogo-artist-single .kogo-artist-single__columns > .kogo-artist-s
 
 @media (max-width: 1024px) {
 	.kogo-section-nav {
-		top: 56px;
+		top: 57px;
 	}
 
 	body.admin-bar .kogo-section-nav {
-		top: 88px;
+		top: 89px;
 	}
 
 	.kogo-artist-single :is(#in-essence, #gallery, #introduction, #press, #works) {
@@ -392,15 +402,17 @@ body.admin-bar .kogo-artist-single .kogo-artist-single__columns > .kogo-artist-s
 
 @media (min-width: 601px) and (max-width: 782px) {
 	body.admin-bar .kogo-section-nav {
-		top: 102px;
+		top: 103px;
+	}
+}
+
+@media (max-width: 600px) {
+	body.admin-bar .kogo-section-nav {
+		top: 57px;
 	}
 }
 
 @media (max-width: $media-max-width-sm) {
-	body.admin-bar .kogo-section-nav {
-		top: 56px;
-	}
-
 	.kogo-artist-single__gallery {
 		padding-inline: 20px;
 	}

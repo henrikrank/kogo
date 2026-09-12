@@ -47,3 +47,13 @@
 .editor-styles-wrapper ul.wp-block-post-template.kogo-posts-slider__items > li {
 	width: auto !important;
 }
+
+.editor-styles-wrapper .kogo-image-slider__viewport {
+	overflow: visible;
+}
+
+.editor-styles-wrapper .kogo-image-slider__slides.wp-block-gallery.has-nested-images {
+	flex-wrap: wrap;
+	gap: 16px !important;
+	transform: none !important;
+}

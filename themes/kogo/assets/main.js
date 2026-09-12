@@ -153,6 +153,52 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 		});
 	};
 
+	const setupImageSlider = (slider) => {
+		const slides = slider.querySelectorAll('.kogo-image-slider__slides > .wp-block-image');
+		if (!slides.length || slider.dataset.sliderReady === 'true') {
+			return;
+		}
+
+		slider.dataset.sliderReady = 'true';
+		slider.setAttribute('role', 'region');
+		slider.setAttribute('aria-label', 'Image gallery');
+		slides.forEach((slide) => slide.classList.add('swiper-slide'));
+
+		const controls = document.createElement('div');
+		controls.className = 'kogo-image-slider__controls';
+		controls.innerHTML =
+			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--previous" type="button" aria-label="Previous image"></button>' +
+			'<button class="kogo-posts-slider__arrow kogo-posts-slider__arrow--next" type="button" aria-label="Next image"></button>';
+		controls.hidden = slides.length < 2;
+		const count = document.createElement('span');
+		count.className = 'kogo-image-slider__count';
+		count.setAttribute('aria-hidden', 'true');
+		slider.append(controls, count);
+
+		const updateSlide = (instance) => {
+			count.textContent = `${instance.realIndex + 1} / ${slides.length}`;
+			instance.slides.forEach((slide, index) => {
+				slide.inert = index !== instance.activeIndex;
+			});
+		};
+		new Swiper(slider, {
+			modules: [A11y, Navigation],
+			slidesPerView: 1,
+			speed: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450,
+			rewind: true,
+			watchOverflow: true,
+			navigation: {
+				prevEl: controls.querySelector('.kogo-posts-slider__arrow--previous'),
+				nextEl: controls.querySelector('.kogo-posts-slider__arrow--next'),
+			},
+			a11y: {
+				prevSlideMessage: 'Previous image',
+				nextSlideMessage: 'Next image',
+			},
+			on: { init: updateSlide, slideChange: updateSlide },
+		});
+	};
+
 	const setupGallery = (gallery) => {
 		const grid = gallery.querySelector('.kogo-gallery-grid');
 		const dialog = gallery.querySelector('.kogo-gallery-lightbox');
@@ -421,6 +467,7 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 	setupHeaderNavigation();
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
 	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
+	document.querySelectorAll('.kogo-image-slider__viewport').forEach(setupImageSlider);
 	document.querySelectorAll('.kogo-gallery-grid-wrap').forEach(setupGallery);
 	document.querySelectorAll('[data-artist-bio]').forEach(setupArtistBio);
 	document.querySelectorAll('[data-artist-works]').forEach(setupArtistWorks);
