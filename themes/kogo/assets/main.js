@@ -290,11 +290,30 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 		update();
 	};
 
+	const setupHeaderNavigation = () => {
+		const current = new URL(window.location.href);
+		const currentPath = current.pathname.replace(/\/+$/, '') || '/';
+		document.querySelectorAll('.kogo-header__navigation .wp-block-navigation-item__content[href]').forEach((link) => {
+			const href = link.getAttribute('href');
+			if (!href || href.startsWith('#')) {
+				return;
+			}
+			const target = new URL(href, current);
+			const path = target.pathname.replace(/\/+$/, '') || '/';
+			const exact = currentPath === path;
+			const inSection = path !== '/' && currentPath.startsWith(`${path}/`);
+			if (target.origin === current.origin && !target.hash && !target.search && (exact || inSection)) {
+				link.setAttribute('aria-current', exact ? 'page' : 'location');
+			}
+		});
+	};
+
 	const setupSiteSearch = () => {
 		const toggle = document.querySelector('.kogo-header__icon-button--search');
 		const panel = document.querySelector('#kogo-site-search');
 		const input = panel?.querySelector('input[type="search"]');
 		const close = panel?.querySelector('.kogo-search-panel__close');
+		const form = panel?.querySelector('form');
 		const pagePanel = document.querySelector('#kogo-search-page');
 		const pageInput = pagePanel?.querySelector('input[type="search"]');
 
@@ -317,28 +336,89 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 			return;
 		}
 
-		if (!close) {
+		if (!close || !form) {
 			return;
 		}
 
-		const setOpen = (open, focus = true) => {
-			panel.hidden = !open;
-			toggle.setAttribute('aria-expanded', String(open));
-			if (focus) {
-				(open ? input : toggle).focus();
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+		const content = Array.from(panel.closest('header')?.parentElement?.children || []).filter((element) =>
+			element.matches('main, footer')
+		);
+		let isOpen = false;
+		let animations = [];
+
+		const setOpen = (open) => {
+			if (open === isOpen) {
+				return;
 			}
+			isOpen = open;
+			toggle.setAttribute('aria-expanded', String(open));
+			panel.inert = !open;
+
+			const wasHidden = panel.hidden;
+			const targets = [panel, form, ...content];
+			const current = targets.map((element) => {
+				const style = window.getComputedStyle(element);
+				return { clipPath: style.clipPath, opacity: style.opacity, transform: style.transform };
+			});
+			animations.forEach((animation) => animation.cancel());
+			animations = [];
+
+			if (reducedMotion.matches) {
+				panel.hidden = !open;
+			} else {
+				panel.hidden = false;
+				const offset = `translateY(-${panel.getBoundingClientRect().height}px)`;
+				const collapsed = 'inset(0 0 100% 0)';
+				const revealed = 'inset(0 0 0% 0)';
+				const panelFrom = wasHidden ? collapsed : current[0].clipPath;
+				const fieldOut = 'translateY(14px) scale(0.985)';
+				const fieldIn = 'translateY(0px) scale(1)';
+				const frames = [
+					[
+						{ clipPath: panelFrom === 'none' ? revealed : panelFrom },
+						{ clipPath: open ? revealed : collapsed },
+					],
+					[
+						{ opacity: wasHidden ? 0 : current[1].opacity, transform: wasHidden ? fieldOut : current[1].transform },
+						{ opacity: open ? 1 : 0, transform: open ? fieldIn : fieldOut },
+					],
+					...content.map((element, index) => [
+						{ transform: wasHidden ? offset : current[index + 2].transform },
+						{ transform: open ? 'translateY(0px)' : offset },
+					]),
+				];
+				animations = targets.map((element, index) =>
+					element.animate(frames[index], {
+						duration: open ? 380 : 260,
+						easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+						fill: 'both',
+					})
+				);
+				const running = animations;
+				Promise.all(running.map((animation) => animation.finished)).then(() => {
+					if (running !== animations) {
+						return;
+					}
+					panel.hidden = !isOpen;
+					animations = [];
+					running.forEach((animation) => animation.cancel());
+				}, () => {});
+			}
+			(open ? input : toggle).focus({ preventScroll: true });
 		};
 
-		toggle.addEventListener('click', () => setOpen(panel.hidden));
+		toggle.addEventListener('click', () => setOpen(!isOpen));
 		close.addEventListener('click', () => setOpen(false));
 		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && !panel.hidden) {
+			if (event.key === 'Escape' && isOpen) {
 				setOpen(false);
 			}
 		});
 	};
 
 	setupSiteSearch();
+	setupHeaderNavigation();
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
 	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
 	document.querySelectorAll('.kogo-gallery-grid-wrap').forEach(setupGallery);

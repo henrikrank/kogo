@@ -2,14 +2,18 @@
 <div class="wp-block-group alignfull kogo-header">
 	<!-- wp:site-logo {"width":100,"className":"kogo-header__logo"} /-->
 
-	<!-- wp:navigation {"overlayMenu":"never","className":"kogo-header__navigation","layout":{"type":"flex","orientation":"horizontal","flexWrap":"nowrap"}} -->
-		<!-- wp:navigation-link {"label":"Artists","url":"/artists/"} /-->
+	<!-- wp:navigation {"overlayMenu":"mobile","submenuVisibility":"click","showSubmenuIcon":false,"className":"kogo-header__navigation","layout":{"type":"flex","orientation":"horizontal","flexWrap":"nowrap"}} -->
 		<!-- wp:navigation-link {"label":"Exhibitions","url":"/exhibitions/"} /-->
 		<!-- wp:navigation-link {"label":"Fairs","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"News","url":"/news/"} /-->
-		<!-- wp:navigation-link {"label":"Visit & about","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Artists","url":"/artists/"} /-->
 		<!-- wp:navigation-link {"label":"Editions","url":"#"} /-->
-		<!-- wp:navigation-link {"label":"Buy art","url":"#"} /-->
+		<!-- wp:navigation-link {"label":"Buy art","url":"/works/"} /-->
+		<!-- wp:navigation-submenu {"label":"Info","className":"kogo-header__info"} -->
+			<!-- wp:navigation-link {"label":"Visit","type":"page","id":463,"url":"/visit/","kind":"post-type"} /-->
+			<!-- wp:navigation-link {"label":"About us","type":"page","id":461,"url":"/about/","kind":"post-type"} /-->
+			<!-- wp:navigation-link {"label":"Services","type":"page","id":465,"url":"/services/","kind":"post-type"} /-->
+			<!-- wp:navigation-link {"label":"News","type":"page","id":11,"url":"/news/","kind":"post-type"} /-->
+		<!-- /wp:navigation-submenu -->
 	<!-- /wp:navigation -->
 
 	<!-- wp:html -->
@@ -24,8 +28,6 @@
 			<a href="#" lang="et">EE</a>
 			<a href="#" lang="en" aria-current="page">EN</a>
 		</nav>
-
-		<button class="kogo-header__menu-button" type="button" aria-label="Open menu"></button>
 	</div>
 	<!-- /wp:html -->
 </div>
