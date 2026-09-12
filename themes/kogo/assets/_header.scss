@@ -1,3 +1,136 @@
+.kogo-announcement {
+	margin: calc(-1 * var(--wp--style--root--padding-top, 0px)) 0 0 !important;
+	border-bottom: 1px solid #8f6c5d;
+	background: #fff0ed;
+	color: $dark-gray;
+
+	&[hidden] {
+		display: none;
+	}
+
+	&:not([hidden]) ~ header.site-header {
+		margin-top: 0;
+		border-top: 0;
+	}
+
+	&__inner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 44px;
+		align-items: center;
+		gap: 12px;
+		max-width: $media-max-width-lg;
+		min-height: 46px;
+		margin: 0 auto;
+		padding: 2px 20px 2px 76px;
+		box-sizing: border-box;
+	}
+
+	p {
+		margin: 0;
+		font-family: var(--wp--preset--font-family--monospace);
+		font-size: var(--wp--preset--font-size--small);
+		line-height: 1.5;
+		text-align: center;
+		overflow-wrap: anywhere;
+		white-space: pre-line;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	&__close {
+		display: grid;
+		place-items: center;
+		width: 44px;
+		height: 44px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+	}
+
+	&__viewport {
+		min-width: 0;
+	}
+
+	&__copy {
+		display: none;
+	}
+
+	a:focus-visible,
+	button:focus-visible {
+		outline: 2px solid $kogo-red;
+		outline-offset: 2px;
+	}
+
+	@media (max-width: 1024px) {
+		&__inner {
+			gap: 4px;
+			padding: 2px 8px 2px 20px;
+		}
+		&__viewport {
+			overflow: hidden;
+		}
+		&__track {
+			display: flex;
+			width: max-content;
+			min-width: 200%;
+			animation: kogo-announcement-marquee 25s linear infinite;
+		}
+		&__viewport:hover &__track,
+		&__viewport:focus-within &__track {
+			animation-play-state: paused;
+		}
+		p {
+			flex: 1 0 auto;
+			box-sizing: border-box;
+			padding-inline-end: 48px;
+			text-align: left;
+			overflow-wrap: normal;
+			white-space: nowrap;
+		}
+		&__copy {
+			display: block;
+		}
+	}
+
+	@media (max-width: 1024px) and (prefers-reduced-motion: reduce) {
+		&__viewport {
+			overflow-x: auto;
+		}
+		&__track {
+			min-width: 100%;
+			animation: none;
+		}
+		&__copy {
+			display: none;
+		}
+	}
+
+	@media (max-width: $media-max-width-sm) {
+		&__inner {
+			min-height: 36px;
+			padding-block: 0;
+		}
+		&__close {
+			height: 36px;
+		}
+	}
+}
+
+@keyframes kogo-announcement-marquee {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); }
+}
+
+body > .kogo-announcement {
+	margin: 0 !important;
+}
+
 header.site-header {
 	--kogo-header-height: 88px;
 	position: sticky;
@@ -455,6 +588,10 @@ header.site-header {
 	.kogo-header {
 		grid-template-columns: auto minmax(0, 1fr) auto auto;
 		column-gap: 1.5rem;
+
+		> * {
+			grid-row: 1;
+		}
 	}
 
 	.kogo-header__navigation {

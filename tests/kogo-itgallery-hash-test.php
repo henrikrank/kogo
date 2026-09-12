@@ -24,6 +24,15 @@ function get_post_meta( $post_id, $key ) {
 }
 function get_post_status() {
 	return 'publish'; }
+function current_user_can() { return $GLOBALS['kogo_test_admin'] ?? true; }
+function get_option() { return $GLOBALS['kogo_test_last_sync'] ?? false; }
+function admin_url( $path ) { return '/wp-admin/' . $path; }
+function esc_html( $value ) { return htmlspecialchars( $value, ENT_QUOTES, 'UTF-8' ); }
+function esc_html__( $value ) { return esc_html( $value ); }
+function esc_url( $value ) { return esc_html( $value ); }
+function wp_nonce_field( $action, $name, $referer, $echo ) {
+	return '<input type="hidden" name="' . $name . '" value="test-nonce">';
+}
 
 require dirname( __DIR__ ) . '/themes/kogo/inc/kogo-itgallery.php';
 require dirname( __DIR__ ) . '/themes/kogo/inc/artist-grid.php';
@@ -74,6 +83,29 @@ if ( $hash === Kogo_ITGallery::fingerprint( 'work', $reordered_images ) ) {
 
 $GLOBALS['kogo_test_meta'][99]['_kogo_itgallery_hash'] = $hash;
 $plugin = new Kogo_ITGallery();
+$toolbar = new class {
+	public $nodes = array();
+	public function add_node( $node ) { $this->nodes[ $node['id'] ] = $node; }
+};
+$plugin->add_admin_bar_menu( $toolbar );
+if ( 4 !== count( $toolbar->nodes ) || 'Last sync: Never' !== $toolbar->nodes['kogo-itgallery-last-sync']['title'] || strpos( $toolbar->nodes['kogo-itgallery-sync']['title'], 'method="post"' ) === false || strpos( $toolbar->nodes['kogo-itgallery-sync']['title'], 'test-nonce' ) === false || '/wp-admin/admin.php?page=kogo-itgallery' !== $toolbar->nodes['kogo-itgallery-settings']['href'] ) {
+	fwrite( STDERR, "ITGallery toolbar must provide sync status, a nonce-protected POST action, and Settings.\n" );
+	exit( 1 );
+}
+$GLOBALS['kogo_test_last_sync'] = '2026-04-29 14:45:00';
+$plugin->add_admin_bar_menu( $toolbar );
+if ( 'Last sync: 29.04.2026 17:45' !== $toolbar->nodes['kogo-itgallery-last-sync']['title'] ) {
+	fwrite( STDERR, "The toolbar last-sync timestamp must use Tallinn time.\n" );
+	exit( 1 );
+}
+$toolbar->nodes = array();
+$GLOBALS['kogo_test_admin'] = false;
+$plugin->add_admin_bar_menu( $toolbar );
+if ( $toolbar->nodes ) {
+	fwrite( STDERR, "ITGallery sync and settings must remain administrator-only.\n" );
+	exit( 1 );
+}
+$GLOBALS['kogo_test_admin'] = true;
 $method = new ReflectionMethod( Kogo_ITGallery::class, 'sync_item' );
 if ( PHP_VERSION_ID < 80100 ) {
 	$method->setAccessible( true );

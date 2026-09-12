@@ -16,6 +16,15 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 		slider.setAttribute('role', 'region');
 		slider.setAttribute('aria-label', 'Featured exhibitions');
 
+		const announcement = document.querySelector('.kogo-announcement');
+		if (announcement && document.body.classList.contains('home')) {
+			const updateAnnouncementHeight = () => {
+				slider.style.setProperty('--kogo-announcement-height', `${announcement.getBoundingClientRect().height}px`);
+			};
+			updateAnnouncementHeight();
+			new ResizeObserver(updateAnnouncementHeight).observe(announcement);
+		}
+
 		const progress = document.createElement('div');
 		progress.className = 'kogo-hero-slider__progress';
 		progress.setAttribute('aria-hidden', 'true');

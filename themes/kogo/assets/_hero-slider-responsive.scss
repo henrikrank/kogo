@@ -38,3 +38,21 @@
 		font-size: clamp(2.75rem, 12vw, 4.5rem);
 	}
 }
+
+// Reserve the actual banner height while preserving the unannounced layout.
+body.home:has(.kogo-announcement:not([hidden])) .kogo-hero-slider {
+	--kogo-hero-header-height: 88px;
+	--kogo-hero-available-height: max(0px, calc(100svh - var(--kogo-hero-header-height) - var(--wp-admin--admin-bar--height, 0px) - var(--kogo-announcement-height, 0px)));
+	min-height: min(560px, var(--kogo-hero-available-height));
+	max-height: min(760px, var(--kogo-hero-available-height));
+
+	@media (max-width: 1024px) {
+		--kogo-hero-header-height: 56px;
+	}
+
+	@media (max-width: 782px) {
+		height: calc(100svh - 80px - var(--wp-admin--admin-bar--height, 0px) - var(--kogo-announcement-height, 0px));
+		min-height: min(520px, var(--kogo-hero-available-height));
+		max-height: min(720px, var(--kogo-hero-available-height));
+	}
+}

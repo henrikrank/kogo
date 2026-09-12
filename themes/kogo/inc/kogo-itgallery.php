@@ -25,7 +25,9 @@ final class Kogo_ITGallery {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ) );
 		add_action( 'init', array( __CLASS__, 'maybe_flush_rewrite_rules' ), 99 );
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_action( 'admin_menu', array( $this, 'add_settings_page' ) );
+		add_action( 'admin_menu', array( $this, 'register_settings_page' ) );
+		add_action( 'admin_bar_menu', array( $this, 'add_admin_bar_menu' ), 35 );
+		add_action( 'wp_before_admin_bar_render', array( $this, 'render_admin_bar_styles' ) );
 		add_action( 'admin_head-edit.php', array( $this, 'render_admin_thumbnail_styles' ) );
 		add_action( 'admin_post_kogo_itgallery_sync', array( $this, 'handle_sync' ) );
 
@@ -157,16 +159,75 @@ final class Kogo_ITGallery {
 		);
 	}
 
-	public function add_settings_page() {
-		add_menu_page(
+	public function register_settings_page() {
+		// Register an accessible admin page without adding a sidebar entry.
+		$hook = add_submenu_page(
+			'',
 			__( 'ITGallery', 'kogo' ),
 			__( 'ITGallery', 'kogo' ),
 			'manage_options',
 			'kogo-itgallery',
-			array( $this, 'render_settings_page' ),
-			'data:image/svg+xml;base64,' . base64_encode( file_get_contents( __DIR__ . '/../assets/images/icons/itgallery.svg' ) ),
-			29
+			array( $this, 'render_settings_page' )
 		);
+		if ( $hook ) {
+			add_action( 'load-' . $hook, static function () {
+				$GLOBALS['title'] = __( 'ITGallery', 'kogo' );
+			} );
+		}
+	}
+
+	public function add_admin_bar_menu( $admin_bar ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$settings_url = admin_url( 'admin.php?page=kogo-itgallery' );
+		$logo = file_get_contents( __DIR__ . '/../assets/images/itgallery-logo.svg' );
+		$admin_bar->add_node( array(
+			'id'    => 'kogo-itgallery',
+			'title' => $logo . '<span class="screen-reader-text">' . esc_html__( 'ITGallery', 'kogo' ) . '</span>',
+			'href'  => $settings_url,
+		) );
+		$admin_bar->add_node( array(
+			'id'     => 'kogo-itgallery-last-sync',
+			'parent' => 'kogo-itgallery',
+			'title'  => esc_html( self::last_sync_label() ),
+		) );
+		$admin_bar->add_node( array(
+			'id'     => 'kogo-itgallery-sync',
+			'parent' => 'kogo-itgallery',
+			'title'  => '<form class="kogo-itgallery-sync-form" method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="kogo_itgallery_sync">' . wp_nonce_field( 'kogo_itgallery_sync', '_wpnonce', false, false ) . '<button class="ab-item" type="submit">' . esc_html__( 'Sync now', 'kogo' ) . '</button></form>',
+		) );
+		$admin_bar->add_node( array(
+			'id'     => 'kogo-itgallery-settings',
+			'parent' => 'kogo-itgallery',
+			'title'  => __( 'Settings', 'kogo' ),
+			'href'   => $settings_url,
+		) );
+	}
+
+	private static function last_sync_label() {
+		$last_sync = get_option( self::LAST_SYNC );
+		return $last_sync
+			? sprintf( __( 'Last sync: %s', 'kogo' ), self::format_itgallery_datetime( $last_sync ) )
+			: __( 'Last sync: Never', 'kogo' );
+	}
+
+	public function render_admin_bar_styles() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		?>
+		<style>
+			#wpadminbar #wp-admin-bar-kogo-itgallery { display: block; }
+			#wpadminbar #wp-admin-bar-kogo-itgallery > .ab-item { display: flex; align-items: center; }
+			#wpadminbar #wp-admin-bar-kogo-itgallery svg { display: block; width: 71px; height: 20px; }
+			#wpadminbar #wp-admin-bar-kogo-itgallery-last-sync > .ab-item { color: #a7aaad; white-space: nowrap; cursor: default; }
+			#wpadminbar #wp-admin-bar-kogo-itgallery-sync > .ab-item { padding: 0; }
+			#wpadminbar .kogo-itgallery-sync-form { margin: 0; padding: 0; }
+			#wpadminbar .kogo-itgallery-sync-form button { width: 100%; height: 26px; padding: 0 10px; border: 0; background: transparent; line-height: 26px; text-align: left; cursor: pointer; }
+			#wpadminbar .kogo-itgallery-sync-form button:hover, #wpadminbar .kogo-itgallery-sync-form button:focus { color: #72aee6; }
+		</style>
+		<?php
 	}
 
 	public function render_settings_page() {
@@ -227,10 +288,7 @@ final class Kogo_ITGallery {
 			<h2><?php esc_html_e( 'Synchronization', 'kogo' ); ?></h2>
 			<p>
 				<?php
-				$last_sync = get_option( self::LAST_SYNC );
-				echo $last_sync
-					? esc_html( sprintf( __( 'Last successful sync: %s UTC', 'kogo' ), $last_sync ) )
-					: esc_html__( 'No successful sync has run yet.', 'kogo' );
+				echo esc_html( self::last_sync_label() );
 				?>
 			</p>
 			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo' ); ?></p>

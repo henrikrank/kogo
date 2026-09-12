@@ -18,6 +18,23 @@
 		close(rect.left, (viewport - rect.width) / 2, 'Large-screen centering');
 	}
 	const title = hero.querySelector('.kogo-exhibition-single__title');
+	const announcement = document.querySelector('.kogo-announcement:not([hidden])');
+	if (announcement && document.body.classList.contains('home') && window.scrollY === 0) {
+		if (rect.bottom > document.documentElement.clientHeight + 1) {
+			throw new Error('The homepage hero must fit below the visible announcement and header.');
+		}
+		close(+getComputedStyle(hero).getPropertyValue('--kogo-announcement-height').replace('px', ''), announcement.getBoundingClientRect().height, 'Reserved announcement height');
+		if (window.innerWidth <= 1024 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			if (getComputedStyle(announcement.querySelector('.kogo-announcement__track')).animationName !== 'kogo-announcement-marquee') {
+				throw new Error('The announcement marquee must run whenever the compact menu is used.');
+			}
+		}
+		if (window.innerWidth <= 1024) {
+			const headerItems = Array.from(document.querySelector('.kogo-header').children);
+			const centers = headerItems.map(item => { const bounds = item.getBoundingClientRect(); return bounds.top + bounds.height / 2; });
+			for (const center of centers) close(center, centers[0], 'Compact header items must share one centered row');
+		}
+	}
 	if (title) {
 		const inner = hero.querySelector('.kogo-exhibition-single__hero-inner');
 		const padding = +getComputedStyle(inner).paddingBottom.replace('px', '');
