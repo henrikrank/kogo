@@ -19,9 +19,24 @@
 		padding: 24px;
 	}
 
+	.kogo-hero-slider__tag {
+		height: auto;
+		min-height: 28px;
+		max-width: 100%;
+		padding-block: 4px;
+	}
+
+	.kogo-hero-slider__tag p {
+		min-width: 0;
+		line-height: 1.2;
+		overflow-wrap: anywhere;
+	}
+
 	.kogo-hero-slider__progress {
-		top: 24px;
-		right: 24px;
+		top: var(--kogo-hero-progress-top, 64px);
+		left: 24px;
+		right: auto;
+		margin: 0 !important;
 	}
 
 	.kogo-hero-slider__controls {
@@ -35,7 +50,7 @@
 	}
 
 	.kogo-hero-slider__title {
-		font-size: clamp(2.75rem, 12vw, 4.5rem);
+		font-size: var(--wp--custom--typography--font-size--colossal);
 	}
 }
 

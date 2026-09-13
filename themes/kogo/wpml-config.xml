@@ -1,0 +1,29 @@
+<wpml-config>
+  <custom-types>
+    <custom-type translate="1" display-as-translated="1" automatic="0">kogo_artist</custom-type>
+    <custom-type translate="1" display-as-translated="1" automatic="0">kogo_work</custom-type>
+    <custom-type translate="1" display-as-translated="1" automatic="0">kogo_exposition</custom-type>
+  </custom-types>
+  <taxonomies>
+    <taxonomy translate="0">kogo_artist_category</taxonomy>
+  </taxonomies>
+  <custom-fields>
+    <custom-field action="copy-once">_kogo_itgallery_id</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_hash</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_content_hash</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_language</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_api_locale</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_payload</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_artist_post_id</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_artist_post_ids</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_work_post_ids</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_exposition_post_ids</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_technique</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_type</custom-field>
+    <custom-field action="ignore">_kogo_itgallery_tags</custom-field>
+    <custom-field action="translate">kogo_exhibition_curator</custom-field>
+    <custom-field action="translate">kogo_exhibition_team</custom-field>
+    <custom-field action="translate">kogo_exhibition_funding</custom-field>
+    <custom-field action="copy-once" type="post-ids" sub-type="kogo_exposition">kogo_linked_exhibition_post_ids</custom-field>
+  </custom-fields>
+</wpml-config>

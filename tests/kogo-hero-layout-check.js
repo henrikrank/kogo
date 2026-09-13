@@ -17,6 +17,22 @@
 		close(rect.width, 1366, 'Large-screen hero width');
 		close(rect.left, (viewport - rect.width) / 2, 'Large-screen centering');
 	}
+	const progress = hero.querySelector('.kogo-hero-slider__progress');
+	if (progress && window.innerWidth <= 782) {
+		const lines = progress.getBoundingClientRect();
+		const activeTag = hero.querySelector('.swiper-slide-active .kogo-hero-slider__tag');
+		close(lines.top - activeTag.getBoundingClientRect().bottom, 12, 'Mobile progress gap below tag');
+		close(lines.left - rect.left, 24, 'Mobile progress left inset');
+		for (const tag of hero.querySelectorAll('.kogo-hero-slider__tag')) {
+			const pill = tag.getBoundingClientRect();
+			const text = tag.querySelector('p').getBoundingClientRect();
+			close(pill.top - rect.top, 24, 'Mobile tag top inset');
+			close(pill.left - rect.left, 24, 'Mobile tag left inset');
+			if (text.top < pill.top || text.bottom > pill.bottom || text.right > pill.right) {
+				throw new Error('Wrapped mobile hero text must stay inside its tag.');
+			}
+		}
+	}
 	const title = hero.querySelector('.kogo-exhibition-single__title');
 	const announcement = document.querySelector('.kogo-announcement:not([hidden])');
 	if (announcement && document.body.classList.contains('home') && window.scrollY === 0) {

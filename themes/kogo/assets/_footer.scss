@@ -309,6 +309,12 @@ footer.site-footer {
 	}
 }
 
+@media (max-width: 782px) {
+	.kogo-footer__title {
+		font-size: var(--wp--custom--typography--font-size--gigantic);
+	}
+}
+
 @media (max-width: $media-max-width-sm) {
 	.kogo-footer {
 		padding-inline: 20px;
@@ -322,7 +328,6 @@ footer.site-footer {
 
 	.kogo-footer__title {
 		max-width: 300px;
-		font-size: calc(40px * var(--kogo-text-scale, 1));
 	}
 
 	.kogo-footer__label {

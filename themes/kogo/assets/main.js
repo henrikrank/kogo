@@ -47,6 +47,16 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 
 		slider.append(progress, controls);
 
+		let progressTag = slides[0].querySelector('.kogo-hero-slider__tag');
+		const updateProgressTop = () => {
+			if (progressTag) {
+				slider.style.setProperty('--kogo-hero-progress-top', `${progressTag.getBoundingClientRect().bottom - slider.getBoundingClientRect().top + 12}px`);
+			}
+		};
+		const progressObserver = new ResizeObserver(updateProgressTop);
+		progressObserver.observe(slider);
+		slider.querySelectorAll('.kogo-hero-slider__tag').forEach((tag) => progressObserver.observe(tag));
+
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const hasAutoplay = slides.length > 1 && !reducedMotion;
 		let revealTimer;
@@ -55,6 +65,8 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 				item.classList.toggle('is-active', index === activeIndex);
 				item.style.setProperty('--kogo-hero-progress', index === activeIndex ? value : 0);
 			});
+			progressTag = slides[activeIndex].querySelector('.kogo-hero-slider__tag');
+			updateProgressTop();
 		};
 		const revealSlide = (instance) => {
 			const activeSlide = instance.slides[instance.activeIndex];

@@ -114,6 +114,12 @@ function kogo_parse_artist_bio( $content, $excerpt = '' ) {
  * @return array
  */
 function kogo_get_artist_bio_sections( $post_id ) {
+	if ( function_exists( 'kogo_itgallery_saved_copy' ) ) {
+		$saved = kogo_itgallery_saved_copy( $post_id, array( 'lead', 'body' ) );
+		if ( null !== $saved ) {
+			return $saved;
+		}
+	}
 	return kogo_parse_artist_bio(
 		get_post_field( 'post_content', $post_id ),
 		get_post_field( 'post_excerpt', $post_id )

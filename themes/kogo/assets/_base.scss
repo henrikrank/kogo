@@ -8,6 +8,17 @@ html {
 	scroll-behavior: smooth;
 }
 
+// Compact display scale; leave body copy and accessibility text scaling intact.
+@media (max-width: 782px) {
+	body {
+		--wp--preset--font-size--large: 1.176rem;
+		--wp--preset--font-size--x-large: clamp(1.5rem, 3.6vw, 1.75rem);
+		--wp--custom--typography--font-size--huge: clamp(1.5rem, 3.6vw, 1.75rem);
+		--wp--custom--typography--font-size--gigantic: clamp(1.882rem, 4.5vw, 2.25rem);
+		--wp--custom--typography--font-size--colossal: clamp(2.47rem, 6vw, 3rem);
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;

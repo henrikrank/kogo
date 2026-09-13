@@ -8,7 +8,7 @@ const defaults = { textSize: 'medium', lineSpacing: '2', contrast: 'regular' };
 const preferred = { textSize: 'very-large', lineSpacing: '6', contrast: 'high' };
 const event = () => ({ preventDefault() {} });
 
-function load(value = null, { blocked = false, headerless = false } = {}) {
+function load(value = null, { blocked = false, headerless = false, label = 'Visibility settings', savedMessage = 'Visibility settings saved.' } = {}) {
 	const element = () => ({
 		listeners: {}, attributes: {},
 		addEventListener(name, callback) { this.listeners[name] = callback; },
@@ -21,8 +21,9 @@ function load(value = null, { blocked = false, headerless = false } = {}) {
 	form.querySelectorAll = () => radios;
 	form.querySelector = () => radios.find(input => input.checked);
 	const toggle = element();
+	toggle.attributes['aria-label'] = label;
 	const close = element();
-	const status = {};
+	const status = { dataset: { savedMessage, unsavedMessage: 'Visibility settings applied. Your browser could not save them.' } };
 	const panel = { ...element(), id: 'kogo-visibility', hidden: true, scrollIntoView() {} };
 	panel.querySelector = selector => ({ form, '.kogo-visibility__close': close, '[data-visibility-status]': status })[selector];
 	const document = {
@@ -96,5 +97,10 @@ blocked.radios.forEach(input => { input.checked = input.value === preferred[inpu
 blocked.form.listeners.submit(event());
 assert.deepEqual(blocked.applied(), preferred, 'Unavailable storage must not prevent settings from working');
 assert.match(blocked.status.textContent, /could not save/);
+
+const estonian = load(null, { label: 'Nähtavuse seaded', savedMessage: 'Nähtavuse seaded on salvestatud.' });
+estonian.form.listeners.submit(event());
+assert.equal(estonian.status.textContent, 'Nähtavuse seaded on salvestatud.');
+assert.equal(estonian.toggle.attributes['aria-label'], 'Nähtavuse seaded', 'Preserve the translated header label');
 
 console.log('Kogo visibility preferences test passed.');

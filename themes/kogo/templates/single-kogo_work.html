@@ -1,0 +1,28 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"site-header"} /-->
+
+<!-- wp:group {"tagName":"main","align":"full","className":"kogo-single-post","layout":{"type":"default"}} -->
+<main class="wp-block-group alignfull kogo-single-post">
+	<!-- wp:group {"align":"full","className":"kogo-single-post__hero","layout":{"type":"default"}} -->
+	<div class="wp-block-group alignfull kogo-single-post__hero">
+		<!-- wp:columns {"className":"kogo-single-post__hero-columns"} -->
+		<div class="wp-block-columns kogo-single-post__hero-columns">
+			<!-- wp:column {"width":"50%","className":"kogo-single-post__intro"} -->
+			<div class="wp-block-column kogo-single-post__intro" style="flex-basis:50%">
+				<!-- wp:post-title {"level":1,"className":"kogo-single-post__title"} /-->
+				<!-- wp:shortcode -->[kogo_work_artist]<!-- /wp:shortcode -->
+			</div>
+			<!-- /wp:column -->
+			<!-- wp:column {"width":"50%","className":"kogo-single-post__media"} -->
+			<div class="wp-block-column kogo-single-post__media" style="flex-basis:50%">
+				<!-- wp:post-featured-image {"aspectRatio":"3/2","sizeSlug":"large","className":"kogo-single-post__image"} /-->
+			</div>
+			<!-- /wp:column -->
+		</div>
+		<!-- /wp:columns -->
+	</div>
+	<!-- /wp:group -->
+	<!-- wp:post-content {"className":"kogo-single-post__content","layout":{"type":"constrained","contentSize":"820px"}} /-->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"site-footer"} /-->

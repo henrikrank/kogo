@@ -76,8 +76,9 @@ function kogo_get_exhibition_curator( $post_id ) {
 		return $curator;
 	}
 
-	$description = wp_strip_all_tags( get_post_field( 'post_content', $post_id ) );
-	if ( preg_match( '/^[\t ]*(?:Curated by|Curator|Curation|Coordination and curation)[\t ]*:[\t ]*([^\r\n]+)/imu', $description, $match ) ||
+	$sections = kogo_get_exhibition_content_sections( $post_id );
+	$description = wp_strip_all_tags( preg_replace( '/<\/p>/i', "</p>\n", implode( "\n\n", $sections ) ) );
+	if ( preg_match( '/^[\t ]*(?:Curated by|Curator|Curation|Coordination and curation|Kuraator|Kureerinud|Koordineerimine ja kureerimine)[\t ]*:[\t ]*([^\r\n]+)/imu', $description, $match ) ||
 		preg_match( '/\bthe (?:show|exhibition) is curated by[\t ]+([^.!?\r\n]+)/iu', $description, $match ) ) {
 		return sanitize_text_field( trim( $match[1] ) );
 	}
@@ -222,12 +223,12 @@ function kogo_parse_exhibition_content( $content, $excerpt = '' ) {
 		$part    = trim( $part );
 		$heading = strtoupper( trim( wp_strip_all_tags( $part ) ) );
 
-		if ( 'TEAM' === $heading ) {
+		if ( in_array( $heading, array( 'TEAM', 'MEESKOND' ), true ) ) {
 			$section = 'team';
 			continue;
 		}
 
-		if ( in_array( $heading, array( 'FUNDING', 'FUNDING AND SUPPORT', 'FUNDING & SUPPORT' ), true ) ) {
+		if ( in_array( $heading, array( 'FUNDING', 'FUNDING AND SUPPORT', 'FUNDING & SUPPORT', 'RAHASTUS', 'RAHASTUS JA TOETAJAD', 'TOETAJAD' ), true ) ) {
 			$section = 'funding';
 			continue;
 		}
@@ -257,6 +258,12 @@ function kogo_parse_exhibition_content( $content, $excerpt = '' ) {
  * @return array
  */
 function kogo_get_exhibition_content_sections( $post_id ) {
+	if ( function_exists( 'kogo_itgallery_saved_copy' ) ) {
+		$saved = kogo_itgallery_saved_copy( $post_id, array( 'idea', 'text', 'team', 'funding' ) );
+		if ( null !== $saved ) {
+			return $saved;
+		}
+	}
 	return kogo_parse_exhibition_content(
 		get_post_field( 'post_content', $post_id ),
 		get_post_field( 'post_excerpt', $post_id )
@@ -583,7 +590,8 @@ function kogo_exhibition_bios_shortcode() {
 	foreach ( (array) get_post_meta( get_the_ID(), '_kogo_itgallery_artist_post_ids', true ) as $artist_post_id ) {
 		$artist_post_id = absint( $artist_post_id );
 		$name           = get_the_title( $artist_post_id );
-		$bio            = trim( wp_strip_all_tags( get_post_field( 'post_content', $artist_post_id ) ) );
+		$sections       = kogo_get_artist_bio_sections( $artist_post_id );
+		$bio            = trim( wp_strip_all_tags( str_ireplace( '</p>', '</p> ', $sections['lead'] . ' ' . $sections['body'] ) ) );
 
 		if ( ! $artist_post_id || ! $name || ! $bio ) {
 			continue;

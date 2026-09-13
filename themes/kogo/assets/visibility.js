@@ -36,9 +36,9 @@
 			apply();
 			try {
 				localStorage.setItem(key, JSON.stringify(settings));
-				status.textContent = 'Visibility settings saved.';
+				status.textContent = status.dataset.savedMessage;
 			} catch (error) {
-				status.textContent = 'Visibility settings applied. Your browser could not save them.';
+				status.textContent = status.dataset.unsavedMessage;
 			}
 		};
 		const setOpen = (open) => {
@@ -53,7 +53,6 @@
 			}
 		};
 		toggles.forEach((toggle) => {
-			toggle.setAttribute('aria-label', 'Visibility settings');
 			toggle.setAttribute('aria-controls', panel.id);
 			toggle.setAttribute('aria-expanded', 'false');
 			toggle.addEventListener('click', () => { opener = toggle; setOpen(panel.hidden); });

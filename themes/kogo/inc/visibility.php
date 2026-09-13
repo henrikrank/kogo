@@ -41,7 +41,7 @@ function kogo_render_visibility( $content, $block ) {
 				<button class="kogo-visibility__apply" type="submit"><?php esc_html_e( 'Apply settings', 'kogo' ); ?></button>
 				<button class="kogo-visibility__reset" type="reset"><?php esc_html_e( 'Reset', 'kogo' ); ?></button>
 			</div>
-			<p class="screen-reader-text" role="status" data-visibility-status></p>
+			<p class="screen-reader-text" role="status" data-visibility-status data-saved-message="<?php esc_attr_e( 'Visibility settings saved.', 'kogo' ); ?>" data-unsaved-message="<?php esc_attr_e( 'Visibility settings applied. Your browser could not save them.', 'kogo' ); ?>"></p>
 		</form>
 		<button class="kogo-visibility__close" type="button" aria-label="<?php esc_attr_e( 'Close visibility settings', 'kogo' ); ?>"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m4 4 12 12M16 4 4 16" stroke="currentColor" stroke-width="1.5"/></svg></button>
 	</section>

@@ -172,7 +172,10 @@ function kogo_get_artist_disciplines( $post_id ) {
 	}
 
 	$disciplines = array_filter( array_map( 'sanitize_text_field', $disciplines ) );
-	return array_values( array_unique( array_map( 'strtolower', $disciplines ) ) );
+	$disciplines = array_values( array_unique( array_map( 'strtolower', $disciplines ) ) );
+	return array_map( static function ( $discipline ) {
+		return apply_filters( 'wpml_translate_single_string', $discipline, 'Kogo artist disciplines', $discipline );
+	}, $disciplines );
 }
 
 /**

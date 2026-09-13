@@ -4,6 +4,7 @@ define( 'ABSPATH', __DIR__ . '/' );
 
 function add_action() {}
 function add_filter() {}
+function apply_filters( $hook, $value ) { return $value; }
 function add_shortcode() {}
 function __( $text ) {
 	return $text; }

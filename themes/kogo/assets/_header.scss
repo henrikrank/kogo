@@ -68,6 +68,8 @@
 	}
 
 	@media (max-width: 1024px) {
+		border-top: 1px solid #8f6c5d;
+
 		&__inner {
 			gap: 4px;
 			padding: 2px 8px 2px 20px;
@@ -644,10 +646,6 @@ header.site-header {
 
 	.kogo-header__actions {
 		gap: 1rem;
-	}
-
-	.kogo-header__languages {
-		display: none;
 	}
 
 	.kogo-search-panel {

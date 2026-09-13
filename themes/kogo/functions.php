@@ -15,6 +15,7 @@ require_once __DIR__ . '/inc/admin-bar.php';
 require_once __DIR__ . '/inc/editions.php';
 require_once __DIR__ . '/inc/product-single.php';
 require_once __DIR__ . '/inc/visibility.php';
+require_once __DIR__ . '/inc/languages.php';
 
 /**
  * General Theme Settings.

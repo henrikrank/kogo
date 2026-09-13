@@ -145,6 +145,9 @@ function kogo_render_announcement( $content, $block ) {
 		return $content;
 	}
 	$GLOBALS['kogo_announcement_rendered'] = true;
+	foreach ( array( 'message', 'link_label' ) as $field ) {
+		$item[ $field ] = apply_filters( 'wpml_translate_single_string', $item[ $field ], 'Kogo announcements', $data['active_id'] . ':' . $field );
+	}
 	$key = $data['active_id'] . '-' . substr( md5( wp_json_encode( $item ) ), 0, 12 );
 	$link = $item['link_url'] ? ' <span aria-hidden="true">•</span> <a href="' . esc_url( $item['link_url'] ) . '">' . esc_html( $item['link_label'] ) . '</a>' : '';
 	$message = '<p>' . esc_html( $item['message'] ) . $link . '</p>';

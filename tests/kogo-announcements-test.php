@@ -7,6 +7,7 @@ $allowed = true;
 $nonce_checked = false;
 function add_action() {}
 function add_filter() {}
+function apply_filters( $name, $value ) { return $value; }
 function __( $text ) { return $text; }
 function get_option() { global $stored; return $stored; }
 function update_option( $name, $data ) { global $stored; $stored = $data; }

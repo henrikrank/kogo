@@ -7,12 +7,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/itgallery-content.php';
+
 final class Kogo_ITGallery {
 	const API_BASE_URL    = 'https://api.itgalleryapp.com/api/public';
 	const OPTION          = 'kogo_itgallery_settings';
 	const LAST_SYNC       = 'kogo_itgallery_last_sync';
 	const SYNC_LOCK       = 'kogo_itgallery_sync_lock';
-	const HASH_VERSION    = 1;
+	const HASH_VERSION    = 2;
 	const REWRITE_VERSION = 2;
 
 	private static $post_types = array(
@@ -20,6 +22,11 @@ final class Kogo_ITGallery {
 		'work'       => 'kogo_work',
 		'exposition' => 'kogo_exposition',
 	);
+
+	private $language = '';
+	private $source_language = '';
+	private $api_locale = '';
+	private $source_posts = array();
 
 	public function __construct() {
 		add_action( 'init', array( __CLASS__, 'register_post_types' ) );
@@ -250,7 +257,7 @@ final class Kogo_ITGallery {
 
 			<h2><?php esc_html_e( 'Synchronization', 'kogo' ); ?></h2>
 			<p><?php echo esc_html( self::last_sync_label() ); ?></p>
-			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue. Unchanged items are skipped; imported items no longer returned by ITGallery are moved to Trash.', 'kogo' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Sync imports the complete web-visible catalogue in each enabled WPML language and links the translations. Text is saved as editable blocks; local text edits are preserved. Unchanged items are skipped; missing imported items are moved to Trash in their own language.', 'kogo' ); ?></p>
 			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 				<input type="hidden" name="action" value="kogo_itgallery_sync">
 				<?php wp_nonce_field( 'kogo_itgallery_sync' ); ?>
@@ -288,7 +295,7 @@ final class Kogo_ITGallery {
 						<th scope="row"><label for="kogo-itgallery-language"><?php esc_html_e( 'API language', 'kogo' ); ?></label></th>
 						<td>
 							<input id="kogo-itgallery-language" class="small-text" type="text" maxlength="5" pattern="[a-z]{2}_[A-Z]{2}" name="<?php echo esc_attr( self::OPTION ); ?>[language]" value="<?php echo esc_attr( $settings['language'] ); ?>">
-							<p class="description"><?php esc_html_e( 'Five-character ITGallery locale, for example en_EN or et_EE.', 'kogo' ); ?></p>
+							<p class="description"><?php esc_html_e( 'Locale for the default language, for example en_EN or et_EE. With WPML, the other enabled languages are also imported (Estonian: et_EE).', 'kogo' ); ?></p>
 						</td>
 					</tr>
 				</table>
@@ -324,6 +331,7 @@ final class Kogo_ITGallery {
 	}
 
 	public function sync() {
+		global $sitepress;
 		$settings = self::settings();
 		$api_key  = self::api_key();
 
@@ -339,7 +347,13 @@ final class Kogo_ITGallery {
 			return new WP_Error( 'kogo_itgallery_locked', __( 'An ITGallery sync is already running. Try again shortly.', 'kogo' ) );
 		}
 
-		set_transient( self::SYNC_LOCK, 1, 5 * MINUTE_IN_SECONDS );
+		$languages = $this->sync_languages( $settings['language'] );
+		if ( is_wp_error( $languages ) ) {
+			return $languages;
+		}
+		$previous_language = $sitepress ? $sitepress->get_current_language() : '';
+		$this->source_language = $sitepress ? $sitepress->get_default_language() : '';
+		set_transient( self::SYNC_LOCK, 1, 30 * MINUTE_IN_SECONDS );
 
 		try {
 			$collections = array();
@@ -349,28 +363,75 @@ final class Kogo_ITGallery {
 				'exposition' => array( 'expositions', array( 'with' => 'works,artist' ) ),
 			);
 
-			foreach ( $requests as $kind => $request ) {
-				$collections[ $kind ] = $this->request_collection( $request[0], $request[1], $api_key, $settings['language'] );
-				if ( is_wp_error( $collections[ $kind ] ) ) {
-					return $collections[ $kind ];
+			// Fetch every language before changing posts: a failed translation request must never trash content.
+			foreach ( $languages as $language => $locale ) {
+				foreach ( $requests as $kind => $request ) {
+					$collections[ $language ][ $kind ] = $this->request_collection( $request[0], $request[1], $api_key, $locale );
+					if ( is_wp_error( $collections[ $language ][ $kind ] ) ) {
+						return $collections[ $language ][ $kind ];
+					}
 				}
 			}
 
 			$report = array();
-			foreach ( $collections as $kind => $items ) {
-				$report[ $kind ] = $this->sync_collection( $kind, $items );
-				if ( is_wp_error( $report[ $kind ] ) ) {
-					return $report[ $kind ];
+			if ( $sitepress && class_exists( 'WPML_Config' ) ) {
+				wpml_load_core_tm();
+				WPML_Config::load_config_run();
+			}
+			foreach ( $collections as $language => $catalogue ) {
+				$this->language = (string) $language;
+				$this->api_locale = $languages[ $language ];
+				if ( $sitepress ) {
+					$sitepress->switch_lang( $language );
 				}
+				foreach ( $catalogue as $kind => $items ) {
+					$key = $language ? $language . '/' . $kind : $kind;
+					$report[ $key ] = $this->sync_collection( $kind, $items );
+					if ( is_wp_error( $report[ $key ] ) ) {
+						return $report[ $key ];
+					}
+					if ( $language === $this->source_language ) {
+						$this->source_posts[ $kind ] = $this->load_post_map( self::$post_types[ $kind ] );
+					}
+				}
+				$this->rebuild_relationships();
 			}
 
-			$this->rebuild_relationships();
 			update_option( self::LAST_SYNC, gmdate( 'Y-m-d H:i:s' ), false );
 
 			return $report;
 		} finally {
+			if ( $sitepress ) {
+				$sitepress->switch_lang( $previous_language );
+			}
+			$this->language = '';
+			$this->source_posts = array();
 			delete_transient( self::SYNC_LOCK );
 		}
+	}
+
+	private function sync_languages( $configured_locale ) {
+		global $sitepress;
+		if ( ! $sitepress ) {
+			return array( '' => $configured_locale );
+		}
+		$default = $sitepress->get_default_language();
+		if ( substr( $configured_locale, 0, 2 ) !== $default ) {
+			return new WP_Error( 'kogo_itgallery_locale', __( 'The API locale must match the default WPML language.', 'kogo' ) );
+		}
+		$languages = array( $default => $configured_locale );
+		foreach ( $sitepress->get_active_languages() as $code => $details ) {
+			if ( $code === $default ) {
+				continue;
+			}
+			$locale = array( 'en' => 'en_EN', 'et' => 'et_EE' )[ $code ] ?? ( $details['default_locale'] ?? '' );
+			$locale = apply_filters( 'kogo_itgallery_api_locale', $locale, $code );
+			if ( ! preg_match( '/^[a-z]{2}_[A-Z]{2}$/', $locale ) ) {
+				return new WP_Error( 'kogo_itgallery_locale', sprintf( __( 'No ITGallery locale is configured for %s.', 'kogo' ), $code ) );
+			}
+			$languages[ $code ] = $locale;
+		}
+		return $languages;
 	}
 
 	private function request_collection( $endpoint, $extra_query, $api_key, $language ) {
@@ -483,16 +544,25 @@ final class Kogo_ITGallery {
 			'updated'   => 0,
 			'unchanged' => 0,
 			'trashed'   => 0,
+			'preserved' => 0,
 		);
 
 		foreach ( $items as $item ) {
 			$external_id                = (string) $item['id'];
 			$remote_ids[ $external_id ] = true;
 			$post_id                    = isset( $local[ $external_id ] ) ? $local[ $external_id ] : 0;
+			if ( ! $post_id && $this->language && $this->language !== $this->source_language && isset( $this->source_posts[ $kind ][ $external_id ] ) ) {
+				$source_id = $this->source_posts[ $kind ][ $external_id ];
+				$translation_id = apply_filters( 'wpml_object_id', $source_id, $post_type, false, $this->language );
+				$details = $translation_id ? apply_filters( 'wpml_element_language_details', null, array( 'element_id' => $translation_id, 'element_type' => 'post_' . $post_type ) ) : null;
+				if ( $translation_id !== $source_id && $details && $details->language_code === $this->language ) {
+					$post_id = (int) $translation_id;
+				}
+			}
 
 			if ( ! empty( $item['canceled_at'] ) ) {
 				if ( $post_id && 'trash' !== get_post_status( $post_id ) ) {
-					wp_trash_post( $post_id );
+					$this->trash_post( $post_id );
 					$this->update_meta_if_changed( $post_id, '_kogo_itgallery_canceled_at', $item['canceled_at'] );
 					++$report['trashed'];
 				} else {
@@ -506,12 +576,14 @@ final class Kogo_ITGallery {
 				return $result;
 			}
 			++$report[ $result['status'] ];
+			$report['preserved'] += ! empty( $result['preserved'] ) ? 1 : 0;
 			$local[ $external_id ] = $result['post_id'];
+			$this->link_translation( $kind, $external_id, $result['post_id'] );
 		}
 
 		foreach ( $local as $external_id => $post_id ) {
-			if ( ! isset( $remote_ids[ $external_id ] ) && 'trash' !== get_post_status( $post_id ) ) {
-				wp_trash_post( $post_id );
+			if ( ! isset( $remote_ids[ $external_id ] ) && get_post_meta( $post_id, '_kogo_itgallery_hash', true ) && 'trash' !== get_post_status( $post_id ) ) {
+				$this->trash_post( $post_id );
 				++$report['trashed'];
 			}
 		}
@@ -531,6 +603,33 @@ final class Kogo_ITGallery {
 		}
 
 		$post_data = $this->post_data( $kind, $item );
+		$preserved = false;
+		$generate = true;
+		$expected_content = null;
+		$excerpt = $post_id ? get_post_field( 'post_excerpt', $post_id ) : '';
+		if ( $post_id ) {
+			$current = get_post_field( 'post_content', $post_id );
+			$content_hash = get_post_meta( $post_id, '_kogo_itgallery_content_hash', true );
+			$previous = get_post_meta( $post_id, '_kogo_itgallery_payload', true );
+			$previous = is_array( $previous ) ? $this->post_data( $kind, $previous ) : null;
+			if ( $content_hash && ! hash_equals( $content_hash, hash( 'sha256', $current ) ) ) {
+				unset( $post_data['post_content'] );
+				$generate = false;
+				$preserved = true;
+			} elseif ( ! $content_hash && ( ( $previous && trim( $current ) !== trim( $previous['post_content'] ) ) || ( ! $previous && trim( $current ) ) ) ) {
+				// First block migration retains any text already edited in WordPress.
+				$expected_content = kogo_itgallery_page_blocks( $kind, $post_data['post_content'], $excerpt, $this->api_locale, $post_id, $item );
+				$post_data['post_content'] = $current;
+				$preserved = true;
+			}
+			if ( ! $previous || get_post_field( 'post_title', $post_id ) !== $previous['post_title'] ) {
+				unset( $post_data['post_title'] );
+				$preserved = true;
+			}
+		}
+		if ( $generate ) {
+			$post_data['post_content'] = kogo_itgallery_page_blocks( $kind, $post_data['post_content'], $excerpt, $this->api_locale, $post_id, $item );
+		}
 		if ( $post_id ) {
 			$post_data['ID'] = $post_id;
 			if ( 'trash' === get_post_status( $post_id ) || get_post_meta( $post_id, '_kogo_itgallery_canceled_at', true ) ) {
@@ -558,10 +657,15 @@ final class Kogo_ITGallery {
 		}
 		delete_post_meta( $post_id, '_kogo_itgallery_canceled_at' );
 		$this->update_meta_if_changed( $post_id, '_kogo_itgallery_hash', $hash );
+		$this->update_meta_if_changed( $post_id, '_kogo_itgallery_api_locale', $this->api_locale );
+		if ( $generate ) {
+			$this->update_meta_if_changed( $post_id, '_kogo_itgallery_content_hash', hash( 'sha256', $expected_content ?? get_post_field( 'post_content', $post_id ) ) );
+		}
 
 		return array(
 			'status'  => $status,
 			'post_id' => $post_id,
+			'preserved' => $preserved,
 		);
 	}
 
@@ -725,12 +829,74 @@ final class Kogo_ITGallery {
 		);
 		$map      = array();
 		foreach ( $post_ids as $post_id ) {
+			if ( $this->language ) {
+				$details = apply_filters( 'wpml_element_language_details', null, array( 'element_id' => $post_id, 'element_type' => 'post_' . $post_type ) );
+				$language = $details->language_code ?? get_post_meta( $post_id, '_kogo_itgallery_language', true );
+				if ( ( $language ?: $this->source_language ) !== $this->language ) {
+					continue;
+				}
+			}
 			$external_id = (string) get_post_meta( $post_id, '_kogo_itgallery_id', true );
 			if ( '' !== $external_id && ! isset( $map[ $external_id ] ) ) {
 				$map[ $external_id ] = (int) $post_id;
 			}
 		}
 		return $map;
+	}
+
+	private function link_translation( $kind, $external_id, $post_id ) {
+		global $sitepress, $wpdb;
+		if ( ! $this->language ) {
+			return;
+		}
+		$type = 'post_' . self::$post_types[ $kind ];
+		$source_id = $this->source_posts[ $kind ][ $external_id ] ?? 0;
+		$details = apply_filters( 'wpml_element_language_details', null, array( 'element_id' => $post_id, 'element_type' => $type ) );
+		$source = $source_id ? apply_filters( 'wpml_element_language_details', null, array( 'element_id' => $source_id, 'element_type' => $type ) ) : null;
+		$trid = $source->trid ?? ( $details->trid ?? false );
+		$is_translation = $source_id && $this->language !== $this->source_language;
+		if ( ! $details || $details->language_code !== $this->language || (int) $details->trid !== (int) $trid || ( $details->source_language_code ?? null ) !== ( $is_translation ? $this->source_language : null ) ) {
+			do_action( 'wpml_set_element_language_details', array(
+				'element_id' => $post_id, 'element_type' => $type, 'trid' => $trid,
+				'language_code' => $this->language, 'source_language_code' => $is_translation ? $this->source_language : null,
+			) );
+		}
+		delete_post_meta( $post_id, '_icl_lang_duplicate_of' );
+		$this->update_meta_if_changed( $post_id, '_kogo_itgallery_language', $this->language );
+		$this->update_meta_if_changed( $post_id, '_wpml_post_translation_editor_native', 'yes' );
+		if ( $is_translation && class_exists( 'WPML_Post_Status' ) ) {
+			$status = new WPML_Post_Status( $wpdb, $sitepress->get_wp_api() );
+			$status->set_status( $post_id, ICL_TM_COMPLETE );
+			$status->set_update_status( $post_id, false );
+		}
+		if ( $is_translation && 'artist' === $kind && ! wp_get_object_terms( $post_id, 'kogo_artist_category', array( 'fields' => 'ids' ) ) ) {
+			$terms = wp_get_object_terms( $source_id, 'kogo_artist_category', array( 'fields' => 'ids' ) );
+			if ( ! is_wp_error( $terms ) ) {
+				wp_set_object_terms( $post_id, $terms, 'kogo_artist_category' );
+			}
+		}
+	}
+
+	private function trash_post( $post_id ) {
+		global $wp_filter;
+		$removed = array();
+		// WPML's optional "delete all translations" setting must not cross API language boundaries.
+		foreach ( $wp_filter['wp_trash_post']->callbacks ?? array() as $priority => $callbacks ) {
+			foreach ( $callbacks as $callback ) {
+				$function = $callback['function'];
+				if ( is_array( $function ) && $function[0] instanceof WPML_Post_Translation && 'trashed_post_actions' === $function[1] ) {
+					$removed[] = array( $function, $priority, $callback['accepted_args'] );
+					remove_action( 'wp_trash_post', $function, $priority );
+				}
+			}
+		}
+		try {
+			return wp_trash_post( $post_id );
+		} finally {
+			foreach ( $removed as $callback ) {
+				add_action( 'wp_trash_post', $callback[0], $callback[1], $callback[2] );
+			}
+		}
 	}
 
 	private function active_post_map( $post_type ) {
@@ -846,18 +1012,20 @@ final class Kogo_ITGallery {
 			'updated'   => 0,
 			'unchanged' => 0,
 			'trashed'   => 0,
+			'preserved' => 0,
 		);
 		foreach ( $report as $counts ) {
 			foreach ( $totals as $key => $unused ) {
-				$totals[ $key ] += $counts[ $key ];
+				$totals[ $key ] += $counts[ $key ] ?? 0;
 			}
 		}
 		return sprintf(
-			__( 'ITGallery sync complete: %1$d created, %2$d updated, %3$d unchanged, %4$d moved to Trash.', 'kogo' ),
+			__( 'ITGallery sync complete: %1$d created, %2$d updated, %3$d unchanged, %4$d moved to Trash, %5$d with local text edits preserved.', 'kogo' ),
 			$totals['created'],
 			$totals['updated'],
 			$totals['unchanged'],
-			$totals['trashed']
+			$totals['trashed'],
+			$totals['preserved']
 		);
 	}
 
