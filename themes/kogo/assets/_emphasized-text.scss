@@ -69,6 +69,7 @@ body.admin-bar .kogo-post-highlight__columns > .wp-block-column:has(.kogo-post-h
 	font-size: var(--wp--custom--typography--font-size--huge);
 	font-weight: 600;
 	line-height: var(--wp--custom--typography--line-height--heading);
+	p { line-height: inherit; }
 }
 
 .kogo-emphasized-text__more .wp-block-button__link {

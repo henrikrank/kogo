@@ -4,18 +4,33 @@
 // The inherited WooCommerce query determines both the grid and its pagination.
 add_filter( 'loop_shop_per_page', static function () { return 12; } );
 
-/** Keep the header link pointed at the configured WooCommerce cart page. */
+/** Keep the header cart URL, accessible label, and quantity in sync. */
 function kogo_header_cart_url( $content ) {
 	if ( ! function_exists( 'wc_get_cart_url' ) || false === strpos( $content, 'kogo-header__icon-button--cart' ) ) {
 		return $content;
 	}
+	$count = function_exists( 'WC' ) && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+	$label = $count ? sprintf( _n( 'Cart, %d item', 'Cart, %d items', $count, 'kogo' ), $count ) : __( 'Cart', 'kogo' );
 	$html = new WP_HTML_Tag_Processor( $content );
 	while ( $html->next_tag( array( 'tag_name' => 'A', 'class_name' => 'kogo-header__icon-button--cart' ) ) ) {
 		$html->set_attribute( 'href', wc_get_cart_url() );
+		$html->set_attribute( 'aria-label', $label );
+		$html->set_attribute( 'data-cart-count', $count );
 	}
-	return $html->get_updated_html();
+	return preg_replace_callback(
+		'/(<a\b[^>]*\bclass="(?:[^"]*\s)?kogo-header__icon-button--cart(?:\s[^"]*)?"[^>]*>).*?(<\/a>)/s',
+		static function ( $match ) use ( $count ) {
+			return $match[1] . '<span class="kogo-header__cart-count" aria-hidden="true"' . ( $count ? '' : ' hidden' ) . '>' . (int) $count . '</span>' . $match[2];
+		},
+		$html->get_updated_html()
+	);
 }
 add_filter( 'render_block_core/html', 'kogo_header_cart_url' );
+
+add_filter( 'woocommerce_add_to_cart_fragments', static function ( $fragments ) {
+	$fragments['a.kogo-header__icon-button--cart'] = kogo_header_cart_url( '<a class="kogo-header__icon-button kogo-header__icon-button--cart" href="/cart/"></a>' );
+	return $fragments;
+} );
 
 /** Keep Editions active throughout the catalogue and WooCommerce purchase pages. */
 add_filter( 'render_block_core/navigation-link', static function ( $content ) {
@@ -127,7 +142,7 @@ function kogo_editions_categories() {
 	}
 	$dropdown = $options->get_updated_html();
 	return '<nav class="kogo-editions__category-links" aria-label="' . esc_attr__( 'Edition categories', 'kogo' ) . '"><a class="kogo-editions__all" href="' . esc_url( $shop_url ) . '"' . ( is_shop() ? ' aria-current="page"' : '' ) . '>' . esc_html__( 'All editions', 'kogo' ) . '</a><ul>' . $list . '</ul></nav>'
-		. '<form class="kogo-editions__category-select" method="get" action="' . esc_url( $shop_url ) . '"><label for="kogo-editions-category">' . esc_html__( 'Category', 'kogo' ) . '</label><div>' . $dropdown . '<button type="submit">' . esc_html__( 'Filter', 'kogo' ) . '</button></div></form>';
+		. '<form class="kogo-editions__category-select" method="get" action="' . esc_url( $shop_url ) . '"><label class="screen-reader-text" for="kogo-editions-category">' . esc_html__( 'Category', 'kogo' ) . '</label><div>' . $dropdown . '<button type="submit">' . esc_html__( 'Filter', 'kogo' ) . '</button></div></form>';
 }
 add_shortcode( 'kogo_editions_categories', 'kogo_editions_categories' );
 

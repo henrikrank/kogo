@@ -232,13 +232,40 @@ header.site-header {
 
 .kogo-header__navigation.wp-block-navigation .kogo-header__info {
 	> .wp-block-navigation-item__content {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
 		padding: 8px 16px;
-		border-color: transparent;
+		border: 0;
+		border-radius: 0;
+		background: transparent;
+		color: inherit;
+
+		&::after {
+			flex: 0 0 auto;
+			width: 12px;
+			height: 16px;
+			margin-inline-end: 3px;
+			background: currentColor;
+			-webkit-mask: url("./images/icons/chevron-left.svg") center / contain no-repeat;
+			mask: url("./images/icons/chevron-left.svg") center / contain no-repeat;
+			transition: transform 160ms ease-out;
+			content: none;
+		}
 
 		&[aria-expanded="true"] {
-			border-color: $dark-gray;
-			background: $dark-gray;
-			color: $white;
+			background: transparent;
+			color: inherit;
+			&::after { transform: rotate(-90deg); }
+		}
+
+		&:hover,
+		&:focus-visible {
+			background: transparent;
+			color: inherit;
+			text-decoration: underline;
+			text-underline-offset: 0.25em;
 		}
 	}
 
@@ -322,6 +349,30 @@ header.site-header {
 	--kogo-header-icon-width: 24px;
 	--kogo-header-icon-height: 24px;
 	color: $kogo-red;
+}
+
+.kogo-header__cart-count {
+	position: absolute;
+	top: calc(50% - 19px);
+	left: calc(50% + 5px);
+	z-index: 1;
+	display: grid;
+	place-items: center;
+	box-sizing: border-box;
+	min-width: 14px;
+	height: 14px;
+	padding: 0 3px;
+	border-radius: 999px;
+	background: #000;
+	color: $white;
+	font-family: var(--wp--preset--font-family--sans-serif);
+	font-size: 0.529rem;
+	font-weight: 600;
+	line-height: 1;
+	white-space: nowrap;
+	pointer-events: none;
+
+	&[hidden] { display: none; }
 }
 
 @keyframes kogo-eye-blink {
@@ -437,6 +488,192 @@ header.site-header {
 	svg {
 		display: none;
 	}
+}
+
+.kogo-header__menu-logo,
+.kogo-header__languages--menu {
+	display: none;
+}
+
+.kogo-header--menu-ready .wp-block-navigation__responsive-container-open {
+	position: relative;
+	background-image: none;
+	color: $kogo-red;
+}
+
+.kogo-header__menu-line {
+	position: absolute;
+	top: calc(50% - 1px);
+	left: calc(50% - 10px);
+	width: 20px;
+	height: 2px;
+	background: currentColor;
+	transition: transform 220ms ease-out, opacity 160ms ease-out;
+	pointer-events: none;
+
+	&:nth-of-type(1) { transform: translateY(-8px); }
+	&:nth-of-type(3) { transform: translateY(8px); }
+}
+
+.kogo-header.is-compact-menu-open {
+	.wp-block-navigation__responsive-container-open {
+		position: fixed;
+		top: var(--kogo-menu-toggle-top);
+		left: var(--kogo-menu-toggle-left);
+		z-index: 100001;
+		pointer-events: none;
+	}
+	.kogo-header__menu-line {
+		&:nth-of-type(1) { transform: rotate(45deg) scaleX(1.3); }
+		&:nth-of-type(2) { opacity: 0; }
+		&:nth-of-type(3) { transform: rotate(-45deg) scaleX(1.3); }
+	}
+}
+
+.kogo-header.is-compact-menu-closing .kogo-header__menu-line {
+	&:nth-of-type(1) { transform: translateY(-8px); }
+	&:nth-of-type(2) { opacity: 1; }
+	&:nth-of-type(3) { transform: translateY(8px); }
+}
+
+// The original burger supplies the animated glyph; WordPress's close button
+// sits over it and retains its native dialog action and keyboard focus target.
+.kogo-header--menu-ready .kogo-header__navigation.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
+	padding: calc(var(--kogo-menu-content-top, 56px) + 16px) 40px 32px;
+	background: transparent;
+	color: $dark-gray;
+	animation: none;
+	.kogo-header__menu-surface {
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		background: $white;
+		pointer-events: none;
+	}
+	&::before {
+		position: fixed;
+		inset: 0 0 auto;
+		z-index: 1;
+		height: var(--kogo-menu-content-top, 56px);
+		background: $white;
+		content: "";
+	}
+
+	.wp-block-navigation__responsive-close { max-width: none; }
+	.wp-block-navigation__responsive-dialog { margin-top: 0; }
+	.wp-block-navigation__responsive-container-close {
+		position: fixed;
+		top: var(--kogo-menu-toggle-top);
+		left: var(--kogo-menu-toggle-left);
+		right: auto;
+		z-index: 100002;
+		width: 44px;
+		height: 44px;
+		color: $kogo-red;
+		svg { display: none; }
+		&:focus-visible { outline: 2px solid $kogo-red; outline-offset: -2px; }
+	}
+	.kogo-header__menu-logo {
+		display: block;
+		position: fixed;
+		top: var(--kogo-menu-logo-top);
+		left: var(--kogo-menu-logo-left);
+		z-index: 2;
+		width: var(--kogo-menu-logo-width);
+		height: var(--kogo-menu-logo-height);
+		margin: 0;
+		.custom-logo-link { display: block; line-height: 0; }
+		.custom-logo { display: block; width: 100%; height: 100%; object-fit: contain; }
+	}
+	.kogo-header__languages--menu {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		min-height: 44px;
+		margin: 0 0 8px;
+		font-size: var(--wp--preset--font-size--small);
+		a {
+			display: grid;
+			place-items: center;
+			min-width: 44px;
+			min-height: 44px;
+			animation: kogo-menu-language-in 280ms ease-out 80ms both;
+			&:nth-child(2) { animation-delay: 140ms; }
+			&:focus-visible { outline-offset: -2px; }
+		}
+	}
+	.kogo-header__utilities--menu {
+		position: fixed;
+		top: var(--kogo-menu-tools-top);
+		left: var(--kogo-menu-tools-left);
+		z-index: 2;
+	}
+	.wp-block-navigation__responsive-container-content {
+		align-items: stretch;
+		gap: 0;
+		padding: 0;
+	}
+	.wp-block-navigation__container {
+		align-items: stretch;
+		width: 100%;
+		gap: 0;
+		> .wp-block-navigation-item {
+			align-items: stretch;
+			width: 100%;
+			border-bottom: 1px solid $dark-gray;
+			> .wp-block-navigation-item__content {
+				box-sizing: border-box;
+				width: 100%;
+				min-height: 56px;
+				padding: 12px 0;
+				border: 0;
+				border-radius: 0;
+				background: transparent;
+				color: inherit;
+				font-size: var(--wp--preset--font-size--large);
+				line-height: 1.4;
+				white-space: normal;
+				&:hover, &:focus-visible, &[aria-current] {
+					text-decoration: underline;
+					text-underline-offset: 0.2em;
+				}
+				&:focus-visible { outline-offset: -2px; }
+			}
+		}
+	}
+	.kogo-header__info {
+		> .wp-block-navigation-item__content::after { content: ""; }
+		> .wp-block-navigation-submenu__toggle[aria-expanded="false"] ~ .wp-block-navigation__submenu-container {
+			display: none;
+		}
+		> .wp-block-navigation__submenu-container {
+			align-items: stretch;
+			gap: 0;
+			width: 100%;
+			min-width: 0;
+			padding: 0 0 16px 24px;
+			border-radius: 0;
+			> .wp-block-navigation-item { align-items: stretch; }
+			> .wp-block-navigation-item > .wp-block-navigation-item__content {
+				display: flex;
+				align-items: center;
+				min-height: 44px;
+				padding: 0;
+				font-size: var(--wp--preset--font-size--medium);
+			}
+		}
+	}
+}
+
+@keyframes kogo-menu-language-in {
+	from { opacity: 0; transform: translateY(-6px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.kogo-header.is-compact-menu-closing .kogo-header__languages--menu {
+	opacity: 0;
+	transform: translateY(-8px);
+	transition: opacity 160ms ease-out, transform 160ms ease-out;
 }
 
 .kogo-search-panel {
@@ -574,6 +811,9 @@ header.site-header {
 	.kogo-header__icon-button--eye::after {
 		animation: none !important;
 	}
+	.kogo-header__menu-line,
+	.kogo-header__info > .wp-block-navigation-item__content::after { transition: none; }
+	.kogo-header--menu-ready .kogo-header__navigation.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open .kogo-header__languages--menu a { animation: none; }
 }
 
 @media (max-width: 1024px) {
@@ -583,7 +823,7 @@ header.site-header {
 
 	.kogo-header {
 		grid-template-columns: auto minmax(0, 1fr) auto auto;
-		column-gap: 1.5rem;
+		column-gap: 16px;
 
 		> * {
 			grid-row: 1;
@@ -616,13 +856,25 @@ header.site-header {
 	}
 
 	.kogo-header__actions {
-		gap: clamp(1.75rem, 9vw, 4rem);
+		> .kogo-header__languages { display: none; }
+	}
+
+	.kogo-header__icon-button {
+		width: 44px;
+		height: 44px;
+		&::after {
+			inset: 0;
+			width: var(--kogo-header-icon-width);
+			height: var(--kogo-header-icon-height);
+			margin: auto;
+		}
 	}
 
 	.kogo-header__navigation .wp-block-navigation__responsive-container-open {
 		display: inline-block !important;
-		width: clamp(1.412rem, 5.44vw, 2.471rem);
-		height: clamp(1.412rem, 5.44vw, 2.471rem);
+		width: 44px;
+		height: 44px;
+		background-size: 24px 24px;
 	}
 
 	.kogo-search-panel {
@@ -641,6 +893,9 @@ header.site-header {
 
 @media (max-width: $media-max-width-sm) {
 	.kogo-header {
+		padding-inline: 20px;
+	}
+	.kogo-header--menu-ready .kogo-header__navigation.wp-block-navigation .wp-block-navigation__responsive-container.is-menu-open {
 		padding-inline: 20px;
 	}
 

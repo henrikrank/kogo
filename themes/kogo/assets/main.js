@@ -3,9 +3,12 @@ import { A11y, Autoplay, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/a11y';
 import { getGalleryLayout } from './gallery-layout.mjs';
+import { setupCompactHeader } from './compact-header.mjs';
+import { setupCartCount } from './cart-count.mjs';
 
 (function () {
 	'use strict';
+	setupCartCount();
 
 	const setupHeroSlider = (slider) => {
 		const slides = slider.querySelectorAll('.swiper-wrapper > .swiper-slide');
@@ -516,34 +519,13 @@ import { getGalleryLayout } from './gallery-layout.mjs';
 
 	setupSiteSearch();
 	setupHeaderNavigation();
+	setupCompactHeader(document.querySelector('.kogo-header'));
 	document.querySelectorAll('.kogo-hero-slider').forEach(setupHeroSlider);
 	document.querySelectorAll('.kogo-posts-slider').forEach(setupPostsSlider);
 	document.querySelectorAll('.kogo-image-slider__viewport').forEach(setupImageSlider);
 	document.querySelectorAll('.kogo-gallery-grid-wrap').forEach(setupGallery);
 	document.querySelectorAll('[data-artist-bio]').forEach(setupArtistBio);
 	document.querySelectorAll('[data-artist-works]').forEach(setupArtistWorks);
-
-	// Switching to mobile: https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList/onchange
-	const isMobile = window.matchMedia(
-		'(max-width: ' + getComputedStyle(document.body).getPropertyValue('--custom--media-max-width--sm') + ')'
-	);
-	const navigationResponsiveContainer = document.querySelector(
-		'.site-header .wp-block-navigation__responsive-container'
-	);
-	isMobile.onchange = (e) => {
-		if (e.matches) {
-			// <= Mobile
-		} else {
-			// > Mobile
-			// Autoclose header nav container if modal is open and browser window gets resized.
-			if (
-				document.body.contains(navigationResponsiveContainer) &&
-				navigationResponsiveContainer.classList.contains('is-menu-open')
-			) {
-				document.querySelector('.site-header .wp-block-navigation__responsive-container-close').click();
-			}
-		}
-	};
 
 	// Style password protected post form.
 	const passwordButton = document.querySelector('.post-password-form [type="submit"]');

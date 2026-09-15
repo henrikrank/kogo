@@ -16,6 +16,7 @@ require_once __DIR__ . '/inc/editions.php';
 require_once __DIR__ . '/inc/product-single.php';
 require_once __DIR__ . '/inc/visibility.php';
 require_once __DIR__ . '/inc/languages.php';
+require_once __DIR__ . '/inc/header-navigation.php';
 
 /**
  * General Theme Settings.
@@ -164,6 +165,14 @@ function kogo_load_scripts() {
 	}
 
 	// 2. Scripts.
-	wp_enqueue_script( 'mainjs', get_theme_file_uri( 'build/main.js' ), array(), $theme_version, true );
+	$script_dependencies = array();
+	if ( class_exists( 'WooCommerce' ) ) {
+		// The custom cart icon needs the same live fragments as a native mini-cart.
+		$script_dependencies[] = 'wc-cart-fragments';
+		if ( is_cart() || is_checkout() ) {
+			$script_dependencies[] = 'wc-blocks-data-store';
+		}
+	}
+	wp_enqueue_script( 'mainjs', get_theme_file_uri( 'build/main.js' ), $script_dependencies, $theme_version . '.' . filemtime( get_theme_file_path( 'build/main.js' ) ), true );
 }
 add_action( 'wp_enqueue_scripts', 'kogo_load_scripts' );
